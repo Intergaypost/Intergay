@@ -102,7 +102,7 @@ var/list/outfits_decls_by_type_
 
 // end of check_and_try_equip_xeno
 
-/decl/hierarchy/outfit/proc/equip(mob/living/carbon/human/H, var/rank, var/assignment, var/equip_adjustments)
+/decl/hierarchy/outfit/proc/equip(var/rank, var/assignment, var/equip_adjustments)
 	equip_base(H, equip_adjustments)
 
 	rank = id_pda_assignment || rank
