@@ -47,7 +47,7 @@ var/datum/controller/subsystem/fluids/SSfluids
 		var/turf/T = curr_sources[curr_sources.len]
 		curr_sources.len--
 
-		FLOOD_TURF_NEIGHBORS(T, FALSE)
+		FLOOD_TURF_NEIGHBORS(T, TRUE)
 
 		if (MC_TICK_CHECK)
 			return
