@@ -35,17 +35,17 @@
 	else
 		..()
 
-/obj/structure/undies_wardrobe/proc/remove_id_card(var/id_card)
+/obj/structure/undies_wardrobe/proc/remove_id_card(id_card)
 	LAZYREMOVE(amount_of_underwear_by_id_card, id_card)
 	GLOB.destroyed_event.unregister(id_card, src, /obj/structure/undies_wardrobe/proc/remove_id_card)
 
-/obj/structure/undies_wardrobe/attack_hand(var/mob/user)
+/obj/structure/undies_wardrobe/attack_hand(mob/user)
 	if(!human_who_can_use_underwear(user))
 		to_chat(user, "<span class='warning'>Sadly there's nothing in here for you to wear.</span>")
 		return
 	interact(user)
 
-/obj/structure/undies_wardrobe/interact(var/mob/living/carbon/human/H)
+/obj/structure/undies_wardrobe/interact(mob/living/carbon/human/H)
 	var/id = H.GetIdCard()
 
 	var/dat = list()
@@ -57,7 +57,7 @@
 	dat = jointext(dat,null)
 	show_browser(H, dat, "window=wardrobe;size=400x250")
 
-/obj/structure/undies_wardrobe/proc/human_who_can_use_underwear(var/mob/living/carbon/human/H)
+/obj/structure/undies_wardrobe/proc/human_who_can_use_underwear(mob/living/carbon/human/H)
 	if(!istype(H) || !H.species || !(H.species.appearance_flags & HAS_UNDERWEAR))
 		return FALSE
 	return TRUE
@@ -103,7 +103,7 @@
 			return
 		LAZYSET(amount_of_underwear_by_id_card, id, ++current_quota)
 
-		var/obj/UW = UWI.create_underwear(metadata_list)
+		var/obj/UW = UWI.create_underwear(H, metadata_list)
 		UW.forceMove(loc)
 		H.put_in_hands(UW)
 

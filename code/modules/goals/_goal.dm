@@ -22,7 +22,7 @@
 		owner = null
 	. = ..()
 
-/datum/goal/proc/summarize(var/show_success = FALSE, var/allow_modification = FALSE, var/datum/admins/admin, var/position = 1)
+/datum/goal/proc/summarize(show_success = FALSE, allow_modification = FALSE, datum/admins/admin, position = 1)
 	. = "[description][get_summary_value()]"
 	if(show_success)
 		. += get_success_string()

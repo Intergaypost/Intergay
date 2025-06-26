@@ -14,7 +14,7 @@
 		var/goal = pick_n_take(possible_goals)
 		LAZYADD(goals, new goal(src))
 
-/datum/department/proc/summarize_goals(var/show_success = FALSE)
+/datum/department/proc/summarize_goals(show_success = FALSE)
 	. = list()
 	for(var/i = 1 to LAZYLEN(goals))
 		var/datum/goal/goal = goals[i]
