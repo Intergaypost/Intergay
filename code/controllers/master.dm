@@ -8,13 +8,14 @@
  **/
 
 //This is the ABSOLUTE ONLY THING that should init globally like this
-var/global/datum/controller/master/Master = new
+GLOBAL_REAL(Master, /datum/controller/master) = new
 
-// THIS IS THE INIT ORDER
-// config/New -> Master -> SSPreInit -> config/Initialize -> GLOB -> world -> SSInit -> Failsafe
+//THIS IS THE INIT ORDER
+//Master -> SSPreInit -> GLOB -> world -> config -> SSInit -> Failsafe
+//GOT IT MEMORIZED?
 
 /datum/controller/master
-	name = "Main"
+	name = "Master"
 
 	// Are we processing (higher values increase the processing delay by n ticks)
 	var/processing = TRUE
@@ -36,6 +37,8 @@ var/global/datum/controller/master/Master = new
 
 	var/make_runtime = 0
 
+	var/initializations_finished_with_no_players_logged_in	//I wonder what this could be?
+
 	var/initializing = FALSE
 
 	// The type of the last subsystem to be process()'d.
@@ -54,21 +57,11 @@ var/global/datum/controller/master/Master = new
 	var/static/restart_timeout = 0
 	var/static/restart_count = 0
 
-	var/const/tick_limit_default = 80
-	var/const/tick_limit_init = 98
-	var/const/tick_limit_to_run = 78
-	var/const/tick_limit_mc = 70
-
 	//current tick limit, assigned before running a subsystem.
 	//used by CHECK_TICK as well so that the procs subsystems call can obey that SS's tick limits
-	var/static/current_ticklimit = tick_limit_default
-
+	var/static/current_ticklimit = TICK_LIMIT_RUNNING
 
 /datum/controller/master/New()
-	if (!global.diary)
-		global.diary = file("data/logs/[time2text(world.timeofday, "YYYY/MM/DD", -world.timezone)].log")
-	if (!config)
-		config = new
 	total_run_times = list()
 	// Highlander-style: there can only be one! Kill off the old and replace it with the new.
 	var/list/_subsystems = list()
@@ -79,12 +72,13 @@ var/global/datum/controller/master/Master = new
 			qdel(Master)
 		else
 			var/list/subsytem_types = subtypesof(/datum/controller/subsystem)
-			sortTim(subsytem_types, GLOBAL_PROC_REF(cmp_subsystem_init))
+			sortTim(subsytem_types, /proc/cmp_subsystem_init)
 			for(var/I in subsytem_types)
 				_subsystems += new I
 		Master = src
-	if (!GLOB)
-		GLOB = new
+
+	if(!GLOB)
+		new /datum/controller/global_vars
 
 /datum/controller/master/Destroy()
 	..()
@@ -93,15 +87,15 @@ var/global/datum/controller/master/Master = new
 
 /datum/controller/master/Shutdown()
 	processing = FALSE
-	sortTim(subsystems, GLOBAL_PROC_REF(cmp_subsystem_init))
+	sortTim(subsystems, /proc/cmp_subsystem_init)
 	reverseRange(subsystems)
 	for(var/datum/controller/subsystem/ss in subsystems)
 		if (ss.flags & SS_NEEDS_SHUTDOWN)
-			var/time = uptime()
-			report_progress("Shutting down [ss] subsystem...")
+			var/time = REALTIMEOFDAY
+			message_admins("Shutting down [ss] subsystem...")
 			ss.Shutdown()
-			report_progress("[ss] shutdown in [(uptime() - time)/10]s.")
-	report_progress("Shutdown complete.")
+			message_admins("[ss] shutdown in [(REALTIMEOFDAY - time)/10]s.")
+	message_admins("Shutdown complete.")
 
 // Returns 1 if we created a new mc, 0 if we couldn't due to a recent restart,
 //	-1 if we encountered a runtime trying to recreate it
@@ -127,7 +121,7 @@ var/global/datum/controller/master/Master = new
 	var/msg = "## DEBUG: [time2text(world.timeofday)] MC restarted. Reports:\n"
 	for (var/varname in Master.vars)
 		switch (varname)
-			if("name", "tag", "bestF", "type", "parent_type", "vars", "stat_line") // Built-in junk.
+			if("name", "tag", "bestF", "type", "parent_type", "vars", "statclick") // Built-in junk.
 				continue
 			else
 				var/varval = Master.vars[varname]
@@ -151,7 +145,7 @@ var/global/datum/controller/master/Master = new
 				msg = "The [BadBoy.name] subsystem seems to be destabilizing the MC and will be offlined."
 				BadBoy.flags |= SS_NO_FIRE
 		if(msg)
-			to_chat(GLOB.admins, SPAN_NOTICE("<b>[msg]</b>"))
+			to_chat(GLOB.admins, "<span class='boldannounce'>[msg]</span>")
 			log_world(msg)
 
 	if (istype(Master.subsystems))
@@ -162,15 +156,14 @@ var/global/datum/controller/master/Master = new
 		total_run_times = Master.total_run_times
 		StartProcessing(10)
 	else
-		to_chat(world, SPAN_NOTICE("<b>The Master Controller is having some issues, we will need to re-initialize EVERYTHING</b>"))
+		to_chat(world, "<span class='boldannounce'>The Master Controller is having some issues, we will need to re-initialize EVERYTHING</span>")
 		Initialize(20, TRUE)
 
 
 // Please don't stuff random bullshit here,
 // 	Make a subsystem, give it the SS_NO_FIRE flag, and do your work in it's Initialize()
 /datum/controller/master/Initialize(delay, init_sss)
-	set waitfor = FALSE
-	var/start_uptime = uptime()
+	set waitfor = 0
 
 	if(delay)
 		sleep(delay)
@@ -178,40 +171,51 @@ var/global/datum/controller/master/Master = new
 	if(init_sss)
 		init_subtypes(/datum/controller/subsystem, subsystems)
 
-	report_progress("Initializing subsystems...")
+	message_admins("Initializing subsystems...")
 
 	initializing = TRUE
 
 	// Sort subsystems by init_order, so they initialize in the correct order.
-	sortTim(subsystems, GLOBAL_PROC_REF(cmp_subsystem_init))
+	sortTim(subsystems, /proc/cmp_subsystem_init)
 
-	current_ticklimit = tick_limit_init
+	var/start_timeofday = REALTIMEOFDAY
+	// Initialize subsystems.
+	current_ticklimit = config.tick_limit_mc_init
 	for (var/datum/controller/subsystem/SS in subsystems)
 		if (SS.flags & SS_NO_INIT)
 			continue
-		SS.DoInitialize(uptime())
+		SS.DoInitialize(REALTIMEOFDAY)
 		CHECK_TICK
-	current_ticklimit = tick_limit_default
-	var/msg = "Initializations complete within [(uptime() - start_uptime) / 10] second\s!"
-	report_progress(msg)
+	current_ticklimit = TICK_LIMIT_RUNNING
+	var/time = (REALTIMEOFDAY - start_timeofday) / 10
+
+	var/msg = "Initializations complete within [time] second\s!"
+	message_admins(msg)
 	log_world(msg)
 
 	initializing = FALSE
 
 	if (!current_runlevel)
-		//sound_to(world, sound('sound/ui/lobby-notify.ogg', volume = 40))
-		callHook("game_ready")
 		SetRunLevel(RUNLEVEL_LOBBY)
 
 	// Sort subsystems by display setting for easy access.
-	sortTim(subsystems, GLOBAL_PROC_REF(cmp_subsystem_display))
+	sortTim(subsystems, /proc/cmp_subsystem_display)
 	// Set world options.
 #ifdef UNIT_TEST
 	world.sleep_offline = FALSE
 #else
 	world.sleep_offline = TRUE
 #endif
+	world.fps = config.fps
+	var/initialized_tod = REALTIMEOFDAY
+	initializations_finished_with_no_players_logged_in = initialized_tod < REALTIMEOFDAY - 10
+	// Loop.
 	Master.StartProcessing(0)
+
+	//shadowcasting_controller.initialized = TRUE
+
+	if(!accepted_prayer)
+		accepted_prayer = generate_random_prayer()  //Should probably datum-ize this, but don't want to now(nor do I)
 
 /datum/controller/master/proc/SetRunLevel(new_runlevel)
 	var/old_runlevel = current_runlevel
@@ -219,22 +223,22 @@ var/global/datum/controller/master/Master = new
 		old_runlevel = "NULL"
 
 	current_runlevel = log(2, new_runlevel) + 1
-	report_progress("MC: Runlevel changed from [old_runlevel] to [current_runlevel]")
+	message_admins("The performance went from [old_runlevel] to [current_runlevel].")
 	if(current_runlevel < 1)
-		CRASH("Attempted to set invalid runlevel: [new_runlevel]")
+		CRASH("Attempted to set invalid runlevel: [new_runlevel].")
 
 // Starts the mc, and sticks around to restart it if the loop ever ends.
 /datum/controller/master/proc/StartProcessing(delay)
 	set waitfor = 0
 	if(delay)
 		sleep(delay)
-	report_progress("Master starting processing")
+	report_progress("The start-up is finished, the game is ready.")
 	var/rtn = Loop()
 	if (rtn > 0 || processing < 0)
 		return //this was suppose to happen.
 	//loop ended, restart the mc
 	log_game("MC crashed or runtimed, restarting")
-	message_admins("MC crashed or runtimed, restarting")
+	report_progress("MC crashed or runtimed, restarting now.")
 	var/rtn2 = Recreate_MC()
 	if (rtn2 <= 0)
 		log_game("Failed to recreate MC (Error code: [rtn2]), it's up to the failsafe now")
@@ -261,19 +265,18 @@ var/global/datum/controller/master/Master = new
 		SS.state = SS_IDLE
 		if (SS.flags & SS_TICKER)
 			tickersubsystems += SS
-			timer += world.tick_lag * rand(0,1)
+			timer += world.tick_lag * rand(1, 5)
 			SS.next_fire = timer
 			continue
 
 		var/ss_runlevels = SS.runlevels
 		var/added_to_any = FALSE
-		var/list/index_to_flag = get_flag_index_to_flag_list() // Получаем список флагов
-		for(var/I in 1 to length(index_to_flag))
-			if(ss_runlevels & index_to_flag[I])
-				while(length(runlevel_sorted_subsystems) < I)
-				runlevel_sorted_subsystems += list(list())
-			runlevel_sorted_subsystems[I] += SS
-			added_to_any = TRUE
+		for(var/I in 1 to GLOB.bitflags.len)
+			if(ss_runlevels & GLOB.bitflags[I])
+				while(runlevel_sorted_subsystems.len < I)
+					runlevel_sorted_subsystems += list(list())
+				runlevel_sorted_subsystems[I] += SS
+				added_to_any = TRUE
 		if(!added_to_any)
 			WARNING("[SS.name] subsystem is not SS_NO_FIRE but also does not have any runlevels set!")
 
@@ -281,15 +284,15 @@ var/global/datum/controller/master/Master = new
 	queue_tail = null
 	//these sort by lower priorities first to reduce the number of loops needed to add subsequent SS's to the queue
 	//(higher subsystems will be sooner in the queue, adding them later in the loop means we don't have to loop thru them next queue add)
-	sortTim(tickersubsystems, GLOBAL_PROC_REF(cmp_subsystem_priority))
-	for(var/level in runlevel_sorted_subsystems)
-		sortTim(level, GLOBAL_PROC_REF(cmp_subsystem_priority))
-		level += tickersubsystems
+	sortTim(tickersubsystems, /proc/cmp_subsystem_priority)
+	for(var/I in runlevel_sorted_subsystems)
+		sortTim(runlevel_sorted_subsystems, /proc/cmp_subsystem_priority)
+		I += tickersubsystems
 
 	var/cached_runlevel = current_runlevel
 	var/list/current_runlevel_subsystems = runlevel_sorted_subsystems[cached_runlevel]
 
-	init_timeofday = uptime()
+	init_timeofday = REALTIMEOFDAY
 	init_time = world.time
 
 	iteration = 1
@@ -299,29 +302,29 @@ var/global/datum/controller/master/Master = new
 	//the actual loop.
 
 	while (1)
-		tickdrift = max(0, MC_AVERAGE_FAST(tickdrift, (((uptime() - init_timeofday) - (world.time - init_time)) / world.tick_lag)))
-		var/starting_tick_usage = world.tick_usage
+		tickdrift = max(0, MC_AVERAGE_FAST(tickdrift, (((REALTIMEOFDAY - init_timeofday) - (world.time - init_time)) / world.tick_lag)))
+		var/starting_tick_usage = TICK_USAGE
 		if (processing <= 0)
-			current_ticklimit = tick_limit_default
+			current_ticklimit = TICK_LIMIT_RUNNING
 			sleep(10)
 			continue
 
 		//Anti-tick-contention heuristics:
 		//if there are mutiple sleeping procs running before us hogging the cpu, we have to run later.
 		//	(because sleeps are processed in the order received, longer sleeps are more likely to run first)
-		if (starting_tick_usage > tick_limit_mc) //if there isn't enough time to bother doing anything this tick, sleep a bit.
+		if (starting_tick_usage > TICK_LIMIT_MC) //if there isn't enough time to bother doing anything this tick, sleep a bit.
 			sleep_delta *= 2
-			current_ticklimit = tick_limit_default * 0.5
+			current_ticklimit = TICK_LIMIT_RUNNING * 0.5
 			sleep(world.tick_lag * (processing * sleep_delta))
 			continue
 
 		//Byond resumed us late. assume it might have to do the same next tick
-		if (last_run + Ceilm(world.tick_lag * (processing * sleep_delta), world.tick_lag) < world.time)
+		if (last_run + Ceiling(world.tick_lag * (processing * sleep_delta), world.tick_lag) < world.time)
 			sleep_delta += 1
 
 		sleep_delta = MC_AVERAGE_FAST(sleep_delta, 1) //decay sleep_delta
 
-		if (starting_tick_usage > tick_limit_mc * 0.75) //we ran 3/4 of the way into the tick
+		if (starting_tick_usage > (TICK_LIMIT_MC*0.75)) //we ran 3/4 of the way into the tick
 			sleep_delta += 1
 
 		//debug
@@ -337,15 +340,14 @@ var/global/datum/controller/master/Master = new
 			var/checking_runlevel = current_runlevel
 			if(cached_runlevel != checking_runlevel)
 				//resechedule subsystems
-				var/list/old_subsystems = current_runlevel_subsystems
 				cached_runlevel = checking_runlevel
 				current_runlevel_subsystems = runlevel_sorted_subsystems[cached_runlevel]
-				//now we'll go through all the subsystems we want to offset and give them a next_fire
-				for(var/datum/controller/subsystem/SS as anything in current_runlevel_subsystems)
-					//we only want to offset it if it's new and also behind
-					if(SS.next_fire > world.time || (SS in old_subsystems))
-						continue
-					SS.next_fire = world.time + world.tick_lag * rand(0, min(SS.wait, 2 SECONDS) / world.tick_lag)
+				var/stagger = world.time
+				for(var/I in current_runlevel_subsystems)
+					var/datum/controller/subsystem/SS = I
+					if(SS.next_fire <= world.time)
+						stagger += world.tick_lag * rand(1, 5)
+						SS.next_fire = stagger
 
 			subsystems_to_check = current_runlevel_subsystems
 		else
@@ -358,7 +360,7 @@ var/global/datum/controller/master/Master = new
 			if (!error_level)
 				iteration++
 			error_level++
-			current_ticklimit = tick_limit_default
+			current_ticklimit = TICK_LIMIT_RUNNING
 			sleep(10)
 			continue
 
@@ -370,7 +372,7 @@ var/global/datum/controller/master/Master = new
 				if (!error_level)
 					iteration++
 				error_level++
-				current_ticklimit = tick_limit_default
+				current_ticklimit = TICK_LIMIT_RUNNING
 				sleep(10)
 				continue
 		error_level--
@@ -381,11 +383,10 @@ var/global/datum/controller/master/Master = new
 		iteration++
 		last_run = world.time
 		src.sleep_delta = MC_AVERAGE_FAST(src.sleep_delta, sleep_delta)
-		current_ticklimit = tick_limit_default
+		current_ticklimit = TICK_LIMIT_RUNNING
 		if (processing * sleep_delta <= world.tick_lag)
-			current_ticklimit -= (tick_limit_default * 0.25) //reserve the tail 1/4 of the next tick for the mc if we plan on running next tick
+			current_ticklimit -= (TICK_LIMIT_RUNNING * 0.25) //reserve the tail 1/4 of the next tick for the mc if we plan on running next tick
 		sleep(world.tick_lag * (processing * sleep_delta))
-
 
 
 
@@ -437,13 +438,13 @@ var/global/datum/controller/master/Master = new
 
 	//keep running while we have stuff to run and we haven't gone over a tick
 	//	this is so subsystems paused eariler can use tick time that later subsystems never used
-	while (ran && queue_head && world.tick_usage < tick_limit_mc)
+	while (ran && queue_head && TICK_USAGE < TICK_LIMIT_MC)
 		ran = FALSE
 		bg_calc = FALSE
 		current_tick_budget = queue_priority_count
 		queue_node = queue_head
 		while (queue_node)
-			if (ran && world.tick_usage > tick_limit_default)
+			if (ran && TICK_USAGE > TICK_LIMIT_RUNNING)
 				break
 
 			queue_node_flags = queue_node.flags
@@ -455,7 +456,7 @@ var/global/datum/controller/master/Master = new
 			//(unless we haven't even ran anything this tick, since its unlikely they will ever be able run
 			//	in those cases, so we just let them run)
 			if (queue_node_flags & SS_NO_TICK_CHECK)
-				if (queue_node.tick_usage > tick_limit_default - world.tick_usage && ran_non_ticker)
+				if (queue_node.tick_usage > TICK_LIMIT_RUNNING - TICK_USAGE && ran_non_ticker)
 					queue_node.queued_priority += queue_priority_count * 0.1
 					queue_priority_count -= queue_node_priority
 					queue_priority_count += queue_node.queued_priority
@@ -467,7 +468,7 @@ var/global/datum/controller/master/Master = new
 				current_tick_budget = queue_priority_count_bg
 				bg_calc = TRUE
 
-			tick_remaining = tick_limit_default - world.tick_usage
+			tick_remaining = TICK_LIMIT_RUNNING - TICK_USAGE
 
 			if (current_tick_budget > 0 && queue_node_priority > 0)
 				tick_precentage = tick_remaining / (current_tick_budget / queue_node_priority)
@@ -476,7 +477,7 @@ var/global/datum/controller/master/Master = new
 
 			tick_precentage = max(tick_precentage*0.5, tick_precentage-queue_node.tick_overrun)
 
-			current_ticklimit = round(world.tick_usage + tick_precentage)
+			current_ticklimit = round(TICK_USAGE + tick_precentage)
 
 			if (!(queue_node_flags & SS_TICKER))
 				ran_non_ticker = TRUE
@@ -487,9 +488,9 @@ var/global/datum/controller/master/Master = new
 
 			queue_node.state = SS_RUNNING
 
-			tick_usage = world.tick_usage
+			tick_usage = TICK_USAGE
 			var/state = queue_node.ignite(queue_node_paused)
-			tick_usage = world.tick_usage - tick_usage
+			tick_usage = TICK_USAGE - tick_usage
 
 			if (state == SS_RUNNING)
 				state = SS_IDLE
@@ -513,7 +514,7 @@ var/global/datum/controller/master/Master = new
 			queue_node.tick_usage = MC_AVERAGE_FAST(queue_node.tick_usage, tick_usage)
 			total_run_times[queue_node.name] += ((tick_usage / 100) * world.tick_lag) / 10
 
-			queue_node.cost = MC_AVERAGE_FAST(queue_node.cost, tick_usage * world.tick_lag)
+			queue_node.cost = MC_AVERAGE_FAST(queue_node.cost, TICK_DELTA_TO_MS(tick_usage))
 			queue_node.paused_ticks = 0
 			queue_node.paused_tick_usage = 0
 
@@ -586,27 +587,13 @@ var/global/datum/controller/master/Master = new
 	. = 1
 
 
-/datum/controller/master/UpdateStat(time)
-	if (PreventUpdateStat(time))
-		return ..()
-	..({"\
-		Alive: [Master.processing ? "Y" : "N"] \
-		Ticks: [world.time / world.tick_lag] \
-		Cycle: [Master.iteration] \
-		Drift: [round(Master.tickdrift)] | [round(Master.tickdrift / (world.time / world.tick_lag), 0.1)]% \
-		FPS: [world.fps] \
-		CPU: [round(world.cpu, 0.1)]% \
-		Map: [round(world.map_cpu, 0.1)]% \
-		Atoms: [length(world.contents)] \
-		Server: [world.byond_version].[world.byond_build] \
-		Compiler: [DM_VERSION].[DM_BUILD] \
-		World Size: [world.maxx],[world.maxy],[world.maxz] \
-		Hub: [config.hub_visible ? "Y" : "N"] \
-		Reachable: [world.reachable ? "Y" : "N"] \
-		Address: [world.internet_address]:[world.port] \
-	"})
 
+/datum/controller/master/stat_entry()
+	if(!statclick)
+		statclick = new/obj/effect/statclick/debug(null, "Initializing...", src)
 
+	stat("Byond:", "(FPS:[world.fps]) (TickCount:[world.time/world.tick_lag]) (TickDrift:[round(Master.tickdrift,1)]([round((Master.tickdrift/(world.time/world.tick_lag))*100,0.1)]%)) (Internal Tick Usage: [round(MAPTICK_LAST_INTERNAL_TICK_USAGE,0.1)]%)")
+	stat("Master Controller:", statclick.update("(TickRate:[Master.processing]) (Iteration:[Master.iteration]) (TickLimit: [round(Master.current_ticklimit, 0.1)])"))
 /datum/controller/master/StartLoadingMap()
 	//disallow more than one map to load at once, multithreading it will just cause race conditions
 	while(map_loading)

@@ -133,7 +133,6 @@ var/list/gamemode_cache = list()
 
 	//Mob specific modifiers. NOTE: These will affect different mob types in different ways
 	var/human_delay = 0
-	var/hub_visible = 0
 	var/robot_delay = 0
 	var/monkey_delay = 0
 	var/alien_delay = 0
