@@ -1,5 +1,9 @@
 #define PUBLIC_GAME_MODE SSticker.master_mode
 
+#define MIN_FLAG_INDEX 1
+#define MAX_FLAG_INDEX 24
+#define RFLAG(BIT) SHIFTL(1, (BIT-1))
+
 #define Clamp(value, low, high) (value <= low ? low : (value >= high ? high : value))
 
 #define get_turf(A) get_step(A,0)

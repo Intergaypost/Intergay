@@ -1,5 +1,23 @@
 GLOBAL_LIST_INIT(bitflags, list(1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768))
 
+/proc/get_flag_index_to_flag_list()
+	var/static/list/index_to_flag
+	if(!index_to_flag)
+		index_to_flag = new /list(MAX_FLAG_INDEX)
+		for(var/i in 1 to MAX_FLAG_INDEX)
+			index_to_flag[i] = RFLAG(i)
+	return index_to_flag
+
+#if DM_VERSION >= 517
+/proc/get_flag_to_index_list()
+	var/static/list/flag_to_index
+	if(!flag_to_index)
+		flag_to_index = new(MAX_FLAG_INDEX)
+		for(var/i in 1 to MAX_FLAG_INDEX)
+			flag_to_index[RFLAG(i)] = i
+	return flag_to_index
+#endif
+
 #define CLOSET_HAS_LOCK  1
 #define CLOSET_CAN_BE_WELDED 2
 
