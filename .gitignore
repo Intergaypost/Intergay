@@ -20,3 +20,4 @@ __pycache__
 # ignore config, but not subdirs
 sql/test_db
 .atom-build.json
+config/admins.txt
