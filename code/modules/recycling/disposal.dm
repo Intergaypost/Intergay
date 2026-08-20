@@ -40,10 +40,7 @@
 	..()
 	spawn(5)
 		trunk = locate() in src.loc
-		if(!trunk)
-			mode = 0
-			flush = 0
-		else
+		if(trunk)
 			trunk.linked = src	// link the pipe trunk to self
 
 		air_contents = new/datum/gas_mixture(PRESSURE_TANK_VOLUME)
@@ -197,6 +194,9 @@
 	if(AM == user)
 		user.visible_message("<span class='danger'>[user] climbs into [src].</span>", \
 							 "<span class='notice'>You climb into [src].</span>")
+		if(user.client)
+			user.client.perspective = EYE_PERSPECTIVE
+			user.client.eye = src
 	else
 		user.visible_message("<span class='[is_dangerous ? "danger" : "notice"]'>[user] stuffs [AM] into [src][is_dangerous ? "!" : "."]</span>", \
 							 "<span class='notice'>You stuff [AM] into [src].</span>")
@@ -376,7 +376,8 @@
 	src.updateDialog()
 
 	if(flush && air_contents.return_pressure() >= SEND_PRESSURE )	// flush can happen even without power
-		flush()
+		spawn(0)
+			flush()
 
 	if(mode != 1) //if off or ready, no need to charge
 		update_use_power(POWER_USE_IDLE)
@@ -522,6 +523,16 @@
 	// note AM since can contain mobs or objs
 	for(var/atom/movable/AM in D)
 		AM.forceMove(src)
+		if(ismob(AM))
+			var/mob/M = AM
+			if(M.client)
+				M.client.perspective = EYE_PERSPECTIVE
+				M.client.eye = src
+		if(AM.contents)
+			for(var/mob/M in AM.contents)
+				if(M.client)
+					M.client.perspective = EYE_PERSPECTIVE
+					M.client.eye = src
 		if(istype(AM, /obj/structure/bigDelivery) && !hasmob)
 			var/obj/structure/bigDelivery/T = AM
 			src.destinationTag = T.sortTag
@@ -550,6 +561,9 @@
 		if(!(count--))
 			active = 0
 		if(!active)
+			if(istype(loc, /obj/structure/disposalpipe))
+				var/obj/structure/disposalpipe/P = loc
+				P.expel(src, P.loc, dir)
 			return PROCESS_KILL
 
 		var/obj/structure/disposalpipe/last
@@ -569,6 +583,7 @@
 
 		if(!curr)
 			last.expel(src, loc, dir)
+			return PROCESS_KILL
 
 	// find the turf which should contain the next pipe
 /obj/structure/disposalholder/proc/nextloc()
@@ -1602,6 +1617,13 @@
 	// expel the contents of the holder object, then delete it
 	// called when the holder exits the outlet
 	proc/expel(var/obj/structure/disposalholder/H)
+		set waitfor = 0
+
+		if(!H)
+			return
+
+		H.active = 0
+		STOP_PROCESSING(SSdisposals, H)
 
 		flick("outlet-open", src)
 		playsound(src, 'sound/machines/warning-buzzer.ogg', 50, 0, 0)
@@ -1659,6 +1681,8 @@
 // by default does nothing, override for special behaviour
 
 /atom/movable/proc/pipe_eject(var/direction)
+	for(var/atom/movable/AM in src)
+		AM.pipe_eject(direction)
 	return
 
 // check if mob has client, if so restore client view on eject
@@ -1666,6 +1690,9 @@
 	if (src.client)
 		src.client.perspective = MOB_PERSPECTIVE
 		src.client.eye = src
+
+	for(var/atom/movable/AM in src)
+		AM.pipe_eject(direction)
 
 	return
 
