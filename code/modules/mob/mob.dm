@@ -1229,7 +1229,12 @@ proc/uh(var/S)
 	var/message = input("","me (text)") as text|null
 	SStyping.set_indicator_state(client, FALSE)
 	if(message)
-		me_verb(message)
+		message = sanitize(message)
+
+		if(use_me)
+			usr.emote("me",usr.emote_type,message)
+		else
+			usr.emote(message)
 
 /mob/verb/whisper_wrapper()
 	set name = ".Whisper"
@@ -1258,4 +1263,4 @@ proc/uh(var/S)
 
 /mob/keybind_face_direction(direction)
 	facedir(direction)
-
+

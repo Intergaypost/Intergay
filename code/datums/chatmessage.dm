@@ -104,12 +104,16 @@
 
 	if(!target.chat_color || target.chat_color_name != chat_color_name_to_use)
 		target.chat_color = colorize_string(chat_color_name_to_use)
-		target.chat_color_darkened = colorize_string(chat_color_name_to_use, 0.85, 0.85)
+		target.chat_color_darkened = colorize_string(chat_color_name_to_use, 0.5, 0.5)
 		target.chat_color_name = chat_color_name_to_use
 
 	var/tgt_color = (extra_classes.Find("italics")) ? target.chat_color_darkened : target.chat_color
+	var/isemote = (extra_classes.Find("emote")) ? "*" : ""
+	var/isbold = (extra_classes.Find("bold")) ? "font-weight: bolder;" : ""
+	var/isitalic = (extra_classes.Find("italics")) ? "font-style: italic;" : ""
+	var/issmall = (extra_classes.Find("small")) ? "font-size: small;" : ""
 
-	var/complete_text = "<span style='color: [tgt_color]; font-family: Arial, sans-serif; font-size: 7pt; text-align: center; -dm-text-outline: 1px #000000; line-height: 1.1;'><span class='center [jointext(extra_classes, " ")]'>[text]</span></span>"
+	var/complete_text = "<span style='color: [tgt_color]; font-family: Arial, sans-serif; font-size: 7pt; text-align: center; -dm-text-outline: 1px #000000; line-height: 1.1;'><span style='[isbold] [isitalic] [issmall]'>[isemote] [text]</span></span>"
 
 	var/mheight = 0
 	if(owned_by)

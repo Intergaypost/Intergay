@@ -35,6 +35,9 @@ GLOBAL_LIST_EMPTY(all_backstory_names)
 		return null
 	if(GLOB.all_backstories[naming])
 		return GLOB.all_backstories[naming]
+	for(var/datum/backstory/bs in GLOB.all_backstories)
+		if(bs.name == naming)
+			return bs
 	return null
 
 /datum/backstory/story

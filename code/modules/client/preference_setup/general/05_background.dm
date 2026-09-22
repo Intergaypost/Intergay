@@ -46,11 +46,11 @@
 	to_file(S["backstory"],pref.backstory)
 
 /datum/category_item/player_setup_item/general/background/sanitize_character()
-	if(!pref.home_system)		 pref.home_system = "Unset"
+	if(!pref.home_system)		 pref.home_system = get_backstory("Малые сектора")
 	if(!pref.citizenship) 		pref.citizenship = "None"
 	if(!pref.faction)    		pref.faction =     "None"
 	if(!pref.religion)    		pref.religion =    "Atheism"
-	if(!pref.backstory) pref.backstory = "None"
+	if(!pref.backstory) pref.backstory = get_backstory("Житель станции")
 
 	pref.nanotrasen_relation = sanitize_inlist(pref.nanotrasen_relation, COMPANY_ALIGNMENTS, initial(pref.nanotrasen_relation))
 
@@ -104,11 +104,11 @@
 		for(var/datum/backstory/story/bs in GLOB.all_backstories)
 			if(bs.name != "None")
 				choices += bs
-		var/choice = input(user, "Выбери предысторию персонажа:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.backstory) as null|anything in choices
+		var/datum/backstory/choice = input(user, "Выбери предысторию персонажа:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.backstory) as null|anything in choices
 		if(!choice || !CanUseTopic(user))
 			return TOPIC_NOACTION
 		pref.backstory = choice
-		//to_chat(usr, "<br><b><span class='government'>[pref.backstory.name]: [pref.backstory.fluff]</b><br>STATS: [pref.backstory.desc]</span>")
+		to_chat(user, "<hr><b><span class='info'>[choice]: [choice.fluff] </b></span><br><span class='notice'>STATS: [choice.desc]</span><hr>")
 		return TOPIC_REFRESH
 
 	else if(href_list["nt_relation"])
@@ -122,11 +122,11 @@
 		for(var/datum/backstory/homesystem/bs in GLOB.all_backstories)
 			if(bs.name != "None")
 				choices += bs
-		var/datum/backstory/choice = input(user, "Выбери родную систему:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.backstory) as null|anything in choices
+		var/datum/backstory/choice = input(user, "Выбери родную систему:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.home_system) as null|anything in choices
 		if(!choice || !CanUseTopic(user))
 			return TOPIC_NOACTION
 		pref.home_system = choice
-		to_chat(usr, "<br><b><span class='government'>[choice]: [choice]</b><br>STATS: [choice]</span>")
+		to_chat(user, "<hr><b><span class='info'>[choice]: [choice.fluff]</b></span><br><span class='notice'>STATS: [choice.desc]</span><hr>")
 		return TOPIC_REFRESH
 
 	/*

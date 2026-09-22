@@ -179,11 +179,6 @@
 		if(new_metadata)
 			set_underwear_metadata(underwear, gt, new_metadata)
 			return TOPIC_REFRESH_UPDATE_PREVIEW
-	else if(href_list["change_backpack"])
-		var/new_backpack = input(user, "Choose backpack style:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.backpack ? pref.backpack.name : null) as null|anything in backpacks_by_name
-		if(!isnull(new_backpack) && CanUseTopic(user))
-			pref.backpack = backpacks_by_name[new_backpack]
-			return TOPIC_REFRESH_UPDATE_PREVIEW
 	else if(href_list["backpack"] && href_list["tweak"])
 		var/backpack_name = href_list["backpack"]
 		if(!(backpack_name in backpacks_by_name))

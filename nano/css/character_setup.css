@@ -71,7 +71,6 @@ html, body {
 	vertical-align: top;
 	background: #181818;
 	border: 1px solid #333333;
-	border-radius: 4px;
 	padding: 8px 6px;
 	box-sizing: border-box;
 	overflow-y: auto;
@@ -95,7 +94,6 @@ html, body {
 	vertical-align: top;
 	background: #181818;
 	border: 1px solid #333333;
-	border-radius: 4px;
 	padding: 8px;
 	box-sizing: border-box;
 	text-align: center;
@@ -106,7 +104,6 @@ html, body {
 .charsetup-slot-box {
 	background: #252525;
 	border: 1px solid #40628a;
-	border-radius: 4px;
 	padding: 6px 4px;
 	margin-bottom: 10px;
 	text-align: center;
@@ -132,7 +129,6 @@ html, body {
 	margin: 2px 1px !important;
 	padding: 3px 6px !important;
 	font-size: 11px !important;
-	border-radius: 2px !important;
 }
 
 /* Sidebar Navigation Tabs */
@@ -164,7 +160,6 @@ html, body {
 	color: #d0d0d0 !important;
 	background: #252525 !important;
 	border: 1px solid #3d3d3d !important;
-	border-radius: 3px !important;
 	text-align: left !important;
 	box-sizing: border-box !important;
 	cursor: pointer !important;
@@ -193,7 +188,6 @@ html, body {
 .charsetup-preview-card {
 	background: #000000;
 	border: 2px solid #40628a;
-	border-radius: 4px;
 	padding: 8px 4px;
 	margin-bottom: 8px;
 }
@@ -208,7 +202,6 @@ html, body {
 .charsetup-preview-summary {
 	background: #252525;
 	border: 1px solid #3d3d3d;
-	border-radius: 4px;
 	padding: 6px 8px;
 	margin-bottom: 8px;
 	text-align: left;
@@ -229,7 +222,6 @@ html, body {
 	margin: 5px auto !important;
 	padding: 5px 8px !important;
 	text-align: center !important;
-	border-radius: 3px !important;
 	box-sizing: border-box !important;
 }
 
@@ -237,7 +229,6 @@ html, body {
 .charsetup-section {
 	background: #222222;
 	border: 1px solid #333333;
-	border-radius: 4px;
 	padding: 8px 12px;
 	margin-bottom: 10px;
 }
@@ -281,7 +272,6 @@ html, body {
 	margin: 1px 3px 1px 0 !important;
 	display: inline-block !important;
 	float: none !important;
-	border-radius: 2px !important;
 }
 
 /* Two-column layout inside content */
@@ -308,7 +298,6 @@ html, body {
 	border: 1px solid #ffffff;
 	vertical-align: middle;
 	margin-left: 4px;
-	border-radius: 2px;
 }
 
 /* Job Listing Styles */
@@ -345,7 +334,6 @@ html, body {
 	line-height: 14px !important;
 	padding: 1px 4px !important;
 	font-size: 10px !important;
-	border-radius: 2px !important;
 }
 
 .charsetup-job-btn-cell {
@@ -364,7 +352,6 @@ html, body {
 	font-weight: bold !important;
 	min-width: 50px !important;
 	text-align: center !important;
-	border-radius: 2px !important;
 }
 
 .job-priority-high {
@@ -426,7 +413,6 @@ html, body {
 	line-height: 16px !important;
 	padding: 2px 6px !important;
 	margin-left: 3px !important;
-	border-radius: 2px !important;
 }
 
 /* Backstory description card */
@@ -434,7 +420,6 @@ html, body {
 	background: #1c1c1c;
 	border: 1px solid #383838;
 	border-left: 3px solid #5dade2;
-	border-radius: 3px;
 	padding: 6px 8px;
 	margin-top: 5px;
 	font-size: 11px;
@@ -500,7 +485,6 @@ html, body {
 	background: #1f3a52 !important;
 	border: 1px solid #3b6e9b !important;
 	color: #e0f0ff !important;
-	border-radius: 3px !important;
 	text-align: center !important;
 }
 
@@ -522,7 +506,6 @@ html, body {
 	border: 1px dashed #555555 !important;
 	background: transparent !important;
 	color: #888888 !important;
-	border-radius: 3px !important;
 }
 
 .charsetup-kb-add-btn.link:hover {
@@ -544,7 +527,6 @@ html, body {
 	background: #331f1f !important;
 	border: 1px solid #663333 !important;
 	color: #ff8888 !important;
-	border-radius: 3px !important;
 }
 
 .charsetup-kb-unbound-btn.link:hover {
@@ -561,7 +543,6 @@ html, body {
 	line-height: 16px !important;
 	padding: 2px 6px !important;
 	font-size: 10px !important;
-	border-radius: 2px !important;
 }
 
 

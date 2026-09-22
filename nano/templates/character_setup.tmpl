@@ -204,35 +204,6 @@
 					</div>
 				{{/if}}
 
-				<!-- Clothing & Gear Section -->
-				<div class="charsetup-section">
-					<div class="charsetup-section-title">Underwear & Backpack</div>
-					{{if data.general.clothing && data.general.clothing.underwear}}
-						{{for data.general.clothing.underwear :uwVal:uwIndex}}
-							<div class="item">
-								<div class="itemLabel">{{:uwVal.category}}:</div>
-								<div class="itemContent">
-									{{:helper.link(uwVal.selected, null, {'item': data.general.clothing.ref, 'change_underwear': uwVal.category})}}
-									{{for uwVal.tweaks :twVal:twIndex}}
-										{{:helper.link(twVal.name, 'wrench', {'item': data.general.clothing.ref, 'underwear': uwVal.category, 'tweak': twVal.ref})}}
-									{{/for}}
-								</div>
-							</div>
-						{{/for}}
-					{{/if}}
-					{{if data.general.clothing}}
-						<div class="item">
-							<div class="itemLabel">Backpack Style:</div>
-							<div class="itemContent">
-								{{:helper.link(data.general.clothing.backpack, null, {'item': data.general.clothing.ref, 'change_backpack': 1})}}
-								{{for data.general.clothing.backpack_tweaks}}
-									{{:helper.link(value.name, 'wrench', {'item': data.general.clothing.ref, 'backpack': data.general.clothing.backpack, 'tweak': value.ref})}}
-								{{/for}}
-							</div>
-						</div>
-					{{/if}}
-				</div>
-
 				<!-- Background & Records Section -->
 				<div class="charsetup-section">
 					<div class="charsetup-section-title">Background & Records</div>

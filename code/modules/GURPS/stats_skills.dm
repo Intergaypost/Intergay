@@ -179,21 +179,21 @@ proc/conToToxinModifier(var/constitution, var/w_class)
 	if(gender == FEMALE)
 		stats[STAT_HT] -= (rand(1,2))
 
-	/*
-	var/mob/living/carbon/human/H = usr
-	if(istype(H.backstory, /datum/backstory/story))
-		var/backstory_stats = H.backstory.stats
+	var/mob/living/carbon/human/H = src
+	var/datum/backstory/story = H.backstory
+	if(istype(story))
+		var/list/backstory_stats = story.stats
 		stats[STAT_ST] += LAZYACCESS(backstory_stats, 1)
 		stats[STAT_DX] += LAZYACCESS(backstory_stats, 2)
 		stats[STAT_IQ] += LAZYACCESS(backstory_stats, 3)
 		stats[STAT_HT] += LAZYACCESS(backstory_stats, 4)
-	if(istype(H.home_system, /datum/backstory/homesystem))
-		var/home_stats = H.home_system.stats
+	var/datum/backstory/homesystem/home = H.home_system
+	if(istype(home))
+		var/list/home_stats = home.stats
 		stats[STAT_ST] += LAZYACCESS(home_stats, 1)
 		stats[STAT_DX] += LAZYACCESS(home_stats, 2)
 		stats[STAT_IQ] += LAZYACCESS(home_stats, 3)
 		stats[STAT_HT] += LAZYACCESS(home_stats, 4)
-	*/
 
 /mob/living/carbon/proc/adjustStrength(var/num)
 	stats[STAT_ST] += num
