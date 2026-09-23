@@ -9,6 +9,7 @@
 	dat = {"
 
 		<html><head>
+		<meta charset='utf-8'>
 		</head>
 
 		<body>
@@ -25,7 +26,7 @@
 	title = "Cyborgs for Dummies"
 
 	dat = {"<html>
-				<head>
+				<head><meta charset='utf-8'>
 				<style>
 				h1 {font-size: 21px; margin: 15px 0px 5px;}
 				h2 {font-size: 18px; margin: 15px 0px 5px;}
@@ -233,6 +234,7 @@
 	dat = {"
 
 		<html><head>
+		<meta charset='utf-8'>
 		</head>
 
 		<body>
@@ -253,6 +255,7 @@
 	..()
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -300,6 +303,7 @@
 	..()
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -375,6 +379,7 @@
 	..()
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -430,6 +435,7 @@
 	dat = {"
 
 		<html><head>
+		<meta charset='utf-8'>
 		</head>
 
 		<body>
@@ -449,6 +455,7 @@
 
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -500,6 +507,7 @@
 
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -575,6 +583,7 @@
 	title = "Pipes and You: Getting To Know Your Scary Tools"
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}
@@ -683,6 +692,7 @@
 	title = "EVA Gear and You: Not Spending All Day Inside"
 	dat = {"<html>
 				<head>
+				<meta charset='utf-8'>
 				<style>
 				h1 {font-size: 18px; margin: 15px 0px 5px;}
 				h2 {font-size: 15px; margin: 15px 0px 5px;}

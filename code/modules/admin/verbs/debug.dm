@@ -439,7 +439,7 @@
 
 	var/dat = H.get_medical_data()
 
-	dat += text("<BR><A href='?src=\ref[];mach_close=scanconsole'>Close</A>", usr)
+	dat += text("<BR><a href='byond://?src=\ref[];mach_close=scanconsole'>Close</A>", usr)
 	show_browser(usr, dat, "window=scanconsole;size=430x600")
 
 /client/proc/cmd_analyse_health_context(mob/living/carbon/human/H as mob in GLOB.human_mob_list)
@@ -485,3 +485,46 @@
 
 	images -= powernet_markers
 	QDEL_NULL_LIST(powernet_markers)
+
+/datum/admins/proc/open_mc_panel()
+	set category = "Debug"
+	set name = "MC Panel"
+	set desc = "Open the Master Controller panel."
+
+	if(!check_rights(R_DEBUG))
+		return
+
+	var/html = "<html><head><title>MC Panel</title></head><body>"
+	html += "<h2>Master Controller</h2>"
+	html += "<b>CPU:</b> [world.cpu]<br>"
+	html += "<b>Instances:</b> [world.contents.len]<br><br>"
+
+	if(Master)
+		html += "<b>Master Controller:</b> <a href='byond://?src=\ref[src];debug_mc=\ref[Master]'>TickRate:[Master.processing] | Iteration:[Master.iteration] | TickLimit: [round(Master.current_ticklimit, 0.1)]</a><br>"
+	else
+		html += "<b>Master Controller:</b> ERROR<br>"
+
+	if(Failsafe)
+		html += "<b>Failsafe Controller:</b> <a href='byond://?src=\ref[src];debug_mc=\ref[Failsafe]'>Defcon: [Failsafe.defcon_pretty()] | Interval: [Failsafe.processing_interval] | Iteration: [Failsafe.master_iteration]</a><br>"
+	else if (Master && Master.initializing)
+		html += "<b>Failsafe Controller:</b> Waiting for MC<br>"
+	else
+		html += "<b>Failsafe Controller:</b> ERROR<br>"
+
+	if(Master)
+		html += "<br><table border='1' cellspacing='0' cellpadding='3'>"
+		html += "<tr><th>Subsystem</th><th>Init</th><th>Run Time/Cost</th></tr>"
+		for(var/datum/controller/subsystem/SS in Master.subsystems)
+			var/init_stat = SS.stat_entry_init()
+			var/run_stat = SS.stat_entry_run()
+			html += "<tr>"
+			html += "<td><a href='byond://?src=\ref[src];debug_mc=\ref[SS]'>[SS.name]</a></td>"
+			html += "<td>[init_stat]</td>"
+			html += "<td>[run_stat]</td>"
+			html += "</tr>"
+		html += "</table>"
+
+	html += "<br><a href='byond://?src=\ref[src];mc_panel=1'>Refresh</a>"
+	html += "</body></html>"
+
+	usr << browse(html, "window=mc_panel;size=600x700")

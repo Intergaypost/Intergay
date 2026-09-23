@@ -175,8 +175,9 @@
 	if(dormant)
 		GLOB.moved_event.unregister(src, src, /obj/effect/spider/spiderling/proc/disturbed)
 	STOP_PROCESSING(SSobj, src)
-	walk(src, 0) // Because we might have called walk_to, we must stop the walk loop or BYOND keeps an internal reference to us forever.
+	SSmove_manager.stop_looping(src)
 	. = ..()
+
 
 /obj/effect/spider/spiderling/attackby(var/obj/item/weapon/W, var/mob/user)
 	..()
@@ -259,7 +260,7 @@
 			var/list/nearby = trange(5, src) - loc
 			if(nearby.len)
 				var/target_atom = pick(nearby)
-				walk_to(src, target_atom, 5)
+				SSmove_manager.move_to(src, target_atom, 0, delay = 5, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
 				if(prob(25))
 					src.visible_message("<span class='notice'>\The [src] skitters[pick(" away"," around","")].</span>")
 					// Reduces the risk of spiderlings hanging out at the extreme ranges of the shift range.
@@ -275,8 +276,9 @@
 			for(var/obj/machinery/atmospherics/unary/vent_pump/v in view(7,src))
 				if(!v.welded)
 					entry_vent = v
-					walk_to(src, entry_vent, 5)
+					SSmove_manager.move_to(src, entry_vent, 0, delay = 5, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
 					break
+
 
 		if(amount_grown >= 100)
 			new greater_form(src.loc, src)

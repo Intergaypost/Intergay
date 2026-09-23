@@ -32,20 +32,18 @@
 	if(!.)
 		return
 
-		if((FAT in src.mutations) && src.m_intent == "run" && src.bodytemperature <= 360)
-			src.bodytemperature += 2
-
-		var/nut_removed = DEFAULT_HUNGER_FACTOR/10
-		var/hyd_removed = DEFAULT_THIRST_FACTOR/10
-		if (src.m_intent == "run")
-			nut_removed *= 2
-			hyd_removed *= 2
-		adjust_nutrition(-nut_removed)
-		adjust_thirst(-hyd_removed)
-
-		// Moving around increases germ_level faster
-		if(germ_level < GERM_LEVEL_MOVE_CAP && prob(8))
-			germ_level++
+	if((FAT in src.mutations) && src.m_intent == "run" && src.bodytemperature <= 360)
+		src.bodytemperature += 2
+	var/nut_removed = DEFAULT_HUNGER_FACTOR/10
+	var/hyd_removed = DEFAULT_THIRST_FACTOR/10
+	if (src.m_intent == "run")
+		nut_removed *= 2
+		hyd_removed *= 2
+	adjust_nutrition(-nut_removed)
+	adjust_thirst(-hyd_removed)
+	// Moving around increases germ_level faster
+	if(germ_level < GERM_LEVEL_MOVE_CAP && prob(8))
+		germ_level++
 
 /mob/living/carbon/relaymove(var/mob/living/user, direction)
 	if((user in contents) && istype(user))
@@ -334,9 +332,7 @@
 	src.visible_message("<span class='warning'>[src] has thrown [item].</span>", range = min(itemsize*2,world.view))
 	playsound(src, 'sound/effects/throw.ogg', 50, 1)
 
-	if(!src.lastarea)
-		src.lastarea = get_area(src.loc)
-	if((istype(src.loc, /turf/space)) || (src.lastarea.has_gravity == 0))
+	if(!check_solid_ground())
 		src.inertia_dir = get_dir(target, src)
 		step(src, inertia_dir)
 
@@ -434,14 +430,14 @@
 	var/dat = {"
 	<B><HR><FONT size=3>[name]</FONT></B>
 	<BR><HR>
-	<BR><B>Head(Mask):</B> <A href='?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "Nothing")]</A>
-	<BR><B>Left Hand:</B> <A href='?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "Nothing")]</A>
-	<BR><B>Right Hand:</B> <A href='?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "Nothing")]</A>
-	<BR><B>Back:</B> <A href='?src=\ref[src];item=back'>[(back ? back : "Nothing")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/weapon/tank) && !( internal )) ? text(" <A href='?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
-	<BR>[(internal ? text("<A href='?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
-	<BR><A href='?src=\ref[src];item=pockets'>Empty Pockets</A>
-	<BR><A href='?src=\ref[user];refresh=1'>Refresh</A>
-	<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>
+	<BR><B>Head(Mask):</B> <a href='byond://?src=\ref[src];item=mask'>[(wear_mask ? wear_mask : "Nothing")]</A>
+	<BR><B>Left Hand:</B> <a href='byond://?src=\ref[src];item=l_hand'>[(l_hand ? l_hand  : "Nothing")]</A>
+	<BR><B>Right Hand:</B> <a href='byond://?src=\ref[src];item=r_hand'>[(r_hand ? r_hand : "Nothing")]</A>
+	<BR><B>Back:</B> <a href='byond://?src=\ref[src];item=back'>[(back ? back : "Nothing")]</A> [((istype(wear_mask, /obj/item/clothing/mask) && istype(back, /obj/item/weapon/tank) && !( internal )) ? text(" <a href='byond://?src=\ref[];item=internal'>Set Internal</A>", src) : "")]
+	<BR>[(internal ? text("<a href='byond://?src=\ref[src];item=internal'>Remove Internal</A>") : "")]
+	<BR><a href='byond://?src=\ref[src];item=pockets'>Empty Pockets</A>
+	<BR><a href='byond://?src=\ref[user];refresh=1'>Refresh</A>
+	<BR><a href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>
 	<BR>"}
 	user << browse(dat, text("window=mob[];size=325x500", name))
 	onclose(user, "mob[name]")

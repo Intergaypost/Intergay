@@ -72,6 +72,7 @@
 			on_hear_say("<span class='game say'><span class='name'>[speaker_name]</span>[alt_name] [track][language.format_message(message, verb)]</span>")
 		else
 			on_hear_say("<span class='game say'><span class='name'>[speaker_name]</span>[alt_name] [track][verb], <span class='message'><span class='body'>\"[message]\"</span></span></span>")
+		create_chat_message(speaker, language, message, (italics ? list("italics") : list()))
 		if (speech_sound && (get_dist(speaker, src) <= world.view && src.z == speaker.z))
 			var/turf/source = speaker? get_turf(speaker) : get_turf(src)
 			src.playsound_local(source, speech_sound, sound_vol, 1)
@@ -260,6 +261,7 @@
 		for(var/mob/living/M in src.contents)
 			M.show_message(message)
 	src.show_message(message)
+	create_chat_message(speaker, language, message, runechat_flags = EMOTE_MESSAGE)
 
 /mob/proc/hear_sleep(var/message)
 	var/heard = ""

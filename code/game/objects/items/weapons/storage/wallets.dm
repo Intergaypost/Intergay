@@ -57,8 +57,8 @@
 			name = initial(name)
 			update_icon()
 
-/obj/item/weapon/storage/wallet/handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
-	. = ..(W, prevent_warning)
+/obj/item/weapon/storage/wallet/handle_item_insertion(var/obj/item/W, var/store_x = -1, var/store_y = -1, var/prevent_warning = 0, var/NoUpdate = 0)
+	. = ..()
 	if(.)
 		if(!front_id && istype(W, /obj/item/weapon/card/id))
 			front_id = W
@@ -69,7 +69,7 @@
 	overlays.Cut()
 	if(front_id)
 		var/tiny_state = "id-generic"
-		if("id-"+front_id.icon_state in icon_states(icon))
+		if("id-"+(front_id.icon_state in icon_states(icon)))
 			tiny_state = "id-"+front_id.icon_state
 		var/image/tiny_image = new/image(icon, icon_state = tiny_state)
 		tiny_image.appearance_flags = RESET_COLOR

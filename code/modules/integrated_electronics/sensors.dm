@@ -38,8 +38,9 @@
 
 	var/datum/integrated_io/range = inputs[2]
 	if(islist(proximity_trigger))
-		var/proxy_type = proximity_trigger[1]
-		var/proxy_flags = proximity_trigger[proxy_type]
+		var/list/pt_list = proximity_trigger
+		var/proxy_type = pt_list[1]
+		var/proxy_flags = pt_list[proxy_type]
 		proximity_trigger = new proxy_type(src, /obj/item/integrated_circuit/sensor/proximity/proc/on_turf_entered, /obj/item/integrated_circuit/sensor/proximity/proc/on_turfs_changed, range.data, proxy_flags)
 	if(ispath(proximity_trigger))
 		proximity_trigger = new proximity_trigger(src, /obj/item/integrated_circuit/sensor/proximity/proc/on_turf_entered, /obj/item/integrated_circuit/sensor/proximity/proc/on_turfs_changed, range.data)

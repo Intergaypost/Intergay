@@ -45,13 +45,13 @@ var/global/photo_count = 0
 /obj/item/weapon/photo/update_icon()
 	overlays.Cut()
 	var/scale = 8/(photo_size*32)
-	var/image/small_img = image(img.icon)
+	var/image/small_img = image(img)
 	small_img.transform *= scale
 	small_img.pixel_x = -32*(photo_size-1)/2 - 3
 	small_img.pixel_y = -32*(photo_size-1)/2
 	overlays |= small_img
 
-	tiny = image(img.icon)
+	tiny = image(img)
 	tiny.transform *= 0.5*scale
 	tiny.underlays += image('icons/obj/bureaucracy.dmi',"photo")
 	tiny.pixel_x = -32*(photo_size-1)/2 - 3
@@ -59,7 +59,7 @@ var/global/photo_count = 0
 
 /obj/item/weapon/photo/attackby(obj/item/weapon/P as obj, mob/user as mob)
 	if(istype(P, /obj/item/weapon/pen))
-		var/txt = sanitize(input_utf8(user, "What would you like to write on the back?", "Photo Writing", null), 128)
+		var/txt = sanitize(input(user, "What would you like to write on the back?", "Photo Writing", null) as text|null, 128)
 		if(loc == user && user.stat == 0)
 			scribble = txt
 	..()
@@ -73,7 +73,7 @@ var/global/photo_count = 0
 
 /obj/item/weapon/photo/proc/show(mob/user as mob)
 	user << browse_rsc(img, "tmp_photo_[id].png")
-	user << browse("<html><head><title>[name]</title></head>" \
+	user << browse("<html><head><meta charset='utf-8'><title>[name]</title></head>" \
 		+ "<body style='overflow:hidden;margin:0;text-align:center'>" \
 		+ "<img src='tmp_photo_[id].png' width='[64*photo_size]' style='-ms-interpolation-mode:nearest-neighbor' />" \
 		+ "[scribble ? "<br>Written on the back:<br><i>[scribble]</i>" : ""]"\

@@ -41,9 +41,10 @@
 /mob/living/simple_animal/hostile/commanded/nanomachine/proc/move_to_heal()
 	if(!target_mob)
 		return 0
-	walk_to(src,target_mob,1,move_to_delay)
+	SSmove_manager.move_to(src, target_mob, 1, move_to_delay)
 	if(Adjacent(target_mob))
 		stance = COMMANDED_HEALING
+
 
 /mob/living/simple_animal/hostile/commanded/nanomachine/proc/heal()
 	if(health <= 3 && !emergency_protocols) //dont die doing this.

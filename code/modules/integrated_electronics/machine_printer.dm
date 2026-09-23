@@ -62,10 +62,10 @@ var/list/integrated_circuit_blacklist = list(/obj/item/integrated_circuit, /obj/
 	user.set_machine(src)
 	var/dat = "<center><b>Integrated Circuit Printer<br>\
 				Metal: [metal]/[maxMetal]</b><br>\
-				<a href='?src=\ref[src];mode=Circuits'>Circuits</a>	<a href='?src=\ref[src];mode=Assemblies'>Assemblies</a></center><br><br>"
+				<a href='byond://?src=\ref[src];mode=Circuits'>Circuits</a>	<a href='byond://?src=\ref[src];mode=Assemblies'>Assemblies</a></center><br><br>"
 	for(var/type in recipe_list[mode])
 		var/obj/O = type
-		dat += "<A href='?src=\ref[src];build=[type]'>[initial(O.name)]</A>: [initial(O.desc)]<br>"
+		dat += "<a href='byond://?src=\ref[src];build=[type]'>[initial(O.name)]</A>: [initial(O.desc)]<br>"
 
 	show_browser(user,dat,"window=integrated")
 

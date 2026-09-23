@@ -437,7 +437,7 @@ a:visited {
 .alium					{color: #00ff00;}
 .cult					{color: #aa1c1c;}
 .wakeup					{color: #8ebf92; text-shadow: 0 0 2px #8ebf92;}
-.tetracorp				{color: #6a0080; text-shadow: 0 0 4px #6a0080;}
+.government				{color: #6a0080; text-shadow: 0 0 4px #6a0080;}
 .manifest				{color: #505050; text-shadow: 0 0 4px #505050;}
 .manifesttext			{color: #008a37; text-shadow: 0 0 4px #008a37;}
 .hygiene				{color: #8f9779; text-shadow: 0 0 1px #8f9779;}
@@ -472,7 +472,7 @@ a:visited {
     border: 1px ridge #151319;
     padding: 10px;
     font-size: 15px;
-    vertical-align: middle;   
+    vertical-align: middle;
     background: rgba(40, 40, 40, 0.5);
     *zoom: 1;
     *display: inline;

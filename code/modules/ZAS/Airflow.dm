@@ -32,12 +32,15 @@ mob/living/carbon/human/airflow_stun()
 	..()
 
 atom/movable/proc/check_airflow_movable(n)
+	if(SEND_SIGNAL(src, COMSIG_ATOM_PRE_PRESSURE_PUSH) & COMSIG_ATOM_BLOCKS_PRESSURE)
+		return 0
 
 	if(anchored && !ismob(src)) return 0
 
 	if(!isobj(src) && n < vsc.airflow_dense_pressure) return 0
 
 	return 1
+
 
 mob/check_airflow_movable(n)
 	if(n < vsc.airflow_heavy_pressure)

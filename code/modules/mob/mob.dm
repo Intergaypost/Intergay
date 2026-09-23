@@ -2,6 +2,7 @@
 	STOP_PROCESSING(SSmobs, src)
 	GLOB.dead_mob_list_ -= src
 	GLOB.living_mob_list_ -= src
+	QDEL_NULL(typing_indicator)
 	unset_machine()
 	QDEL_NULL(hud_used)
 	if(istype(ability_master))
@@ -90,10 +91,12 @@
 		var/mob/M = m
 		if(self_message && M == src)
 			M.show_message(self_message, VISIBLE_MESSAGE, blind_message, AUDIBLE_MESSAGE)
+			M.create_chat_message(src, null, self_message, runechat_flags = EMOTE_MESSAGE)
 			continue
 
 		if(M.see_invisible >= invisibility || narrate)
 			M.show_message(message, VISIBLE_MESSAGE, blind_message, AUDIBLE_MESSAGE)
+			M.create_chat_message(src, null, message, runechat_flags = EMOTE_MESSAGE)
 			continue
 
 		if(blind_message)
@@ -141,8 +144,14 @@
 			return M
 	return 0
 
+
+/mob/set_glide_size(target = 8)
+	..()
+	if(pulling && ismovable(pulling))
+		pulling.set_glide_size(target)
+
 /mob/proc/movement_delay()
-	. = 0
+	. = -0.5
 	if(istype(loc, /turf))
 		var/turf/T = loc
 		. += T.movement_delay
@@ -159,11 +168,12 @@
 /mob/proc/Life()
 //	if(organStructure)
 //		organStructure.ProcessOrgans()
-	return
+	return 1
 
 #define UNBUCKLED 0
 #define PARTIALLY_BUCKLED 1
 #define FULLY_BUCKLED 2
+
 /mob/proc/buckled()
 	// Preliminary work for a future buckle rewrite,
 	// where one might be fully restrained (like an elecrical chair), or merely secured (shuttle chair, keeping you safe but not otherwise restrained from acting)
@@ -423,7 +433,7 @@
 		src << browse(null, t1)
 
 	if(href_list["flavor_more"])
-		usr << browse(text("<HTML><HEAD><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", name, cp1251_to_utf8(replacetext(flavor_text, "\n", "<BR>"))), text("window=[];size=500x200", name))
+		usr << browse(text("<HTML><HEAD><meta charset='utf-8'><TITLE>[]</TITLE></HEAD><BODY><TT>[]</TT></BODY></HTML>", name, replacetext(flavor_text, "\n", "<BR>")), text("window=[];size=500x200", name))
 		onclose(usr, "[name]")
 	if(href_list["flavor_change"])
 		update_flavor_text()
@@ -1042,7 +1052,9 @@ mob/proc/yank_out_object()
 
 /mob/proc/set_stat(var/new_stat)
 	. = stat != new_stat
-	stat = new_stat
+	if(.)
+		stat = new_stat
+		SStyping.set_indicator_state(client, FALSE)
 
 /mob/verb/northfaceperm()
 	set hidden = 1
@@ -1187,3 +1199,68 @@ proc/uh(var/S)
 
 /mob/proc/return_pointer(var/client/client)
 	usr.client.mouse_pointer_icon = 'icons/misc/pointer_cursor.dmi'
+
+// Mob procs relating to the typing indicator subsystem.
+/mob/Logout()
+	if(typing_indicator)
+		vis_contents -= typing_indicator
+	is_typing = FALSE
+	..()
+
+/mob/proc/is_cloaked()
+	return FALSE
+
+/mob/proc/get_speech_bubble_state_modifier()
+	return
+
+/mob/verb/say_wrapper()
+	set name = ".Say"
+	set hidden = TRUE
+	SStyping.set_indicator_state(client, TRUE)
+	var/message = input("","say (text)") as text|null
+	SStyping.set_indicator_state(client, FALSE)
+	if(message)
+		say_verb(message)
+
+/mob/verb/me_wrapper()
+	set name = ".Me"
+	set hidden = TRUE
+	SStyping.set_indicator_state(client, TRUE)
+	var/message = input("","me (text)") as text|null
+	SStyping.set_indicator_state(client, FALSE)
+	if(message)
+		message = sanitize(message)
+
+		if(use_me)
+			usr.emote("me",usr.emote_type,message)
+		else
+			usr.emote(message)
+
+/mob/verb/whisper_wrapper()
+	set name = ".Whisper"
+	set hidden = TRUE
+	if(config.show_typing_indicator_for_whispers)
+		SStyping.set_indicator_state(client, TRUE)
+	var/message = input("","whisper (text)") as text|null
+	if(config.show_typing_indicator_for_whispers)
+		SStyping.set_indicator_state(client, FALSE)
+	if(message)
+		whisper(message)
+
+/// Update the mouse pointer of the attached client in this mob.
+/mob/proc/update_mouse_pointer()
+	if(!client)
+		return
+
+	client.mouse_pointer_icon = initial(client.mouse_pointer_icon)
+
+	if(client.get_preference_value(/datum/client_preference/examine_cursor) == GLOB.PREF_NO)
+		return
+
+	if(examine_cursor_icon && client.keys_held["Shift"])
+		client.mouse_pointer_icon = examine_cursor_icon
+
+
+/mob/keybind_face_direction(direction)
+	facedir(direction)
+

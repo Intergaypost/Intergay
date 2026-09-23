@@ -1,9 +1,5 @@
 var/global/datum/controller/occupations/job_master
 
-#define GET_RANDOM_JOB 0
-#define BE_ASSISTANT 1
-#define RETURN_TO_LOBBY 2
-
 /datum/controller/occupations
 		//List of all jobs
 	var/list/occupations = list()
@@ -472,7 +468,9 @@ var/global/datum/controller/occupations/job_master
 				H.forceMove(S.loc)
 			else
 				var/datum/spawnpoint/spawnpoint = get_spawnpoint_for(H.client, rank)
-				H.forceMove(pick(spawnpoint.turfs))
+				var/turf/T = spawnpoint.get_spawn_turf(rank)
+				if(T)
+					H.forceMove(T)
 				spawnpoint.after_join(H)
 
 			// Moving wheelchair if they have one
@@ -527,7 +525,7 @@ var/global/datum/controller/occupations/job_master
 						spawn(50)
 							to_chat(H, "<B>.......<B> ")
 							spawn(50)
-								to_chat(H, "<B><span class = 'wakeup'>I should gather the officers for a meeting.</span> <span class = 'tetracorp'>TetraCorp</span><span class = 'wakeup'>'s bound to have sent us some new job to do...<B></span>")
+								to_chat(H, "<B><span class = 'wakeup'>I should gather the officers for a meeting.</span> <span class = 'government'>New Order League</span><span class = 'wakeup'>'s bound to have sent us some new job to do...<B></span>")
 		else
 			spawn(20)
 				to_chat(H, "<B><span class = 'wakeup'>Wh-where am I?</B></span>")
@@ -542,7 +540,7 @@ var/global/datum/controller/occupations/job_master
 								spawn(20)
 									to_chat(H, "<B>.......<B> ")
 									spawn(60)
-										to_chat(H, "<B><span class = 'wakeup'>Right, right...I'm [job.total_positions == 1 ? "the" : "a"] [alt_title ? alt_title : rank] working for </span><span class = 'tetracorp'>TetraCorp</span><span class = 'wakeup'> on one of their ''state of the art'' research outposts.</span>")
+										to_chat(H, "<B><span class = 'wakeup'>Right, right...I'm [job.total_positions == 1 ? "the" : "a"] [alt_title ? alt_title : rank] working for </span><span class = 'government'>New Order League</span><span class = 'wakeup'> on one of their ''state of the art'' research outposts.</span>")
 										spawn(20)
 											to_chat(H, "<B>.......<B>")
 											spawn(100)
@@ -606,7 +604,8 @@ var/global/datum/controller/occupations/job_master
 		if(H.religion)//In case they somehow don't have one.
 			H.mind.religion = H.religion
 			if(H.religion_is_legal())
-				GLOB.all_religions[LEGAL_RELIGION].followers += H.name // I don't think I want to save copies of the entire entity.
+				var/datum/religion/leg_rel = GLOB.all_religions[LEGAL_RELIGION]
+				leg_rel.followers += H.name // I don't think I want to save copies of the entire entity.
 				if(prob(95) || rank == "Supreme Arbiter")//Only a 5% chance to not remember the prayer, but supreme arbiter never forgets
 					H.mind.prayer = accepted_prayer
 					H.verbs += /mob/living/proc/recite_prayer
@@ -620,17 +619,19 @@ var/global/datum/controller/occupations/job_master
 				H.religion = pick(GLOB.all_religions - ILLEGAL_RELIGION - LEGAL_RELIGION)
 				H.verbs += /mob/living/proc/make_shrine
 				H.verbs += /mob/living/proc/praise_god
-				var/obj/item/I = GLOB.all_religions[H.religion].holy_item.type
-				I = new I()
+				var/datum/religion/rel = GLOB.all_religions[H.religion]
+				var/holy_item_type = rel.holy_item
+				var/obj/item/I = new holy_item_type()
 				H.equip_to_storage(I)
-				GLOB.all_religions[H.religion].followers += H.mind.name
+				rel.followers += H.mind.name
 				if(prob(5))
 					H.mind.prayer = accepted_prayer
 					to_chat(H, "<span class='notice'>You can't believe your luck, you've managed to pick up on the selected prayer for today. It's: <b>[H.mind.prayer]</b> Remember this prayer, and Gods save you from the Arbiters.\n</span>")
 				var/list/pickable_spells = list()
 				for(var/S in GLOB.all_spells)
-					if(GLOB.all_spells[S].old_god == H.religion)
-						pickable_spells += GLOB.all_spells[S]
+					var/datum/old_god_spell/ogs = GLOB.all_spells[S]
+					if(ogs.old_god == H.religion)
+						pickable_spells += ogs
 				var/datum/old_god_spell/new_spell = pick(pickable_spells)
 				H.mind.store_memory("[new_spell.name] Incantation: \"[new_spell.phrase]\"")
 
@@ -706,11 +707,11 @@ var/global/datum/controller/occupations/job_master
 
 	proc/SetCombatMusic(var/mob/living/carbon/human/H, var/rank)
 		switch(rank)
-			if("Captain" || "Executive Officer")
+			if("Captain", "Executive Officer")
 				H.combat_music = GLOB.command_combat_music
-			if("Major" || "Enforcer")
+			if("Major", "Enforcer")
 				H.combat_music = GLOB.security_combat_music
-			if("Supreme Arbiter" || "Arbiter")
+			if("Supreme Arbiter", "Arbiter")
 				H.combat_music = GLOB.religion_combat_music
 			if("Jester")
 				H.combat_music = GLOB.jester_combat_music

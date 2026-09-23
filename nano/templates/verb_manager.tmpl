@@ -1,0 +1,453 @@
+<style>
+	/* SCADA Theme Overrides for Verb Manager */
+	body {
+		background: #181b20 !important;
+		color: #cbd5e1 !important;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif !important;
+		font-size: 12px !important;
+		line-height: 1.5 !important;
+	}
+	#uiWrapper, .uiWrapper, #uiContent, .uiContent {
+		background: #181b20 !important;
+		color: #cbd5e1 !important;
+	}
+	#uiTitleWrapper {
+		background: #20252e !important;
+		border-bottom: 2px solid #334155 !important;
+	}
+	#uiTitleText {
+		color: #93c5fd !important;
+		font-family: inherit !important;
+		font-weight: 600 !important;
+		letter-spacing: 0.5px !important;
+	}
+	hr {
+		background: #334155 !important;
+		border: 0 !important;
+		height: 1px !important;
+		margin: 10px 0 !important;
+	}
+
+	/* Top Navigation & Subnav */
+	.scada-nav {
+		display: flex;
+		gap: 6px;
+		background: #20252e;
+		padding: 6px 8px;
+		border-radius: 4px;
+		border: 1px solid #334155;
+		margin-bottom: 10px;
+	}
+	.scada-panel {
+		background: #20252e;
+		border: 1px solid #334155;
+		border-radius: 4px;
+		padding: 10px 12px;
+		margin-bottom: 10px;
+	}
+	.scada-title {
+		font-size: 13px;
+		font-weight: 600;
+		color: #93c5fd;
+		margin-bottom: 6px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+
+	/* Links & Buttons */
+	.link, .linkOn, .selected, .disabled, .yellowButton, .redButton, a.white {
+		float: none !important;
+		display: inline-block !important;
+		font-family: inherit !important;
+		font-size: 11px !important;
+		font-weight: 500 !important;
+		color: #e2e8f0 !important;
+		background: #2b3240 !important;
+		border: 1px solid #475569 !important;
+		border-radius: 3px !important;
+		padding: 4px 10px !important;
+		margin: 2px !important;
+		height: auto !important;
+		text-align: center !important;
+		box-shadow: none !important;
+		text-decoration: none !important;
+		transition: background 0.15s, border-color 0.15s !important;
+	}
+	.link:hover, a.white:hover {
+		background: #3b4557 !important;
+		border-color: #64748b !important;
+		color: #ffffff !important;
+	}
+	.selected, .linkOn, a.selected, a.linkOn {
+		background: #0284c7 !important;
+		border-color: #38bdf8 !important;
+		color: #ffffff !important;
+		font-weight: 600 !important;
+	}
+	.redButton {
+		background: #991b1b !important;
+		border-color: #ef4444 !important;
+		color: #ffffff !important;
+	}
+	.redButton:hover {
+		background: #b91c1c !important;
+	}
+	.disabled, .linkOff {
+		background: #1e293b !important;
+		border-color: #334155 !important;
+		color: #64748b !important;
+		cursor: not-allowed !important;
+	}
+
+	/* SCADA Tables */
+	table {
+		width: 100% !important;
+		border-collapse: collapse !important;
+		margin-top: 6px !important;
+		background: #1e232b !important;
+		border: 1px solid #334155 !important;
+		border-radius: 4px !important;
+	}
+	th {
+		background: #252b36 !important;
+		color: #93c5fd !important;
+		font-weight: 600 !important;
+		text-align: left !important;
+		padding: 7px 10px !important;
+		border-bottom: 2px solid #334155 !important;
+		border-right: 1px solid #334155 !important;
+		font-size: 11px !important;
+		text-transform: uppercase !important;
+		letter-spacing: 0.5px !important;
+	}
+	td {
+		padding: 6px 10px !important;
+		border-bottom: 1px solid #2d3748 !important;
+		border-right: 1px solid #2d3748 !important;
+		color: #cbd5e1 !important;
+		font-size: 12px !important;
+		vertical-align: middle !important;
+	}
+	tr:nth-child(even) td {
+		background: #222832 !important;
+	}
+	tr:hover td {
+		background: #2a3240 !important;
+	}
+
+	/* Badges & Status Indicators */
+	.scada-badge {
+		display: inline-block;
+		padding: 2px 6px;
+		border-radius: 3px;
+		font-size: 10px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+	}
+	.badge-cat { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
+	.badge-idle { background: #1e293b; color: #94a3b8; border: 1px solid #475569; }
+	.badge-running { background: #0369a1; color: #e0f2fe; border: 1px solid #38bdf8; }
+	.badge-queued { background: #854d0e; color: #fef08a; border: 1px solid #eab308; }
+	.badge-paused { background: #7c2d12; color: #fed7aa; border: 1px solid #f97316; }
+
+	.status-good { color: #4ade80 !important; font-weight: 600; }
+	.status-warn { color: #fbbf24 !important; font-weight: 600; }
+	.status-bad { color: #f87171 !important; font-weight: 600; }
+
+	/* Metrics Cards Grid */
+	.metrics-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 8px;
+		margin-bottom: 10px;
+	}
+	.metric-card {
+		background: #20252e;
+		border: 1px solid #334155;
+		border-radius: 4px;
+		padding: 8px 12px;
+	}
+	.metric-label {
+		font-size: 10px;
+		text-transform: uppercase;
+		color: #94a3b8;
+		letter-spacing: 0.5px;
+		margin-bottom: 2px;
+	}
+	.metric-val {
+		font-size: 14px;
+		font-weight: 600;
+		color: #f1f5f9;
+	}
+
+	/* Progress bar adjustments for SCADA */
+	.displayBar {
+		background-color: #1e293b !important;
+		border: 1px solid #475569 !important;
+	}
+	.displayBarFill {
+		background-color: #0284c7 !important;
+	}
+	.displayBarFill.good {
+		background-color: #16a34a !important;
+	}
+	.displayBarFill.average {
+		background-color: #d97706 !important;
+	}
+	.displayBarFill.bad {
+		background-color: #dc2626 !important;
+	}
+	.statusValue {
+		color: #f1f5f9 !important;
+		font-weight: 600 !important;
+	}
+</style>
+
+<!-- Main SCADA Navigation -->
+<div class="scada-nav">
+	{{:helper.link('Каталог вербов', 'gear', {'set_screen' : 1}, data.screen == 1 ? 'selected' : null)}}
+	{{:helper.link('Группы и права', 'folder', {'set_screen' : 2}, data.screen == 2 ? 'selected' : null)}}
+	{{:helper.link('Master Controller (MC)', 'calculator', {'set_screen' : 3}, data.screen == 3 ? 'selected' : null)}}
+</div>
+
+{{if data.screen == 1}}
+	<!-- SCREEN 1: VERB CATALOG -->
+	<div class="scada-panel">
+		<div class="item">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">КАТЕГОРИИ:</div>
+			<div class="itemContent">
+				{{for data.categories}}
+					{{:helper.link(value, null, {'select_category' : value}, data.selected_category == value ? 'selected' : null)}}
+				{{/for}}
+			</div>
+		</div>
+		<div class="item" style="margin-top: 6px;">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">ФИЛЬТР:</div>
+			<div class="itemContent">
+				<span style="color: #f1f5f9; font-weight: 600; margin-right: 8px;">{{:data.search_query ? data.search_query : 'Все вербы'}}</span>
+				{{:helper.link('Поиск...', 'search', {'set_search' : 1})}}
+				{{if data.search_query}}
+					{{:helper.link('Сбросить фильтр', 'close', {'clear_search' : 1})}}
+				{{/if}}
+			</div>
+		</div>
+	</div>
+
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 25%;">Верб / Команда</th>
+				<th style="width: 12%;">Категория</th>
+				<th style="width: 48%;">Описание</th>
+				<th style="width: 15%; text-align: center;">Действие</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{for data.verbs}}
+				<tr>
+					<td><b style="color: #f1f5f9;">{{:value.name}}</b></td>
+					<td><span class="scada-badge badge-cat">{{:value.cat}}</span></td>
+					<td style="color: #94a3b8;">{{:value.desc}}</td>
+					<td style="text-align: center;">{{:helper.link('Выполнить', 'play', {'run_verb' : value.cmd})}}</td>
+				</tr>
+			{{empty}}
+				<tr>
+					<td colspan="4" style="text-align: center; color: #94a3b8; padding: 14px;"><i>Вербы не найдены по заданным критериям поиска</i></td>
+				</tr>
+			{{/for}}
+		</tbody>
+	</table>
+
+{{else data.screen == 2}}
+	<!-- SCREEN 2: GROUPS & RIGHTS -->
+	<div class="metrics-grid">
+		<div class="metric-card">
+			<div class="metric-label">Администратор</div>
+			<div class="metric-val">{{:data.user_info.ckey}}</div>
+		</div>
+		<div class="metric-card">
+			<div class="metric-label">Ранг</div>
+			<div class="metric-val" style="color: #93c5fd;">{{:data.user_info.rank}}</div>
+		</div>
+		<div class="metric-card">
+			<div class="metric-label">Stealth Mode</div>
+			<div class="metric-val {{:data.user_info.stealth ? 'status-warn' : 'status-good'}}">
+				{{:data.user_info.stealth ? "Активен" : "Выключен"}}
+			</div>
+		</div>
+	</div>
+
+	<div class="scada-panel">
+		<div class="scada-title">Назначенные права доступа</div>
+		<div style="color: #cbd5e1; font-size: 11px; line-height: 1.6;">{{:data.user_info.rights}}</div>
+	</div>
+
+	<div class="scada-title" style="margin-top: 10px;">Управление группами вербов и инструментами</div>
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 32%;">Группа / Действие</th>
+				<th style="width: 48%;">Описание</th>
+				<th style="width: 20%; text-align: center;">Управление</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><b style="color: #f1f5f9;">Show All Admin Verbs</b></td>
+				<td style="color: #94a3b8;">Восстановить отображение всех разрешенных вербов</td>
+				<td style="text-align: center;">{{:helper.link('Показать все', 'circle-arrow-e', {'toggle_group' : 'show_all'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Hide Most Verbs</b></td>
+				<td style="color: #94a3b8;">Скрыть большинство вербов из контекстного меню</td>
+				<td style="text-align: center;">{{:helper.link('Скрыть большинство', 'circle-arrow-s', {'toggle_group' : 'hide_most'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Hide All Verbs</b></td>
+				<td style="color: #94a3b8;">Скрыть практически все админские вербы</td>
+				<td style="text-align: center;">{{:helper.link('Скрыть все', 'circle-arrow-n', {'toggle_group' : 'hide_all'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Debug Verbs (Extra)</b></td>
+				<td style="color: #94a3b8;">Включить или выключить расширенные инструменты маппинга</td>
+				<td style="text-align: center;">
+					{{:helper.link('Вкл', 'power', {'toggle_group' : 'debug_on'})}}
+					{{:helper.link('Выкл', 'close', {'toggle_group' : 'debug_off'}, null, 'redButton')}}
+				</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Build Mode</b></td>
+				<td style="color: #94a3b8;">Режим быстрого строительства и редактирования на карте</td>
+				<td style="text-align: center;">{{:helper.link('Toggle Build', 'wrench', {'toggle_group' : 'buildmode'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Stealth Mode</b></td>
+				<td style="color: #94a3b8;">Скрытый режим присутствия в раунде</td>
+				<td style="text-align: center;">{{:helper.link('Toggle Stealth', 'gear', {'toggle_group' : 'stealth'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Permissions Panel</b></td>
+				<td style="color: #94a3b8;">Панель управления правами и рангами игроков</td>
+				<td style="text-align: center;">{{:helper.link('Открыть', 'gear', {'run_verb' : 'Permissions-Panel'})}}</td>
+			</tr>
+			<tr>
+				<td><b style="color: #f1f5f9;">Secrets Panel</b></td>
+				<td style="color: #94a3b8;">Панель админских секретов и глобальных событий</td>
+				<td style="text-align: center;">{{:helper.link('Открыть', 'locked', {'run_verb' : 'Secrets'})}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+{{else data.screen == 3}}
+	<!-- SCREEN 3: MASTER CONTROLLER MONITOR -->
+	<div class="metrics-grid">
+		<div class="metric-card">
+			<div class="metric-label">Server FPS</div>
+			<div class="metric-val status-good">{{:data.mc_info.fps}}</div>
+		</div>
+		<div class="metric-card">
+			<div class="metric-label">Instances Count</div>
+			<div class="metric-val">{{:data.mc_info.instances}}</div>
+		</div>
+		<div class="metric-card">
+			<div class="metric-label">Tick Drift</div>
+			<div class="metric-val">{{:data.mc_info.tickdrift}}</div>
+		</div>
+		<div class="metric-card">
+			<div class="metric-label">Round Duration</div>
+			<div class="metric-val" style="color: #93c5fd;">{{:data.mc_info.round_time}}s</div>
+		</div>
+	</div>
+
+	<div class="scada-panel">
+		<div class="item">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">ЗАГРУЗКА CPU:</div>
+			<div class="itemContent">
+				{{:helper.displayBar(data.mc_info.cpu, 0, 100, data.mc_info.cpu > 80 ? 'bad' : (data.mc_info.cpu > 50 ? 'average' : 'good'))}}
+				<div class="statusValue">{{:data.mc_info.cpu}}%</div>
+			</div>
+		</div>
+		<div class="item" style="margin-top: 4px;">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">INTERNAL TICK USAGE:</div>
+			<div class="itemContent">
+				{{:helper.displayBar(data.mc_info.internal_tick, 0, 100, data.mc_info.internal_tick > 80 ? 'bad' : (data.mc_info.internal_tick > 50 ? 'average' : 'good'))}}
+				<div class="statusValue">{{:data.mc_info.internal_tick}}%</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="scada-panel">
+		<div class="item">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">MASTER CONTROLLER:</div>
+			<div class="itemContent">
+				<span style="color: #f1f5f9;">{{:data.mc_info.master_status}}</span>
+				{{if data.mc_info.master_ref}}
+					{{:helper.link('VV', 'search', {'vv_target' : data.mc_info.master_ref})}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="item" style="margin-top: 4px;">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">FAILSAFE CONTROLLER:</div>
+			<div class="itemContent">
+				<span style="color: #f1f5f9;">{{:data.mc_info.failsafe_status}}</span>
+				{{if data.mc_info.failsafe_ref}}
+					{{:helper.link('VV', 'search', {'vv_target' : data.mc_info.failsafe_ref})}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="item" style="margin-top: 6px;">
+			<div class="itemLabel" style="color: #94a3b8; font-weight: 600;">УПРАВЛЕНИЕ:</div>
+			<div class="itemContent">
+				<span style="color: #38bdf8; font-size: 11px; margin-right: 8px;">● Реальное время (2с)</span>
+				{{:helper.link('Обновить сейчас', 'refresh', {'refresh_mc' : 1})}}
+				{{:helper.link('Restart Controller', 'alert', {'run_verb' : 'Restart-Controller'}, null, 'redButton')}}
+			</div>
+		</div>
+	</div>
+
+	<div class="scada-title" style="margin-top: 10px;">Список подсистем (Subsystems)</div>
+	<table>
+		<thead>
+			<tr>
+				<th style="width: 24%;">Подсистема</th>
+				<th style="width: 12%;">Статус</th>
+				<th style="width: 22%;">Инициализация</th>
+				<th style="width: 14%;">Cost</th>
+				<th style="width: 14%;">Tick Usage</th>
+				<th style="width: 14%; text-align: center;">Действия</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{for data.subsystems}}
+				<tr>
+					<td><b style="color: #f1f5f9;">{{:value.name}}</b></td>
+					<td>
+						{{if value.state == 'RUNNING'}}
+							<span class="scada-badge badge-running">RUNNING</span>
+						{{else value.state == 'QUEUED'}}
+							<span class="scada-badge badge-queued">QUEUED</span>
+						{{else value.state == 'PAUSED'}}
+							<span class="scada-badge badge-paused">PAUSED</span>
+						{{else}}
+							<span class="scada-badge badge-idle">{{:value.state}}</span>
+						{{/if}}
+					</td>
+					<td style="color: #94a3b8;">{{:value.init}}</td>
+					<td style="color: #cbd5e1;">{{:value.cost}} ds</td>
+					<td>
+						<span class="{{:value.tick > 20 ? 'status-bad' : (value.tick > 5 ? 'status-warn' : 'status-good')}}"><b>{{:value.tick}}%</b></span>
+					</td>
+					<td style="text-align: center;">
+						{{:helper.link('VV', 'search', {'vv_target' : value.ref})}}
+						{{:helper.link('Fire', 'play', {'fire_ss' : value.ref})}}
+					</td>
+				</tr>
+			{{empty}}
+				<tr>
+					<td colspan="6" style="text-align: center; color: #94a3b8; padding: 14px;"><i>Подсистемы не инициализированы</i></td>
+				</tr>
+			{{/for}}
+		</tbody>
+	</table>
+{{/if}}

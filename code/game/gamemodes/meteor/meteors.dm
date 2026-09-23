@@ -90,9 +90,9 @@
 	var/Me = pickweight(meteortypes)
 	var/obj/effect/meteor/M = new Me(pickedstart)
 	M.dest = pickedgoal
-	spawn(0)
-		walk_towards(M, M.dest, 1)
+	M.chase_target(M.dest)
 	return
+
 
 /proc/spaceDebrisStartLoc(startSide, Z)
 	var/starty
@@ -172,14 +172,27 @@
 		qdel(src)
 
 /obj/effect/meteor/Destroy()
-	walk(src,0) //this cancels the walk_towards() proc
+	SSmove_manager.stop_looping(src)
 	return ..()
 
-/obj/effect/meteor/New()
-	..()
-	SpinAnimation()
+/obj/effect/meteor/Process_Spacemove()
+	return TRUE
+
+/obj/effect/meteor/proc/chase_target(atom/chasing, delay = 1, home = FALSE)
+	if(!isatom(chasing))
+		return
+	var/datum/move_loop/new_loop = SSmove_manager.move_towards(src, chasing, delay, home)
+	if(!new_loop)
+		return
+	RegisterSignal(new_loop, COMSIG_PARENT_QDELETING, .proc/handle_stopping)
+
+/obj/effect/meteor/proc/handle_stopping()
+	SIGNAL_HANDLER
+	if(!QDELETED(src))
+		qdel(src)
 
 /obj/effect/meteor/Bump(atom/A)
+
 	..()
 	if(A && !QDELETED(src))	// Prevents explosions and other effects when we were deleted by whatever we Bumped() - currently used by shields.
 		ram_turf(get_turf(A))

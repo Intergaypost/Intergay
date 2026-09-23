@@ -1,7 +1,6 @@
 #define EXTOOLS			(world.system_type == MS_WINDOWS ? "byond-extools.dll" : "byond-extools")
 #define EXTOOLS_SUCCESS	"SUCCESS"
 #define EXTOOLS_FAILED	"FAIL"
-#define GLOBAL_PROC		"magic BS"
 
 /*
 	Core - Provides necessary functionality for other modules.
@@ -108,7 +107,8 @@ var/next_promise_id = 0
 		P.__resolve_callback()
 
 /proc/call_wait()
-	return call_async(arglist(args)).resolve()
+	var/datum/promise/P = call_async(arglist(args))
+	return P.resolve()
 	
 /*
 	Extended Profiling - High precision in-depth performance profiling.

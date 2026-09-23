@@ -33,6 +33,19 @@ SUBSYSTEM_DEF(timer)
 	head_offset = world.time
 	bucket_resolution = world.tick_lag
 
+/datum/controller/subsystem/timer/Recover()
+	//Find the current timer sub-subsystem in global and recover its buckets etc
+	var/datum/controller/subsystem/timer/timerSS = null
+	for(var/global_var in global.vars)
+		if (istype(global.vars[global_var], src.type))
+			timerSS = global.vars[global_var]
+	if (timerSS)
+		second_queue |= timerSS.second_queue
+		hashes |= timerSS.hashes
+		timer_id_dict |= timerSS.timer_id_dict
+		bucket_list |= timerSS.bucket_list
+		clienttime_timers |= timerSS.clienttime_timers
+
 /datum/controller/subsystem/timer/stat_entry(msg)
 	..("B:[bucket_count] P:[length(second_queue)] H:[length(hashes)] C:[length(clienttime_timers)] S:[length(timer_id_dict)]")
 

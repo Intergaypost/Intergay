@@ -224,10 +224,10 @@
 					return SURGERY_FAILURE
 				C.use(3)
 				return 1
-		return SURGERY_FAILURE
+
 
 		if(!limb_can_operate)
-			return 0
+			return SURGERY_FAILURE
 
 		if(istype(C))
 			if(!C.can_use(10))

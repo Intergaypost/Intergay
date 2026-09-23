@@ -38,7 +38,7 @@
 		updatePig()
 
 		if(GAME_STATE <= RUNLEVEL_LOBBY)
-			stat("Time To Start:", "[round(SSticker.pregame_timeleft/10)][SSticker.round_progressing ? "" : " (DELAYED)"]")
+			stat("Time To Start:", "[floor(SSticker.pregame_timeleft/10)][SSticker.round_progressing ? "" : " (DELAYED)"]")
 			stat("Players: [totalPlayers]", "Players Ready: [totalPlayersReady]")
 			totalPlayers = 0
 			totalPlayersReady = 0
@@ -135,7 +135,100 @@
 		if(!check_species_allowed(S))
 			return 0
 
+		SSnano.close_user_uis(src, src, "latejoin")
 		AttemptLateSpawn(job, client.prefs.spawnpoint)
+		return
+
+	if(href_list["select_department"])
+		selected_department = href_list["select_department"]
+		ui_interact(src)
+		return
+
+	if(href_list["toggle_invalid_jobs"] || href_list["invalid_jobs"])
+		show_invalid_jobs = !show_invalid_jobs
+		ui_interact(src)
+		return
+
+	if(href_list["select_alt_title"])
+		var/datum/job/job = job_master.GetJob(href_list["select_alt_title"])
+		if(job && job.alt_titles && job.alt_titles.len)
+			var/choice = input(usr, "Choose an alt title for [job.title]:", "Alt Title", client.prefs.GetPlayerAltTitle(job)) as null|anything in job.alt_titles
+			if(choice && (choice in job.alt_titles))
+				client.prefs.player_alt_titles[job.title] = choice
+				SScharacter_setup.queue_preferences_save(client.prefs)
+			ui_interact(src)
+		return
+
+	if(href_list["set_spawnpoint"])
+		var/list/spawnkeys = list()
+		for(var/spawntype in spawntypes())
+			spawnkeys += spawntype
+		var/choice = input(usr, "Where would you like to spawn when late-joining?", "Spawn Location", client.prefs.spawnpoint) as null|anything in spawnkeys
+		if(choice && spawntypes()[choice])
+			client.prefs.spawnpoint = choice
+			SScharacter_setup.queue_preferences_save(client.prefs)
+			ui_interact(src)
+		return
+
+	if(href_list["changeslot"])
+		var/slot_num = text2num(href_list["changeslot"])
+		if(slot_num >= 1 && slot_num <= (config.character_slots || 10))
+			client.prefs.load_character(slot_num)
+			client.prefs.sanitize_preferences()
+			client.prefs.preview_icon = null
+			ui_interact(src)
+		return
+
+	if(href_list["open_character_setup"])
+		client.prefs.ShowChoices(src)
+		return
+
+	if(href_list["rename"])
+		var/raw_name = input(usr, "Choose your character's name:", "Character Name", client.prefs.real_name) as text|null
+		if(!isnull(raw_name))
+			var/new_name = sanitize_name(raw_name, client.prefs.species)
+			if(new_name)
+				if(GLOB.in_character_filter.len && findtext(new_name, config.ic_filter_regex))
+					new_name = random_name(client.prefs.gender, client.prefs.species)
+				client.prefs.real_name = new_name
+				SScharacter_setup.queue_preferences_save(client.prefs)
+			else
+				to_chat(usr, "<span class='warning'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long.</span>")
+			ui_interact(src)
+		return
+
+	if(href_list["random_name"])
+		client.prefs.real_name = random_name(client.prefs.gender, client.prefs.species)
+		SScharacter_setup.queue_preferences_save(client.prefs)
+		ui_interact(src)
+		return
+
+	if(href_list["random_look"])
+		client.prefs.randomize_appearance_and_body_for(null)
+		client.prefs.preview_icon = null
+		SScharacter_setup.queue_preferences_save(client.prefs)
+		ui_interact(src)
+		return
+
+	if(href_list["cycle_bg"])
+		if(client.prefs.bgstate == "00")
+			client.prefs.bgstate = "01"
+		else if(client.prefs.bgstate == "01")
+			client.prefs.bgstate = "02"
+		else if(client.prefs.bgstate == "02")
+			client.prefs.bgstate = "03"
+		else if(client.prefs.bgstate == "03")
+			client.prefs.bgstate = "04"
+		else
+			client.prefs.bgstate = "00"
+		client.prefs.preview_icon = null
+		ui_interact(src)
+		return
+
+	if(href_list["toggle_job_gear"])
+		client.prefs.equip_preview_mob ^= EQUIP_PREVIEW_JOB
+		client.prefs.preview_icon = null
+		ui_interact(src)
 		return
 
 	if(href_list["privacy_poll"])
@@ -272,7 +365,7 @@
 		return
 
 	var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, job.title)
-	var/turf/spawn_turf = pick(spawnpoint.turfs)
+	var/turf/spawn_turf = spawnpoint.get_spawn_turf(job.title)
 	if(job.latejoin_at_spawnpoints)
 		var/obj/S = job_master.get_roundstart_spawnpoint(job.title)
 		spawn_turf = get_turf(S)
@@ -289,6 +382,8 @@
 
 	character = job_master.EquipRank(character, job.title, 1)					//equips the human
 	equip_custom_items(character)
+	if(ishuman(character) && job.title != "AI" && job.title != "Cyborg")
+		assign_personal_locker(character)
 
 	// AIs don't need a spawnpoint, they must spawn at an empty core
 	if(character.mind.assigned_role == "AI")
@@ -333,56 +428,6 @@
 		GLOB.global_announcer.autosay("A new[rank ? " [rank]" : " visitor" ] [join_message ? join_message : "has arrived"].", "Arrivals Announcement Computer")
 		log_and_message_admins("has joined the round as [character.mind.assigned_role].", character)
 
-/mob/new_player/proc/LateChoices()
-	var/name = client.prefs.be_random_name ? "friend" : client.prefs.real_name
-	var/department = null
-	var/dat = "<html><body><center>"
-	dat += "<b>Welcome, [name].<br></b>"
-	dat += "Round Duration: [roundduration2text()]<br>"
-
-	if(client.prefs.gender != MALE)
-		dat += "<font color='red'><b>Some of the roles are missing due to a gender lock.</b></font><br>"
-
-	if(SSevac.evacuation_controller.has_evacuated())
-		dat += "<font color='red'><b>The [station_name()] has been evacuated.</b></font><br>"
-	else if(SSevac.evacuation_controller.is_evacuating())
-		if(SSevac.evacuation_controller.emergency_evacuation) // Emergency shuttle is past the point of no recall
-			dat += "<font color='red'>The [station_name()] is currently undergoing evacuation procedures.</font><br>"
-		else                                           // Crew transfer initiated
-			dat += "<font color='red'>The [station_name()] is currently undergoing crew transfer procedures.</font><br>"
-
-	dat += "Choose from the following open/valid positions:<br>"
-	dat += "<a href='byond://?src=\ref[src];invalid_jobs=1'>[show_invalid_jobs ? "Hide":"Show"] unavailable jobs.</a><br>"
-	dat += "<table>"
-
-	for(var/datum/job/job in job_master.occupations)
-		//Suprisingly, get_announcement_frequency is perfect for getting the name from the depratment_flag var
-		if(department != get_department_names(job))
-			department = get_department_names(job)
-			dat += "<tr><td>[department]</td></tr>"
-		if(job && IsJobAvailable(job))
-			if(job.minimum_character_age && (client.prefs.age < job.minimum_character_age))
-				continue
-
-			if(job.sex_lock && job.sex_lock != src.client.prefs.gender)
-				continue
-
-			var/active = 0
-			// Only players with the job assigned and AFK for less than 10 minutes count as active
-			for(var/mob/M in GLOB.player_list) if(M.mind && M.client && M.mind.assigned_role == job.title && M.client.inactivity <= 10 * 60 * 10)
-				active++
-
-			if(job.is_restricted(client.prefs))
-				if(show_invalid_jobs)
-					dat += "<tr bgcolor='[job.selection_color]'><td><a style='text-decoration: line-through' href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title]</a></td><td>[job.current_positions]</td><td>(Active: [active])</td></tr>"
-			else
-				dat += "<tr bgcolor='[job.selection_color]'><td><a href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title]</a></td><td>[job.current_positions]</td><td>(Active: [active])</td></tr>"
-
-	dat += "</table></center>"
-	//src << browse(jointext(dat, null), "window=latechoices;size=450x640;can_close=1")
-	var/datum/browser/popup = new(src, "Character Latejoin","Character Latejoin", 450, 640, src)
-	popup.set_content(dat)
-	popup.open()
 
 /mob/new_player/proc/create_character(var/turf/spawn_turf)
 	spawning = 1
@@ -396,7 +441,7 @@
 
 	if(!spawn_turf)
 		var/datum/spawnpoint/spawnpoint = job_master.get_spawnpoint_for(client, get_rank_pref())
-		spawn_turf = pick(spawnpoint.turfs)
+		spawn_turf = spawnpoint.get_spawn_turf(get_rank_pref())
 
 	if(chosen_species)
 		if(!check_species_allowed(chosen_species))

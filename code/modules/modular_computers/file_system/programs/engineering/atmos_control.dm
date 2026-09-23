@@ -35,7 +35,7 @@
 
 	if(monitored_alarm_ids)
 		for(var/obj/machinery/alarm/alarm in SSmachines.machinery)
-			if(alarm.alarm_id && alarm.alarm_id in monitored_alarm_ids)
+			if(alarm.alarm_id && (alarm.alarm_id in monitored_alarm_ids))
 				monitored_alarms += alarm
 		// machines may not yet be ordered at this point
 		monitored_alarms = dd_sortedObjectList(monitored_alarms)
@@ -49,7 +49,7 @@
 			var/obj/machinery/alarm/alarm = locate(href_list["alarm"]) in (monitored_alarms.len ? monitored_alarms : SSmachines.machinery)
 			if(alarm)
 				var/datum/topic_state/TS = generate_state(alarm)
-				alarm.ui_interact(usr, master_ui = ui_ref, state = TS)
+				alarm.ui_interact(usr, ui_ref, TS)
 		return 1
 
 /datum/nano_module/atmos_control/ui_interact(mob/user, ui_key = "main", var/datum/nanoui/ui = null, var/force_open = 1, var/master_ui = null, var/datum/topic_state/state = GLOB.default_state)

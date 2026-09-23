@@ -1146,7 +1146,6 @@ obj/item/clothing/mask/chewable/Destroy()
 		reagents.remove_reagent(/datum/reagent/fuel, 0.05)
 	else
 		extinguish()
-		return
 
 		var/turf/location = get_turf(src)
 		if(location)

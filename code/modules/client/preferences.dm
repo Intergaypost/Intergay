@@ -29,14 +29,20 @@
 	var/savefile/loaded_character
 	var/datum/category_collection/player_setup_collection/player_setup
 	var/datum/browser/panel
+	var/list/key_bindings = list()
+	var/hotkeys = TRUE
+
 
 /datum/preferences/New(client/C)
+	key_bindings = GLOB.hotkey_keybinding_list_by_key.Copy()
+
 	if(istype(C))
 		client = C
 		client_ckey = C.ckey
 		SScharacter_setup.preferences_datums[C.ckey] = src
 
 	player_setup = new(src)
+
 	gender = pick(MALE, FEMALE)
 	real_name = random_name(gender,species)
 	b_type = RANDOM_BLOOD_TYPE
@@ -57,58 +63,41 @@
 /datum/preferences/proc/ShowChoices(mob/user)
 	if(!user || !user.client)
 		return
+	ui_interact(user)
 
-	var/dat = "<html><head><title>TERMINAL CONNECTION</title>"
-	dat += "<style type='text/css'>html {overflow: auto;};"
-	dat += "body {"
-	dat += "overflow:hidden;"
-	dat += "font-family: Futura, sans-serif;"
-	dat += "font-size: 17px;"
-	dat += "background-repeat:repeat-x;"
-	dat += "border: 4px ridge #2f303d;"
-	dat += "}"
-	dat += "a {text-decoration:none;outline: none;border: none;margin:-1px;}"
-	dat += "a:focus{outline:none;border: none;}"
-	dat += "a:hover {Color:#0d0d0d;background:#ababb3;outline: none;border: none; text-decoration:none;}"
-	dat += "a.active { text-decoration:none; Color:#533333;border: none;}"
-	dat += "a.inactive:hover {Color:#0d0d0d;background:#bb0000;border: none;}"
-	dat += "a.active:hover {Color:#bb0000;background:#0f0f0f;}"
-	dat += "a.inactive:hover { text-decoration:none; Color:#0d0d0d; background:#bb0000;border: none;}"
-	dat += "a img {     border: 0; }"
-	dat += "TABLE.winto {"
-	dat += "z-index:-1;"
-	dat += "position: absolute;"
-	dat += "top: 12;"
-	dat += "left:14;"
-	dat += "background-position: bottom;"
-	dat += "background-repeat:repeat-x;"
-	dat += "border: 4px ridge #2f303d;"
-	dat += "}"
-	dat += "TR {"
-	dat += "border: 0px;"
-	dat += "}"
-	dat += "span.job_class {Color:#000000;}"
-	dat += "</style>"
-	dat += "</head>"
-	dat += "<body bgcolor='#000000' text='#c9c9c9' alink='#a6a6a6' vlink='#a6a6a6' link='#a6a6a6'>"
-	dat += "<p align ='right'>"
-	dat += "</p>"
-	dat += "<br>"
-	if(path)
-		dat += "<a onfocus ='this.blur()' href='?src=\ref[src];save=1'>Save Slot</a> --- "
-		dat += "<a onfocus ='this.blur()' href='?src=\ref[src];resetslot=1'>Reset Slot</a> --- "
-		dat += "<a onfocus ='this.blur()' href='?src=\ref[src];load=1'>Load Slot</a><br>"
-	dat += "<br>"
-	dat += "<br>"
-	dat += player_setup.header()
-	dat += "<br>"
-	dat += "<br>"
-	dat += player_setup.content(user)
-	dat += "</html></body>"
-	user <<browse(dat,"window=player_panel;size=700x700;can_close=1;can_resize=0;border=0;titlebar=1")
+/datum/preferences/ui_interact(mob/user, ui_key = "character_setup", var/datum/nanoui/ui = null, var/force_open = 1, var/datum/nanoui/master_ui = null, var/datum/topic_state/state = GLOB.interactive_state)
+	if(!user || !user.client)
+		return
+
+	if(!preview_icon)
+		update_preview_icon()
+	if(preview_icon && user.client)
+		user << browse_rsc(preview_icon, "previewicon.png")
+
+	var/list/data = list()
+	data["character_name"] = real_name
+	data["slot"] = default_slot
+	data["max_slots"] = config.character_slots
+	data["has_save_path"] = path ? 1 : 0
+	data["preview_version"] = world.time
+	data["bgstate"] = bgstate
+	data["equip_preview_mob"] = equip_preview_mob
+	data["preview_job_gear"] = (equip_preview_mob & EQUIP_PREVIEW_JOB) ? 1 : 0
+	data["preview_loadout"] = (equip_preview_mob & EQUIP_PREVIEW_LOADOUT) ? 1 : 0
+
+	var/list/setup_data = player_setup.get_data(user)
+	for(var/key in setup_data)
+		data[key] = setup_data[key]
+
+	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
+	if (!ui)
+		ui = new(user, src, ui_key, "character_setup.tmpl", "Character Setup", 980, 720, state = state)
+		ui.add_stylesheet("character_setup.css")
+		ui.set_initial_data(data)
+		ui.open()
+		ui.set_auto_update(1)
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
-
 	if(!user)	return
 	if(isliving(user)) return
 
@@ -125,13 +114,24 @@
 	if(..())
 		return 1
 
+	if(href_list["preference"] == "open_whitelist_forum")
+		if(config.forumurl)
+			usr << link(config.forumurl)
+		else
+			to_chat(usr, "<span class='danger'>The forum URL is not set in the server configuration.</span>")
+		return 1
+
 	if(href_list["save"])
 		save_preferences()
 		save_character()
+		to_chat(usr, "<span class='notice'>Character preferences saved.</span>")
+		return 1
 	else if(href_list["reload"])
 		load_preferences()
 		load_character()
 		sanitize_preferences()
+		preview_icon = null
+		return 1
 	else if(href_list["load"])
 		if(!IsGuestKey(usr.key))
 			open_load_dialog(usr)
@@ -139,14 +139,33 @@
 	else if(href_list["changeslot"])
 		load_character(text2num(href_list["changeslot"]))
 		sanitize_preferences()
+		preview_icon = null
 		close_load_dialog(usr)
+		return 1
 	else if(href_list["resetslot"])
-		if(real_name != input("This will reset the current slot. Enter the character's full name to confirm."))
-			return 0
+		var/confirm_name = input(usr, "This will reset the current slot. Enter the character's full name to confirm.", "Reset Character Slot") as text|null
+		if(confirm_name != real_name)
+			return 1
 		load_character(SAVE_RESET)
 		sanitize_preferences()
+		preview_icon = null
+		return 1
+	else if(href_list["select_category"])
+		for(var/datum/category_group/player_setup_category/PS in player_setup.categories)
+			if(PS.name == href_list["select_category"] || "\ref[PS]" == href_list["select_category"])
+				player_setup.selected_category = PS
+				return 1
+	else if(href_list["item"])
+		var/datum/category_item/player_setup_item/PI = locate(href_list["item"])
+		if(istype(PI))
+			var/result = PI.OnTopic(href, href_list, usr)
+			if(result & TOPIC_UPDATE_PREVIEW)
+				preview_icon = null
+				update_preview_icon()
+				if(usr.client)
+					usr << browse_rsc(preview_icon, "previewicon.png")
+			return 1
 
-	ShowChoices(usr)
 	return 1
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, is_preview_copy = FALSE)
@@ -288,9 +307,8 @@
 	character.exploit_record = exploit_record
 
 	character.home_system = home_system
-	character.citizenship = citizenship
-	character.personal_faction = faction
 	character.religion = religion
+	character.backstory = backstory
 
 	if(!character.isSynthetic())
 		character.set_nutrition(rand(140,360))
@@ -314,7 +332,7 @@
 			if(!name)	name = "Character[i]"
 			if(i==default_slot)
 				name = "<b>[name]</b>"
-			dat += "<a href='?src=\ref[src];changeslot=[i]'>[name]</a><br>"
+			dat += "<a href='byond://?src=\ref[src];changeslot=[i]'>[name]</a><br>"
 
 	dat += "<hr>"
 	dat += "</center></tt>"

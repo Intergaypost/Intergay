@@ -10,8 +10,6 @@
 #define UT_VACUUM 2                   // Vacume on simulated turfs
 #define UT_NORMAL_COLD 3              // Cold but standard atmosphere.
 
-#define FAILURE 0
-#define SUCCESS 1
 #define SKIP 2
 
 //
@@ -74,7 +72,7 @@ proc/test_air_in_area(var/test_area, var/expectation = UT_NORMAL)
 					return test_result
 
 
-			if(UT_NORMAL || UT_NORMAL_COLD)
+			if(UT_NORMAL, UT_NORMAL_COLD)
 				if(abs(pressure - ONE_ATMOSPHERE) > 10)
 					test_result["msg"] = "Pressure out of bounds: [pressure] | [t_msg]"
 					return test_result
@@ -166,5 +164,3 @@ datum/unit_test/zas_supply_shuttle_moved/check_result()
 #undef UT_NORMAL
 #undef UT_VACUUM
 #undef UT_NORMAL_COLD
-#undef SUCCESS
-#undef FAILURE

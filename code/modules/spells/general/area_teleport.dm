@@ -31,13 +31,17 @@
 		thearea = pick(teleportlocs)
 	return list(teleportlocs[thearea])
 
-/spell/area_teleport/cast(area/thearea, mob/user)
+/spell/area_teleport/cast(thearea, mob/user)
 	playsound(get_turf(user),cast_sound,50,1)
-	if(!istype(thearea))
-		if(istype(thearea, /list))
-			thearea = thearea[1]
+	if(islist(thearea))
+		var/list/area_list = thearea
+		if(area_list.len)
+			thearea = area_list[1]
+	var/area/A = thearea
+	if(!istype(A))
+		return
 	var/list/L = list()
-	for(var/turf/T in get_area_turfs(thearea))
+	for(var/turf/T in get_area_turfs(A))
 		if(!T.density)
 			var/clear = 1
 			for(var/obj/O in T)

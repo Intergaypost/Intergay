@@ -140,14 +140,14 @@
 		return
 
 	var/HTML = list()
-	HTML += "<html><head><title>[src.name]</title></head><body>"
+	HTML += "<html><head><meta charset='utf-8'><title>[src.name]</title></head><body>"
 	HTML += "<div align='center'>"
 	HTML += "<table border='1' style='undefined;table-layout: fixed; width: 424px'>"
 
-	HTML += "<br><a href='?src=\ref[src];refresh=1'>\[Refresh\]</a>  |  "
-	HTML += "<a href='?src=\ref[src];rename=1'>\[Rename\]</a>  |  "
+	HTML += "<br><a href='byond://?src=\ref[src];refresh=1'>\[Refresh\]</a>  |  "
+	HTML += "<a href='byond://?src=\ref[src];rename=1'>\[Rename\]</a>  |  "
 	if(removable)
-		HTML += "<a href='?src=\ref[src];remove=1'>\[Remove\]</a><br>"
+		HTML += "<a href='byond://?src=\ref[src];remove=1'>\[Remove\]</a><br>"
 
 	HTML += "<colgroup>"
 	HTML += "<col style='width: 121px'>"

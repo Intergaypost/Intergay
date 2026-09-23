@@ -42,8 +42,11 @@ In my current plan for it, 'solid' will be defined as anything with density == 1
 			src.forceMove(clong.loc)
 
 	Destroy()
-		walk(src, 0) // Because we might have called walk_towards, we must stop the walk loop or BYOND keeps an internal reference to us forever.
+		SSmove_manager.stop_looping(src)
 		return ..()
+
+	Process_Spacemove()
+		return TRUE
 
 /proc/immovablerod()
 	var/startx = 0
@@ -79,8 +82,7 @@ In my current plan for it, 'solid' will be defined as anything with density == 1
 //	log_debug("Rod in play, starting at [start.loc.x],[start.loc.y] and going to [end.loc.x],[end.loc.y]")
 
 	var/end = locate(endx, endy, 1)
-	spawn(0)
-		walk_towards(immrod, end,1)
+	SSmove_manager.move_towards(immrod, end, delay = 1)
 	sleep(1)
 	while (immrod)
 		if (isNotStationLevel(immrod.z))
@@ -92,3 +94,4 @@ In my current plan for it, 'solid' will be defined as anything with density == 1
 		return
 	sleep(50)
 	command_announcement.Announce("What the fuck was that?!", "General Alert")
+

@@ -13,7 +13,7 @@ function clearAll(){
 	clearallup += 1;
 	$("#vote_main").empty();
 	$("#vote_choices").empty();
-	$("#vote_admin").html("<br />(<a href='?src="+hSrc+";vote=cancel;'>Cancel Vote</a>)");
+	$("#vote_admin").html("<br />(<a href='byond://?src="+hSrc+";vote=cancel;'>Cancel Vote</a>)");
 
 }
 
@@ -37,8 +37,8 @@ function update_mode(newMode, newQuestion, newTimeleft, vrestart, vmode){
 	$("#vote_choices").append($("<div class='item'></div>").append($("<div class='itemLabel'></div>").html("Time Left")).append($("<div class='itemContent'></div>").html(displayBar(time_left, 0, 60, (time_left >= 50) ? 'good' : (time_left >= 25) ? 'average' : 'bad', '<center>' + time_left + '</center>'))));
 	$("#vote_choices").append($("<div class='item'></div>").append($("<div class='itemLabel'></div>").html("<br />Question")).append($("<div class='itemContentMedium'></div>").append($("<div class='statusDisplay'></div>").text(question))));
 	if(admin > 0 || allow_restart > 0){
-		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='?src=" + hSrc + ";vote=restart'>Restart</a>" + (admin == 2 ? "(<a href='?src=" + hSrc + ";vote=toggle_restart'>" + (allow_restart?"Allowed":"Disallowed") + "</a>)" : ""))));
-		$("#vote_main").append($("<div class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='?src=" + hSrc + ";vote=crew_transfer'>Crew Transfer</a>")));
+		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='byond://?src=" + hSrc + ";vote=restart'>Restart</a>" + (admin == 2 ? "(<a href='byond://?src=" + hSrc + ";vote=toggle_restart'>" + (allow_restart?"Allowed":"Disallowed") + "</a>)" : ""))));
+		$("#vote_main").append($("<div class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='byond://?src=" + hSrc + ";vote=crew_transfer'>Crew Transfer</a>")));
 	}
 	else{
 		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<font color='grey'>Restart</font>")));
@@ -46,11 +46,11 @@ function update_mode(newMode, newQuestion, newTimeleft, vrestart, vmode){
 	}
 	
 	if(admin > 0 || allow_mode > 0){
-		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='?src=" + hSrc + ";vote=gamemode'>GameMode</a>" + (admin == 2 ? "(<a href='?src=" + hSrc + ";vote=toggle_gamemode'>" + (allow_mode?"Allowed":"Disallowed") + "</a>)" : ""))));
+		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='byond://?src=" + hSrc + ";vote=gamemode'>GameMode</a>" + (admin == 2 ? "(<a href='byond://?src=" + hSrc + ";vote=toggle_gamemode'>" + (allow_mode?"Allowed":"Disallowed") + "</a>)" : ""))));
 	}
 
 	if(admin > 0)
-		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='?src=" + hSrc + ";vote=custom'>Custom</a>")));
+		$("#vote_main").append($("<div  class='item'></div>").append($("<div class='itemContent'></div>").html("<a href='byond://?src=" + hSrc + ";vote=custom'>Custom</a>")));
 
 	if(mode != null && mode != ""){
 		$("#vote_main").hide();

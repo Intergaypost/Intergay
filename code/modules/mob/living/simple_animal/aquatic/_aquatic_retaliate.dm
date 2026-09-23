@@ -17,9 +17,10 @@
 	if(!submerged())
 		if(icon_state == icon_living)
 			icon_state = "[icon_living]_dying"
-		walk(src, 0)
+		SSmove_manager.stop_looping(src)
 		Paralyse(3)
 	. = ..()
+
 
 /mob/living/simple_animal/hostile/retaliate/aquatic/handle_atmos(var/atmos_suitable = 1)
 	. = ..(atmos_suitable = submerged())

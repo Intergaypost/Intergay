@@ -31,14 +31,15 @@
 	//float over to our destination, if we have one
 	destination = dest_turf
 	if(destination)
-		walk_to(src, destination)
+		SSmove_manager.move_to(src, destination, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
 
 /obj/effect/effect/smoke/chem/Destroy()
-	walk(src, 0) // Because we might have called walk_to, we must stop the walk loop or BYOND keeps an internal reference to us forever.
+	SSmove_manager.stop_looping(src)
 	set_opacity(0)
 	// TODO - fadeOut() sleeps.  Sleeping in /Destroy is Bad, this needs to be fixed.
 	fadeOut()
 	return ..()
+
 
 /obj/effect/effect/smoke/chem/Move()
 	var/list/oldlocs = view(1, src)
@@ -137,14 +138,14 @@
 	var/area/A = get_area(location)
 
 	var/where = "[A.name] | [location.x], [location.y]"
-	var/whereLink = "<A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>[where]</a>"
+	var/whereLink = "<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[location.x];Y=[location.y];Z=[location.z]'>[where]</a>"
 
 	if(show_log)
 		if(carry.my_atom.fingerprintslast)
 			var/mob/M = get_mob_by_key(carry.my_atom.fingerprintslast)
 			var/more = ""
 			if(M)
-				more = "(<A HREF='?_src_=holder;adminmoreinfo=\ref[M]'>?</a>)"
+				more = "(<a href='byond://?_src_=holder;adminmoreinfo=\ref[M]'>?</a>)"
 			message_admins("A chemical smoke reaction has taken place in ([whereLink])[contained]. Last associated key is [carry.my_atom.fingerprintslast][more].", 0, 1)
 			log_game("A chemical smoke reaction has taken place in ([where])[contained]. Last associated key is [carry.my_atom.fingerprintslast].")
 		else

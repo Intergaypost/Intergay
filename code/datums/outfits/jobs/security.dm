@@ -68,3 +68,13 @@
 		else
 			qdel(Lifchik)
 */
+
+/decl/hierarchy/outfit/job/security/arbiter
+	name = OUTFIT_JOB_NAME("Arbiter")
+	l_ear = null
+	uniform = null
+	shoes = null
+	head = null
+	suit = null
+	id_type = /obj/item/weapon/card/id/arbiter
+	pda_type = /obj/item/device/pda

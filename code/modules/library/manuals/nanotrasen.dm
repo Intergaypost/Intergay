@@ -1,9 +1,9 @@
 /obj/item/weapon/book/manual/nt_regs
-	name = "TetraCorp Regulations"
-	desc = "A set of corporate guidelines for employees of TetraCorp."
+	name = "New Order League employee Regulations"
+	desc = "A set of corporate guidelines for employees of New Order League."
 	icon_state = "booknanoregs"
-	author = "TetraCorp"
-	title = "TetraCorp Regulations"
+	author = "NOL HR Dept"
+	title = "NOL Employee Regulations"
 
 /obj/item/weapon/book/manual/nt_regs/New()
 	..()

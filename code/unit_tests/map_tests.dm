@@ -6,9 +6,6 @@
  *
  */
 
-#define FAILURE 0
-#define SUCCESS 1
-
 
 /datum/unit_test/apc_area_test
 	name = "MAP: Area Test APC / Scrubbers / Vents"
@@ -516,6 +513,3 @@ datum/unit_test/ladder_check/start_test()
 	else
 		pass("No station pipes are leaking")
 	return 1
-
-#undef SUCCESS
-#undef FAILURE

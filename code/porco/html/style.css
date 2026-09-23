@@ -55,12 +55,25 @@ background: rgba(255, 255, 0, 0.1);
     color: #a8f004;
     text-shadow: 0px 0px 3px #a8f004;
 }
-.verb {float: top; font-family: "Cond";text-shadow: 0px 0px 3px #bdda57;
-color:#acd249; text-decoration:none;outline: none;border: none;font-size:90%;}
+.verb {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-family: "Cond", sans-serif;
+    text-shadow: 0px 0px 3px #bdda57;
+    color:#acd249;
+    text-decoration:none;
+    outline: none;
+    border: none;
+    font-size:90%;
+    line-height: 1.2;
+}
 .verb.dim { color:#707070; text-shadow: 0px 0px 3px #707070;}
 .verb.smaller { font-size:80%;}
 .verb.dim:hover{color: #702963; word-break: keep-all; }
-.verb:hover {color:#999;background:rgba(0,255,0,0.2);outline: none;border: none;font-weight:bold; word-break: keep-all;}
+.verb:hover {color:#ffffff;background:rgba(0,255,0,0.2);outline: none;border: none;word-break: keep-all;}
 .verb:focus{outline:none;}
 
 #buttonpanel
@@ -126,7 +139,7 @@ background-image:url('button_options.png');
 }
 
 #scrollbar_container {
-    position:absolute; top:42px; left:315px; width: 200px; height: 159px; padding: 5px;
+    position:absolute; top:42px; left:315px; width: 200px; height: 159px; padding: 5px; z-index: 10;
 }
 
 #scrollbar_track {

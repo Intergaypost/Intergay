@@ -18,7 +18,7 @@ GLOBAL_VAR(spawntypes)
 	var/list/restrict_job = null
 	var/list/disallow_job = null
 
-/datum/spawnpoint/proc/check_job_spawning(job)
+/datum/spawnpoint/proc/check_job_spawning(var/job)
 	if(restrict_job && !(job in restrict_job))
 		return 0
 
@@ -27,8 +27,19 @@ GLOBAL_VAR(spawntypes)
 
 	return 1
 
+/datum/spawnpoint/proc/get_spawn_turfs(var/rank)
+	return turfs
+
+/datum/spawnpoint/proc/get_spawn_turf(var/rank)
+	var/list/candidates = get_spawn_turfs(rank)
+	if(candidates && candidates.len)
+		return pick(candidates)
+	if(turfs && turfs.len)
+		return pick(turfs)
+	return null
+
 //Called after mob is created, moved to a turf and equipped.
-/datum/spawnpoint/proc/after_join(mob/victim)
+/datum/spawnpoint/proc/after_join(var/mob/victim)
 	return
 
 #ifdef UNIT_TEST
@@ -60,11 +71,33 @@ GLOBAL_VAR(spawntypes)
 /datum/spawnpoint/cryo
 	display_name = "Cryogenic Storage"
 	msg = "has completed cryogenic awakening"
-	disallow_job = list("Robot", "Captain", "Vessel Overseer", "Maintainer", "Head Scientist", "General Researcher", "Major", "Enforcer", "Medical Officer", "Executive Officer")
+	disallow_job = list("Cyborg", "AI")
 
 /datum/spawnpoint/cryo/New()
 	..()
 	turfs = GLOB.latejoin_cryo
+
+/datum/spawnpoint/cryo/get_spawn_turfs(var/rank)
+	var/list/dept_turfs
+	switch(rank)
+		if("Captain")
+			dept_turfs = GLOB.latejoin_cryocaptain
+		if("Executive Officer", "Head of Personnel")
+			dept_turfs = GLOB.latejoin_cryohop
+		if("Vessel Overseer", "Maintainer", "Chief Engineer", "Station Maintainer", "Station Engineer", "Atmospheric Technician")
+			dept_turfs = GLOB.latejoin_cryoengineering
+		if("Head Scientist", "General Researcher", "Research Director", "Scientist", "Xenobiologist", "Roboticist", "Robocist")
+			dept_turfs = GLOB.latejoin_cryoscience
+		if("Medical Officer", "Chief Medical Officer", "Medical Doctor", "Chemist", "Geneticist", "Psychiatrist", "Paramedic", "Surgeon", "Practitioner", "Emergency physician", "Undertaker", "Medical Assistant")
+			dept_turfs = GLOB.latejoin_cryomedical
+		if("Major", "Enforcer", "Head of Security", "Warden", "Detective", "Security Officer", "Head Peacekeeper", "Peacekeeper", "Loyaler Enforcer")
+			dept_turfs = GLOB.latejoin_cryosecurity
+
+	if(dept_turfs && dept_turfs.len)
+		return dept_turfs
+	if(GLOB.latejoin_cryo && GLOB.latejoin_cryo.len)
+		return GLOB.latejoin_cryo
+	return turfs
 
 /datum/spawnpoint/cryo/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
 	if(!istype(victim))
@@ -79,192 +112,16 @@ GLOBAL_VAR(spawntypes)
 			victim.Sleeping(7)
 			victim.resting = 0
 			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+			if(victim.mind && victim.mind.assigned_role == "Captain")
+				addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_captain_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+				addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), 24 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+			else if(victim.mind && (victim.mind.assigned_role in list("Executive Officer", "Head of Personnel")))
+				addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+				addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), 26 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+			else
+				addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
+				addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
 			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryocaptain
-	display_name = "Cryogenic Storage Captain"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Captain")
-
-/datum/spawnpoint/cryocaptain/New()
-	..()
-	turfs = GLOB.latejoin_cryocaptain
-
-/datum/spawnpoint/cryocaptain/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	for(var/obj/machinery/cryopod/C in A)
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_captain_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), 24 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryoengineering
-	display_name = "Cryogenic Storage"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Vessel Overseer", "Maintainer")
-
-/datum/spawnpoint/cryoengineering/New()
-	..()
-	turfs = GLOB.latejoin_cryoengineering
-
-/datum/spawnpoint/cryoengineering/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	var/role_alt_title = victim.mind ? victim.mind.role_alt_title : "Unknown"
-	for(var/obj/machinery/cryopod/C in A)
-		if(control_computer)
-			control_computer.frozen_crew += "[victim.real_name], [role_alt_title] - [stationtime2text()]"
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryoscience
-	display_name = "Cryogenic Storage"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Head Scientist", "General Researcher")
-
-/datum/spawnpoint/cryoscience/New()
-	..()
-	turfs = GLOB.latejoin_cryoscience
-
-/datum/spawnpoint/cryoscience/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	var/role_alt_title = victim.mind ? victim.mind.role_alt_title : "Unknown"
-	for(var/obj/machinery/cryopod/C in A)
-		if(control_computer)
-			control_computer.frozen_crew += "[victim.real_name], [role_alt_title] - [stationtime2text()]"
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryosecurity
-	display_name = "Cryogenic Storage"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Major", "Enforcer")
-
-/datum/spawnpoint/cryosecurity/New()
-	..()
-	turfs = GLOB.latejoin_cryosecurity
-
-/datum/spawnpoint/cryosecurity/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	var/role_alt_title = victim.mind ? victim.mind.role_alt_title : "Unknown"
-	for(var/obj/machinery/cryopod/C in A)
-		if(control_computer)
-			control_computer.frozen_crew += "[victim.real_name], [role_alt_title] - [stationtime2text()]"
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryomedical
-	display_name = "Cryogenic Storage"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Medical Officer")
-
-/datum/spawnpoint/cryomedical/New()
-	..()
-	turfs = GLOB.latejoin_cryomedical
-
-/datum/spawnpoint/cryomedical/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	var/role_alt_title = victim.mind ? victim.mind.role_alt_title : "Unknown"
-	for(var/obj/machinery/cryopod/C in A)
-		if(control_computer)
-			control_computer.frozen_crew += "[victim.real_name], [role_alt_title] - [stationtime2text()]"
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), rand(23,32) SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			//victim.add_cryo_filter_effect()
-			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			return
-	for(var/obj/machinery/light/L in A)
-		L.flicker(10)
-
-/datum/spawnpoint/cryohop
-	display_name = "Cryogenic Storage"
-	msg = "has completed cryogenic awakening"
-	restrict_job = list("Executive Officer")
-
-/datum/spawnpoint/cryohop/New()
-	..()
-	turfs = GLOB.latejoin_cryohop
-
-/datum/spawnpoint/cryohop/after_join(mob/living/carbon/human/victim, obj/machinery/computer/cryopod/control_computer)
-	if(!istype(victim))
-		return
-	var/area/A = get_area(victim)
-	var/role_alt_title = victim.mind ? victim.mind.role_alt_title : "Unknown"
-	for(var/obj/machinery/cryopod/C in A)
-		if(control_computer)
-			control_computer.frozen_crew += "[victim.real_name], [role_alt_title] - [stationtime2text()]"
-		if(!C.occupant)
-			C.set_occupant(victim, 1)
-			victim.Sleeping(7)
-			victim.resting = 0
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_advice), 25 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			addtimer(CALLBACK(victim, /mob/living/carbon/human/proc/give_cryo_effect), 30 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
-			victim.add_event("cryo", /datum/happiness_event/cryo)
-			addtimer(CALLBACK(C, /obj/machinery/cryopod/proc/go_out_forced), 26 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
 			//victim.add_cryo_filter_effect()
 			//addtimer(CALLBACK(victim, /mob/living/proc/remove_cryo_filter_effect), 40 SECONDS, TIMER_UNIQUE|TIMER_NO_HASH_WAIT)
 			return

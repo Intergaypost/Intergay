@@ -386,7 +386,7 @@
 
 /obj/item/clothing/glasses/priest
 	name = "priests's googles"
-	desc = "His vision is guided by TetraCorp, but it does not mean he can escape physical constraints."
+	desc = "His vision is guided by New Order League, but it does not mean he can escape physical constraints."
 	icon_state = "priest"
 	item_state = "priest" // lol
 	body_parts_covered = EYES

@@ -41,10 +41,10 @@
 
 /datum/poster/tg_9
 	name = "Missing Gloves"
-	desc = "This poster is about the uproar that followed TetraCorp's financial cuts towards insulated-glove purchases."
+	desc = "This poster is about the uproar that followed New Order League's financial cuts towards insulated-glove purchases."
 	icon_state="poster9"
 
 /datum/poster/tg_10
 	name = "Hacking Guide"
-	desc = "This poster details the internal workings of the common TetraCorp airlock."
+	desc = "This poster details the internal workings of the common Tri-Net Corp airlock."
 	icon_state="poster10"

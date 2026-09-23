@@ -51,7 +51,7 @@
 
 	turns_since_scan++
 	if (turns_since_scan > 5)
-		walk_to(src,0)
+		SSmove_manager.stop_looping(src)
 		turns_since_scan = 0
 
 		if (flee_target) //fleeing takes precendence
@@ -87,7 +87,7 @@
 
 	if(movement_target)
 		stop_automated_movement = 1
-		walk_to(src,movement_target,0,3)
+		SSmove_manager.move_to(src, movement_target, 0, 3)
 
 /mob/living/simple_animal/cat/proc/handle_flee_target()
 	//see if we should stop fleeing
@@ -98,7 +98,7 @@
 	if (flee_target)
 		if(prob(25)) say("HSSSSS")
 		stop_automated_movement = 1
-		walk_away(src, flee_target, 7, 2)
+		SSmove_manager.move_away(src, flee_target, 7, 2)
 
 /mob/living/simple_animal/cat/proc/set_flee_target(atom/A)
 	if(A)
@@ -145,17 +145,17 @@
 		if (movement_target != friend)
 			if (current_dist > follow_dist && !istype(movement_target, /mob/living/simple_animal/mouse) && (friend in oview(src)))
 				//stop existing movement
-				walk_to(src,0)
+				SSmove_manager.stop_looping(src)
 				turns_since_scan = 0
 
 				//walk to friend
 				stop_automated_movement = 1
 				movement_target = friend
-				walk_to(src, movement_target, near_dist, 4)
+				SSmove_manager.move_to(src, movement_target, near_dist, 4)
 
 		//already following and close enough, stop
 		else if (current_dist <= near_dist)
-			walk_to(src,0)
+			SSmove_manager.stop_looping(src)
 			movement_target = null
 			stop_automated_movement = 0
 			if (prob(10))
@@ -163,6 +163,7 @@
 
 	if (!friend || movement_target != friend)
 		..()
+
 
 /mob/living/simple_animal/cat/fluff/Life()
 	..()

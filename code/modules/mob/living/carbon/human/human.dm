@@ -255,38 +255,38 @@
 		if((slot_ref["slot"] in list(slot_l_store, slot_r_store)))
 			continue
 		var/obj/item/thing_in_slot = get_equipped_item(slot_ref["slot"])
-		dat += "<BR><B>[slot_ref["name"]]:</b> <a href='?src=\ref[src];item=[slot_ref["slot"]]'>[istype(thing_in_slot) ? thing_in_slot : "nothing"]</a>"
+		dat += "<BR><B>[slot_ref["name"]]:</b> <a href='byond://?src=\ref[src];item=[slot_ref["slot"]]'>[istype(thing_in_slot) ? thing_in_slot : "nothing"]</a>"
 		if(istype(thing_in_slot, /obj/item/clothing))
 			var/obj/item/clothing/C = thing_in_slot
 			if(C.accessories.len)
-				dat += "<BR><A href='?src=\ref[src];item=tie;holder=\ref[C]'>Remove accessory</A>"
+				dat += "<BR><a href='byond://?src=\ref[src];item=tie;holder=\ref[C]'>Remove accessory</A>"
 	dat += "<BR><HR>"
 
 	if(species.hud.has_hands)
-		dat += "<BR><b>Left hand:</b> <A href='?src=\ref[src];item=[slot_l_hand]'>[istype(l_hand) ? l_hand : "nothing"]</A>"
-		dat += "<BR><b>Right hand:</b> <A href='?src=\ref[src];item=[slot_r_hand]'>[istype(r_hand) ? r_hand : "nothing"]</A>"
+		dat += "<BR><b>Left hand:</b> <a href='byond://?src=\ref[src];item=[slot_l_hand]'>[istype(l_hand) ? l_hand : "nothing"]</A>"
+		dat += "<BR><b>Right hand:</b> <a href='byond://?src=\ref[src];item=[slot_r_hand]'>[istype(r_hand) ? r_hand : "nothing"]</A>"
 
 	// Do they get an option to set internals?
 	if(istype(wear_mask, /obj/item/clothing/mask) || istype(head, /obj/item/clothing/head/helmet/space))
 		if(istype(back, /obj/item/weapon/tank) || istype(belt, /obj/item/weapon/tank) || istype(s_store, /obj/item/weapon/tank))
-			dat += "<BR><A href='?src=\ref[src];item=internals'>Toggle internals.</A>"
+			dat += "<BR><a href='byond://?src=\ref[src];item=internals'>Toggle internals.</A>"
 
 	var/obj/item/clothing/under/suit = w_uniform
 	// Other incidentals.
 	if(istype(suit))
-		dat += "<BR><b>Pockets:</b> <A href='?src=\ref[src];item=pockets'>Empty or Place Item</A>"
+		dat += "<BR><b>Pockets:</b> <a href='byond://?src=\ref[src];item=pockets'>Empty or Place Item</A>"
 		if(suit.has_sensor == 1)
-			dat += "<BR><A href='?src=\ref[src];item=sensors'>Set sensors</A>"
+			dat += "<BR><a href='byond://?src=\ref[src];item=sensors'>Set sensors</A>"
 	if(handcuffed)
-		dat += "<BR><A href='?src=\ref[src];item=[slot_handcuffed]'>Handcuffed</A>"
+		dat += "<BR><a href='byond://?src=\ref[src];item=[slot_handcuffed]'>Handcuffed</A>"
 
 	for(var/entry in worn_underwear)
 		var/obj/item/underwear/UW = entry
-		dat += "<BR><a href='?src=\ref[src];item=\ref[UW]'>Remove \the [UW]</a>"
+		dat += "<BR><a href='byond://?src=\ref[src];item=\ref[UW]'>Remove \the [UW]</a>"
 
-	dat += "<BR><A href='?src=\ref[src];item=splints'>Remove splints</A>"
-	dat += "<BR><A href='?src=\ref[src];refresh=1'>Refresh</A>"
-	dat += "<BR><A href='?src=\ref[user];mach_close=mob[name]'>Close</A>"
+	dat += "<BR><a href='byond://?src=\ref[src];item=splints'>Remove splints</A>"
+	dat += "<BR><a href='byond://?src=\ref[src];refresh=1'>Refresh</A>"
+	dat += "<BR><a href='byond://?src=\ref[user];mach_close=mob[name]'>Close</A>"
 
 	user << browse(dat, text("window=mob[name];size=340x540"))
 	onclose(user, "mob[name]")
@@ -384,19 +384,17 @@
 var/list/rank_prefix = list(\
 	"Captain" = "Captain",\
 	"Executive Officer" = "Executive Officer",\
-	"Head Scientist" = "Head Scientist",\
+	"Head Scientist" = "Prof.",\
 	"Major" = "Major",\
-	"Vessel Overseer" = "Vessel Overseer",\
+	"Vessel Overseer" = "Overseer",\
 	"Enforcer" = "Enforcer",\
-	"Maintainer" = "Maintainer",\
-	"Medical Officer" = "Medical Officer",\
-	"General Researcher" = "General Researcher",\
-	"Anomaly Researcher" = "Anomaly Researcher",\
-	"Excavator" = "Excavator",\
-	"Anomaly Excavator" = "Anomaly Excavator",\
-	"Cargo Technician" = "Cargo Technician",\
+	"Maintainer" = "Spec.",\
+	"Medical Officer" = "Dr.",\
+	"Head Physician" = "Dr.",\
+	"General Researcher" = "Prof.",\
+	"Anomaly Researcher" = "Prof.",\
+	"Anomaly Excavator" = "Spec.",\
 	"Nutritionist" = "Nutritionist",\
-	"Sanitation Technician" = "Sanitation Technician",\
 	)
 
 /mob/living/carbon/human/proc/rank_prefix_name(name)
@@ -450,7 +448,7 @@ var/list/rank_prefix = list(\
 	var/obj/item/organ/external/floor_organ
 
 	if(!lying)
-		var/obj/item/organ/external/list/standing = list()
+		var/list/obj/item/organ/external/standing = list()
 		for(var/limb_tag in list(BP_L_FOOT, BP_R_FOOT))
 			var/obj/item/organ/external/E = organs_by_name[limb_tag]
 			if(E && E.is_usable())
@@ -465,7 +463,7 @@ var/list/rank_prefix = list(\
 	if(!floor_organ)
 		floor_organ = pick(organs)
 
-	var/obj/item/organ/external/list/to_shock = trace_shock(initial_organ, floor_organ)
+	var/list/obj/item/organ/external/to_shock = trace_shock(initial_organ, floor_organ)
 
 	if(to_shock && to_shock.len)
 		shock_damage /= to_shock.len
@@ -480,7 +478,7 @@ var/list/rank_prefix = list(\
 	return total_damage
 
 /mob/living/carbon/human/proc/trace_shock(var/obj/item/organ/external/init, var/obj/item/organ/external/floor)
-	var/obj/item/organ/external/list/traced_organs = list(floor)
+	var/list/obj/item/organ/external/traced_organs = list(floor)
 
 	if(!init)
 		return
@@ -528,7 +526,7 @@ var/list/rank_prefix = list(\
 
 			var/datum/computer_file/crew_record/R = get_crewmember_record(perpname)
 			if(R)
-				var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) in GLOB.security_statuses as null|text
+				var/setcriminal = input(usr, "Specify a new criminal status for this person.", "Security HUD", R.get_criminalStatus()) as null|anything in GLOB.security_statuses
 				if(hasHUD(usr, "security") && setcriminal)
 					R.set_criminalStatus(setcriminal)
 					modified = 1
@@ -583,7 +581,7 @@ var/list/rank_prefix = list(\
 
 			var/datum/computer_file/crew_record/E = get_crewmember_record(perpname)
 			if(E)
-				var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) in GLOB.physical_statuses as null|text
+				var/setmedical = input(usr, "Specify a new medical status for this person.", "Medical HUD", E.get_status()) as null|anything in GLOB.physical_statuses
 				if(hasHUD(usr,"medical") && setmedical)
 					E.set_status(setmedical)
 					modified = 1

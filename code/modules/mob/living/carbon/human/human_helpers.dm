@@ -269,7 +269,7 @@
 	return FALSE
 
 // Returns true if the human is cloaked, otherwise false (technically returns the number of cloaking sources)
-/mob/living/carbon/human/proc/is_cloaked()
+/mob/living/carbon/human/is_cloaked()
 	if(clean_cloaking_sources())
 		update_icons()
 		visible_message(CLOAK_APPEAR_OTHER, CLOAK_APPEAR_SELF)

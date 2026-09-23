@@ -138,7 +138,7 @@
 					G.assailant.attack_log += text("\[[time_stamp()]\] <span class='danger'>Smashed [G.affecting.name] ([G.affecting.ckey]) on the floor.</font>")
 
 					//log_admin("ATTACK: [G.assailant] ([G.assailant.ckey]) smashed [G.affecting] ([G.affecting.ckey]) on a table.", 2)
-					message_admins("ATTACK: [G.assailant] ([G.assailant.ckey])(<A HREF='?_src_=holder;adminplayerobservejump=\ref[G]'>JMP</A>) smashed [G.affecting] ([G.affecting.ckey]) on the floor.", 2)
+					message_admins("ATTACK: [G.assailant] ([G.assailant.ckey])(<a href='byond://?_src_=holder;adminplayerobservejump=\ref[G]'>JMP</A>) smashed [G.affecting] ([G.affecting.ckey]) on the floor.", 2)
 					log_attack("[G.assailant] ([G.assailant.ckey]) smashed [G.affecting] ([G.affecting.ckey]) on a table.")
 */
 

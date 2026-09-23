@@ -3,7 +3,7 @@
 	plane = DEFAULT_PLANE
 	layer = MOB_LAYER
 
-	appearance_flags = PIXEL_SCALE
+	appearance_flags = PIXEL_SCALE | LONG_GLIDE
 	animate_movement = 2
 
 	virtual_mob = /mob/observer/virtual/mob
@@ -63,6 +63,10 @@
 	Changing this around would probably require a good look-over the pre-existing code.
 	*/
 	var/obj/screen/zone_sel/zone_sel = null
+
+	/// Cursor icon used when holding shift over things.
+	var/examine_cursor_icon = 'icons/effects/mouse_pointers/examine_pointer.dmi'
+
 
 	var/use_me = 1 //Allows all mobs to use the me verb by default, will have to manually specify they cannot
 	var/damageoverlaytemp = 0
@@ -205,3 +209,8 @@
 	var/emote_cd = 0//Emote cooldown.
 
 	var/last_pull_sound = 0
+
+	/// If this mob is or was piloted by a player with typing indicators enabled, an instance of one.
+	var/atom/movable/overlay/typing_indicator/typing_indicator
+	/// Whether this mob is currently typing, if piloted by a player.
+	var/is_typing

@@ -119,7 +119,7 @@ Please contact me on #coderbus IRC. ~Carn x
 //Human Overlays Indexes/////////
 #define MUTATIONS_LAYER			1
 #define SKIN_LAYER				2
-#define DAMAGE_LAYER			3
+#define HUMAN_DAMAGE_LAYER		3
 #define BODYHAIR_LAYER			4
 #define SURGERY_LEVEL			5		//bs12 specific.
 #define UNDERWEAR_LAYER         6
@@ -146,7 +146,7 @@ Please contact me on #coderbus IRC. ~Carn x
 #define L_HAND_LAYER			27
 #define R_HAND_LAYER			28
 #define BLEEDING_LAYER			29
-#define FIRE_LAYER				30		//If you're on fire
+#define HUMAN_FIRE_LAYER		30		//If you're on fire
 #define TARGETED_LAYER			31		//BS12: Layer for the target overlay from weapon targeting system
 #define FLIES_LAYER				32
 #define COLDBREATH_LAYER		33
@@ -251,7 +251,7 @@ var/global/list/damage_icon_parts = list()
 
 		standing_image.overlays += DI
 
-	overlays_standing[DAMAGE_LAYER]	= standing_image
+	overlays_standing[HUMAN_DAMAGE_LAYER]	= standing_image
 
 	if(update_icons)   update_icons()
 
@@ -441,7 +441,7 @@ var/global/list/damage_icon_parts = list()
 				add_image = 1
 	for(var/mut in mutations)
 		switch(mut)
-			if(LASER)
+			if(LASEREYE)
 				standing.overlays	+= "lasereyes_s"
 				add_image = 1
 	if(add_image)
@@ -775,10 +775,10 @@ var/global/list/damage_icon_parts = list()
 	if(update_icons)   update_icons()
 
 /mob/living/carbon/human/update_fire(var/update_icons=1)
-	overlays_standing[FIRE_LAYER] = null
+	overlays_standing[HUMAN_FIRE_LAYER] = null
 	if(on_fire)
 		var/image/standing = overlay_image('icons/mob/OnFire.dmi', "Standing", RESET_COLOR)
-		overlays_standing[FIRE_LAYER] = standing
+		overlays_standing[HUMAN_FIRE_LAYER] = standing
 	if(update_icons)   update_icons()
 
 /mob/living/carbon/human/proc/update_surgery(var/update_icons=1)
@@ -878,7 +878,7 @@ var/global/list/damage_icon_parts = list()
 //Human Overlays Indexes/////////
 #undef MUTATIONS_LAYER
 #undef SKIN_LAYER
-#undef DAMAGE_LAYER
+#undef HUMAN_DAMAGE_LAYER
 #undef BODYHAIR_LAYER
 #undef SURGERY_LEVEL
 #undef UNDERWEAR_LAYER
@@ -905,7 +905,7 @@ var/global/list/damage_icon_parts = list()
 #undef L_HAND_LAYER
 #undef R_HAND_LAYER
 #undef BLEEDING_LAYER
-#undef FIRE_LAYER
+#undef HUMAN_FIRE_LAYER
 #undef TARGETED_LAYER
 #undef FLIES_LAYER
 #undef COLDBREATH_LAYER

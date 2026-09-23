@@ -5,12 +5,20 @@ PROCESSING_SUBSYSTEM_DEF(mobs)
 	runlevels = RUNLEVEL_GAME|RUNLEVEL_POSTGAME
 	wait = 2 SECONDS
 
-	process_proc = /mob/proc/Life
-
 	var/list/mob_list
+	var/list/queue = list()
 
 /datum/controller/subsystem/processing/mobs/PreInit()
 	mob_list = processing // Simply setups a more recognizable var name than "processing"
+
+/datum/controller/subsystem/processing/mobs/fire(resumed = 0)
+	for(var/last_object in mob_list)
+		var/mob/M = last_object
+		if(istype(M) && !QDELETED(M))
+			M.Life()
+		else
+			mob_list -= M
+	sleep(wait)
 
 /mob/dview/Initialize()
 	. = ..()

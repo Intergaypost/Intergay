@@ -56,7 +56,7 @@
 	artery_name = "iliac artery"
 	cavity_name = "abdominal"
 
-/obj/item/organ/external/groin/droplimb(var/clean, var/disintegrate = DROPLIMB_EDGE, var/ignore_children, var/silen)
+/obj/item/organ/external/groin/droplimb(var/clean, var/disintegrate = DROPLIMB_EDGE, var/ignore_children, var/silent)
 	if(owner.has_penis())//Instead of bisecting them entirely just fucking drop their dick off.
 		owner.mutilate_genitals()
 		owner.visible_message("<span class='danger'><big>\The [owner]'s penis flies off in a bloody arc!</big></span>")

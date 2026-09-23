@@ -41,6 +41,9 @@
 	if(usr.incapacitated())
 		return
 
+	var/datum/asset/assets = get_asset_datum(/datum/asset/simple/craft)
+	assets.send(user)
+
 	var/list/data = list()
 	var/curr_category = get_category(usr)
 
@@ -52,7 +55,7 @@
 	if(CR)
 		data["cur_item"] = list(
 			"name" = CR.name,
-			"icon" = getAtomCacheFilename(CR.result[1]),
+			"icon" = (CR.result && CR.result.len) ? getAtomCacheFilename(CR.result[1]) : null,
 			"ref"  = "\ref[CR]",
 			"desc" = user.statcheck(user.stats[STAT_IQ]) >= 8 ? CR.get_description() : "I'm not even sure what this does... <br>",
 			"ingredients" = user.statcheck(user.stats[STAT_IQ]) >= 10 ?  CR.get_ingredients() : "I'm not sure what this would be made out of... <br>",
@@ -66,18 +69,12 @@
 				"ref" = "\ref[recipe]"
 			))
 	data["items"] = items
-	//user << browse(text("<HEAD><TITLE>Crafting menu</TITLE></HEAD><TT>[]</TT>", data), "window=secure_rec;size=600x400")
-	if (!ui)
-		ui = new(user, src, ui_key, "craft.tmpl", "[src]", 800, 450, state = state)
-		ui.set_initial_data(data)
-		ui.open()
-	/*
+
 	ui = SSnano.try_update_ui(user, src, ui_key, ui, data, force_open)
 	if (!ui)
 		ui = new(user, src, ui_key, "craft.tmpl", "[src]", 800, 450, state = state)
 		ui.set_initial_data(data)
 		ui.open()
-	*/
 /datum/nano_module/craft/Topic(href, href_list)
 	if(..())
 		return TRUE

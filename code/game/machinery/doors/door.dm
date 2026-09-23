@@ -230,7 +230,7 @@
 			if (!transfer)
 				to_chat(user, "<span class='warning'>You must weld or remove \the [repairing] from \the [src] before you can add anything else.</span>")
 		else
-			repairing = stack.split(amount_needed, force=TRUE)
+			repairing = stack.split(amount_needed)
 			if (repairing)
 				repairing.loc = src
 				transfer = repairing.amount
@@ -409,7 +409,7 @@
 	operating = 0
 
 	if(autoclose)
-		addtimer(CALLBACK(src, .close), next_close_time(), TIMER_UNIQUE|TIMER_OVERRIDE)
+		addtimer(CALLBACK(src, PROC_REF(close)), next_close_time(), TIMER_UNIQUE|TIMER_OVERRIDE)
 
 	return 1
 
@@ -419,7 +419,7 @@
 /obj/machinery/door/proc/close(var/forced = 0)
 	if(!can_close(forced))
 		if(autoclose)
-			addtimer(CALLBACK(src, .close), next_close_time(), TIMER_UNIQUE|TIMER_OVERRIDE)
+			addtimer(CALLBACK(src, PROC_REF(close)), next_close_time(), TIMER_UNIQUE|TIMER_OVERRIDE)
 		return
 	operating = 1
 

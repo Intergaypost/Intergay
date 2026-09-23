@@ -65,3 +65,10 @@ ANIMAL_DELAY 0
 
 ## Remove the # in front of this config option to have loyalty implants spawn by default on your server.
 #USE_LOYALTY_IMPLANTS
+
+## Toggle diagonal movement (Holding both W and D to move north-east, for example).
+ALLOW_DIAGONAL_MOVEMENT
+
+## If enabled, diagonal movement applies a sqrt(2) (1.414x) delay multiplier so diagonal travel speed matches cardinal speed.
+DIAGONAL_MOVEMENT_SPEED_NORMALIZATION
+

@@ -33,7 +33,7 @@
 				honorific = "Ms."
 			dat += "<font color=red><i>Identity not found in operative database. What can the Syndicate do for you today, [honorific] [user.name]?</i></font><br>"
 			if(!selfdestructing)
-				dat += "<br><br><A href='?src=\ref[src];betraitor=1;traitormob=\ref[user]'>\"[pick("I want to switch teams.", "I want to work for you.", "Let me join you.", "I can be of use to you.", "You want me working for you, and here's why...", "Give me an objective.", "How's the 401k over at the Syndicate?")]\"</A><BR>"
+				dat += "<br><br><a href='byond://?src=\ref[src];betraitor=1;traitormob=\ref[user]'>\"[pick("I want to switch teams.", "I want to work for you.", "Let me join you.", "I can be of use to you.", "You want me working for you, and here's why...", "Give me an objective.", "How's the 401k over at the Syndicate?")]\"</A><BR>"
 	dat += temptext
 	user << browse(dat, "window=syndbeacon")
 	onclose(user, "syndbeacon")
@@ -51,12 +51,11 @@
 			src.updateUsrDialog()
 			return
 		charges -= 1
-		switch(rand(1,2))
-			if(1)
-				temptext = "<font color=red><i><b>Double-crosser. You planned to betray us from the start. Allow us to repay the favor in kind.</b></i></font>"
-				src.updateUsrDialog()
-				spawn(rand(50,200)) selfdestruct()
-				return
+		if(prob(50))
+			temptext = "<font color=red><i><b>Double-crosser. You planned to betray us from the start. Allow us to repay the favor in kind.</b></i></font>"
+			src.updateUsrDialog()
+			spawn(rand(50,200)) selfdestruct()
+			return
 		if(istype(M, /mob/living/carbon/human))
 			var/mob/living/carbon/human/N = M
 			to_chat(M, "<B>You have joined the ranks of the Syndicate and become a traitor to the station!</B>")

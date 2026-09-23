@@ -18,7 +18,9 @@
 	var/phrase = "Test Phrase"
 
 /datum/old_god_spell/New()
-	phrase = GLOB.all_religions[old_god].generate_random_phrase()
+	var/datum/religion/rel = GLOB.all_religions[old_god]
+	if(rel)
+		phrase = rel.generate_random_phrase()
 	..()
 
 /datum/old_god_spell/proc/spell_effect(var/mob/living/user)

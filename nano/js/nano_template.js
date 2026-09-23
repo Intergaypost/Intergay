@@ -44,7 +44,7 @@ var NanoTemplate = function () {
 					// Oh well.
 					//cache: false,
 					dataType: 'text',
-					timeout: 1000
+					timeout: 5000
 				}))
 				.done(function(templateMarkup) {
 

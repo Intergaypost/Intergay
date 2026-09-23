@@ -19,7 +19,7 @@
 				<body>
 
 				<h1>FOOD RECIPES</h1>
-				This is a guide mandated by the TetraCorp Chef Board for the enjoyment of the crew.
+				This is a guide mandated by the Tri-Net Corp Chef Board for the enjoyment of the crew.
 
 				<h3>Dough:</h3>
 				Knead an egg and some flour along with some water to make dough. Bake that to make a bun or flatten and cut it.

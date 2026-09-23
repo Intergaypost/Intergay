@@ -1,10 +1,3 @@
-#define isWrench(A)      (A && A.iswrench())
-#define isWelder(A)      (A && A.iswelder())
-#define isCoil(A)        (A && A.iscoil())
-#define isWirecutter(A)  (A && A.iswirecutter())
-#define isScrewdriver(A) (A && A.isscrewdriver())
-#define isMultitool(A)   (A && A.ismultitool())
-#define isCrowbar(A)     (A && A.iscrowbar())
 //snowflake code because yes
 /atom/proc/iswrench()
 	return FALSE

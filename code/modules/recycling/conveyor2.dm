@@ -55,6 +55,10 @@
 		operating = 0
 	if(stat & NOPOWER)
 		operating = 0
+	if(!operating)
+		for(var/atom/movable/A in loc)
+			if(A != src)
+				SSmove_manager.stop_looping(A, SSconveyors)
 	icon_state = "conveyor[operating]"
 
 	// machine process
@@ -69,16 +73,30 @@
 	if(exhumessound && operating)
 		playsound(src.loc, 'sound/effects/assembly_loop.ogg', 30, 0, 0)
 
-	affecting = loc.contents - src		// moved items will be all in loc
-	spawn(1)	// slight delay to prevent infinite propagation due to map order	//TODO: please no spawn() in process(). It's a very bad idea
-		var/items_moved = 0
-		for(var/atom/movable/A in affecting)
-			if(!A.anchored)
-				if(A.loc == src.loc) // prevents the object from being affected if it's not currently here.
-					step(A,movedir)
-					items_moved++
-			if(items_moved >= 10)
-				break
+	for(var/atom/movable/A in loc)
+		if(A == src || A.anchored)
+			continue
+		var/datum/move_loop/move/moving_loop = SSmove_manager.processing_on(A, SSconveyors)
+		if(moving_loop)
+			moving_loop.direction = movedir
+		else
+			A.AddComponent(/datum/component/convey, movedir, 3, 3)
+
+/obj/machinery/conveyor/Crossed(atom/movable/AM)
+	. = ..()
+	if(operating && !AM.anchored && ismovable(AM))
+		var/datum/move_loop/move/moving_loop = SSmove_manager.processing_on(AM, SSconveyors)
+		if(moving_loop)
+			moving_loop.direction = movedir
+		else
+			AM.AddComponent(/datum/component/convey, movedir, 3, 3)
+
+/obj/machinery/conveyor/Uncrossed(atom/movable/AM)
+	. = ..()
+	var/obj/machinery/conveyor/next_conveyor = locate(/obj/machinery/conveyor) in AM.loc
+	if(!next_conveyor || !next_conveyor.operating)
+		SSmove_manager.stop_looping(AM, SSconveyors)
+
 
 // attack with item, place item on conveyor
 /obj/machinery/conveyor/attackby(var/obj/item/I, mob/user)

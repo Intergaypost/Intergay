@@ -7,7 +7,7 @@
 	use_to_pickup = 1
 	slot_flags = SLOT_BELT
 
-/obj/item/weapon/storage/bag/handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
+/obj/item/weapon/storage/bag/handle_item_insertion(var/obj/item/W, var/store_x = -1, var/store_y = -1, var/prevent_warning = 0, var/NoUpdate = 0)
 	. = ..()
 	if(.) update_w_class()
 

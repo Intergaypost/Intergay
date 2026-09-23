@@ -30,10 +30,21 @@
 	if(!candidate)
 		log_debug("[user] pAI prefs have a null candidate var.")
 		return .
-	//. += "Name: <a href='?src=\ref[src];option=name'>[candidate.name ? candidate.name : "None Set"]</a><br>"
-	//. += "Description: <a href='?src=\ref[src];option=desc'>[candidate.description ? TextPreview(candidate.description, 40) : "None Set"]</a><br>"
-	//. += "Role: <a href='?src=\ref[src];option=role'>[candidate.role ? TextPreview(candidate.role, 40) : "None Set"]</a><br>"
-	//. += "OOC Comments: <a href='?src=\ref[src];option=ooc'>[candidate.comments ? TextPreview(candidate.comments, 40) : "None Set"]</a><br>"
+
+/datum/category_item/player_setup_item/player_global/pai/get_data(var/mob/user)
+	if(!candidate)
+		candidate = new()
+
+	return list(
+		"ref" = "\ref[src]",
+		"name" = candidate.name ? candidate.name : "None Set",
+		"desc" = candidate.description ? candidate.description : "",
+		"desc_preview" = candidate.description ? TextPreview(candidate.description, 40) : "None Set",
+		"role" = candidate.role ? candidate.role : "",
+		"role_preview" = candidate.role ? TextPreview(candidate.role, 40) : "None Set",
+		"comments" = candidate.comments ? candidate.comments : "",
+		"comments_preview" = candidate.comments ? TextPreview(candidate.comments, 40) : "None Set"
+	)
 
 /datum/category_item/player_setup_item/player_global/pai/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["option"])

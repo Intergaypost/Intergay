@@ -73,7 +73,7 @@
 
 /obj/item/clothing/suit/storage/toggle/labcoat/rd
 	name = "research director's labcoat"
-	desc = "A full-body labcoat covered in red and black designs, denoting it as a TetraCorp management coat. Judging by the amount of designs on it, it is only to be worn by the most enthusiastic of TetraCorp employees."
+	desc = "A full-body labcoat covered in red and black designs, denoting it as a management coat. Judging by the amount of designs on it, it is only to be worn by the most enthusiastic employees."
 	icon_state = "labcoat_rd_open"
 	icon_open = "labcoat_rd_open"
 	icon_closed = "labcoat_rd"

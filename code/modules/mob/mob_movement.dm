@@ -8,7 +8,6 @@
 		return (!mover.density || !density || lying)
 	else
 		return (!mover.density || !density || lying)
-	return
 
 /mob/proc/setMoveCooldown(var/timeout)
 	if(client)
@@ -133,56 +132,34 @@
 
 //This proc should never be overridden elsewhere at /atom/movable to keep directions sane.
 /atom/movable/Move(newloc, direct, glide_size_override = 0)
-	if (direct & (direct - 1))
-		if (direct & 1)
-			if (direct & 4)
-				if (step(src, NORTH))
-					step(src, EAST)
-				else
-					if (step(src, EAST))
-						step(src, NORTH)
-			else
-				if (direct & 8)
-					if (step(src, NORTH))
-						step(src, WEST)
-					else
-						if (step(src, WEST))
-							step(src, NORTH)
-		else
-			if (direct & 2)
-				if (direct & 4)
-					if (step(src, SOUTH))
-						step(src, EAST)
-					else
-						if (step(src, EAST))
-							step(src, SOUTH)
-				else
-					if (direct & 8)
-						if (step(src, SOUTH))
-							step(src, WEST)
-						else
-							if (step(src, WEST))
-								step(src, SOUTH)
-	else
-		var/atom/A = src.loc
+	if(glide_size_override)
+		set_glide_size(glide_size_override)
 
-		if(glide_size_override)
-			set_glide_size(glide_size_override)
+	var/atom/A = src.loc
+	var/olddir = dir //we can't override this without sacrificing the rest of movable/New()
+	. = ..()
 
-		var/olddir = dir //we can't override this without sacrificing the rest of movable/New()
-		. = ..()
-		if(direct != olddir)
-			dir = olddir
-			set_dir(direct)
+	if(!. && (direct & (direct - 1)) && config.allow_diagonal_movement)
+		var/first_dir = direct & (NORTH|SOUTH)
+		var/second_dir = direct & (EAST|WEST)
+		if(first_dir && step(src, first_dir))
+			return 1
+		else if(second_dir && step(src, second_dir))
+			return 1
+		return 0
 
-		src.move_speed = world.time - src.l_move_time
-		src.l_move_time = world.time
-		src.m_flag = 1
-		if ((A != src.loc && A && A.z == src.z))
-			src.last_move = get_dir(A, src.loc)
-		if(.)
-			Moved(A, direct)
-	return
+	if(direct != olddir)
+		dir = olddir
+		set_dir(direct)
+
+	src.move_speed = world.time - src.l_move_time
+	src.l_move_time = world.time
+	src.m_flag = 1
+	if ((A != src.loc && A && A.z == src.z))
+		src.last_move = get_dir(A, src.loc)
+	if(.)
+		Moved(A, direct)
+	return .
 
 // Called on a successful Move().
 /atom/movable/proc/Moved(atom/oldloc)
@@ -200,8 +177,14 @@
 
 
 /client/Move(n, direct)
-	if(!mob)
+	if(!user_acted(src))
+		return
+
+	if(!mob || !n || !direct)
 		return // Moved here to avoid nullrefs below
+
+	if(SEND_SIGNAL(mob, COMSIG_MOB_CLIENT_PRE_MOVE) & COMSIG_MOB_CLIENT_BLOCK_PRE_MOVE)
+		return FALSE
 
 	if(mob.control_object)	Move_object(direct)
 
@@ -211,7 +194,12 @@
 
 	if(moving)	return 0
 
-	if(world.time < move_delay)	return
+	if(world.time < move_delay)
+		return
+	else
+		next_move_dir_add = 0
+		next_move_dir_sub = 0
+
 
 	if(locate(/obj/effect/stop/, mob.loc))
 		for(var/obj/effect/stop/S in mob.loc)
@@ -234,6 +222,8 @@
 		return
 
 	if(isliving(mob))
+		if(SEND_SIGNAL(mob, COMSIG_MOB_CLIENT_PRE_LIVING_MOVE) & COMSIG_MOB_CLIENT_BLOCK_PRE_LIVING_MOVE)
+			return FALSE
 		var/mob/living/L = mob
 		if(L.incorporeal_move)//Move though walls
 			Process_Incorpmove(direct)
@@ -265,7 +255,7 @@
 	if(!mob.lastarea)
 		mob.lastarea = get_area(mob.loc)
 
-	if((istype(mob.loc, /turf/space)) || (mob.lastarea.has_gravity == 0))
+	if(!mob.check_solid_ground())
 		if(!mob.Process_Spacemove(0))	return 0
 
 	if(isobj(mob.loc) || ismob(mob.loc))//Inside an object, tell it we moved
@@ -287,16 +277,21 @@
 			to_chat(src, "<span class='notice'>You're pinned to a wall by [mob.pinned[1]]!</span>")
 			return 0
 
-		move_delay = world.time//set move delay
+		var/step_delay = 0
 
 		switch(mob.m_intent)
 			if("run")
 				if(mob.drowsyness > 0)
-					move_delay += 6
-				move_delay += 1+config.run_speed
+					step_delay += config.run_speed+1
+				step_delay += config.run_speed
 			if("walk")
-				move_delay += 7+config.walk_speed
-		move_delay += mob.movement_delay()
+				step_delay += config.walk_speed
+		step_delay += mob.movement_delay()
+
+		if((direct & (direct - 1)) && config.diagonal_movement_speed_normalization)
+			step_delay *= DIAGONAL_MOVE_DELAY_MULT
+
+		step_delay = max(round(step_delay, world.tick_lag), world.tick_lag)
 
 		if(istype(mob.buckled, /obj/vehicle))
 			//manually set move_delay for vehicles so we don't inherit any mob movement penalties
@@ -330,8 +325,21 @@
 							if(prob(50))	direct = turn(direct, pick(90, -90))
 						if("walk")
 							if(prob(25))	direct = turn(direct, pick(90, -90))
-				move_delay += 2
+				step_delay += 2
+				step_delay = max(round(step_delay, world.tick_lag), world.tick_lag)
+				if(world.time - move_delay > step_delay)
+					move_delay = world.time + step_delay
+				else
+					move_delay = max(move_delay + step_delay, world.time + world.tick_lag)
+				if(mob.updating_glide_size)
+					var/actual_delay = max(move_delay - world.time, world.tick_lag)
+					mob.set_glide_size(DELAY_TO_GLIDE_SIZE(actual_delay))
 				return mob.buckled.relaymove(mob,direct)
+
+		if(world.time - move_delay > step_delay)
+			move_delay = world.time + step_delay
+		else
+			move_delay = max(move_delay + step_delay, world.time + world.tick_lag)
 
 		//We are now going to move
 		moving = 1
@@ -347,6 +355,14 @@
 						if(M)
 							if ((get_dist(mob, M) <= 1 || M.loc == mob.loc))
 								var/turf/T = mob.loc
+								var/temp_visual_delay = visual_delay
+								visual_delay = 0
+								if(mob.updating_glide_size)
+									if(temp_visual_delay)
+										mob.set_glide_size(temp_visual_delay)
+									else
+										var/actual_delay = max(move_delay - world.time, world.tick_lag)
+										mob.set_glide_size(DELAY_TO_GLIDE_SIZE(actual_delay))
 								. = ..()
 								if (isturf(M.loc))
 									var/diag = get_dir(mob, M)
@@ -380,6 +396,14 @@
 						if(prob(35))
 							direct = turn(direct, pick(90, -90))
 							n = get_step(mob, direct)
+			var/temp_visual_delay = visual_delay
+			visual_delay = 0
+			if(mob.updating_glide_size)
+				if(temp_visual_delay)
+					mob.set_glide_size(temp_visual_delay)
+				else
+					var/actual_delay = max(move_delay - world.time, world.tick_lag)
+					mob.set_glide_size(DELAY_TO_GLIDE_SIZE(actual_delay))
 			. = mob.SelfMove(n, direct)
 		for (var/obj/item/grab/G in mob)
 			if (G.assailant_reverse_facing())
@@ -401,12 +425,25 @@
 /mob/proc/SelfMove(turf/n, direct)
 	return Move(n, direct)
 
+/mob/newtonian_move(direction)
+	. = ..()
+	if(!.)
+		return
+	if(client)
+		client.visual_delay = MOVEMENT_ADJUSTED_GLIDE_SIZE(inertia_move_delay, SSspacedrift.visual_delay)
+
 
 ///Process_Incorpmove
 ///Called by client/Move()
 ///Allows mobs to run though walls
 /client/proc/Process_Incorpmove(direct)
 	var/turf/mobloc = get_turf(mob)
+
+	next_move_dir_add = 0
+	next_move_dir_sub = 0
+
+	if(mob.updating_glide_size)
+		mob.set_glide_size(DELAY_TO_GLIDE_SIZE(world.tick_lag))
 
 	switch(mob.incorporeal_move)
 		if(1)
@@ -478,7 +515,10 @@
 ///Called by /client/Move()
 ///For moving in space
 ///Return 1 for movement 0 for none
-/mob/proc/Process_Spacemove(var/check_drift = 0)
+/mob/Process_Spacemove(var/check_drift = 0)
+	if(check_drift)
+		return check_solid_ground()
+
 	if(!Check_Dense_Object()) //Nothing to push off of so end here
 		update_floating()
 		return 0
@@ -490,31 +530,37 @@
 	return 1
 
 /mob/proc/check_solid_ground()
-	if(istype(loc, /turf/space))
+	var/turf/T = get_turf(src)
+	if(!T || istype(T, /turf/space))
 		return 0
 
-	//Check to see if we slipped
-	if(prob(Process_Spaceslipping(0)) && !buckled)
-		src << "<font color='blue'><B>You slipped!</B></font>"
-		src.inertia_dir = src.last_move
-		step(src, src.inertia_dir)
-		return 0
-	//If not then we can reset inertia and move
-	inertia_dir = 0
-	return 1
+	if(mob_has_gravity(T))
+		//Check to see if we slipped
+		if(prob(Process_Spaceslipping(0)) && !buckled)
+			src << "<font color='blue'><B>You slipped!</B></font>"
+			src.inertia_dir = src.last_move
+			step(src, src.inertia_dir)
+			return 0
+		//If not then we can reset inertia and move
+		inertia_dir = 0
+		return 1
+
+	if(istype(T, /turf/simulated/floor) && Check_Shoegrip())
+		inertia_dir = 0
+		return 1
+
+	return 0
 
 /mob/proc/Check_Dense_Object() //checks for anything to push off in the vicinity. also handles magboots on gravity-less floors tiles
-
 	var/dense_object = 0
 	var/shoegrip
 
-	for(var/turf/turf in oview(1,src))
-		if(istype(turf,/turf/space))
+	for(var/turf/turf in range(1, src))
+		if(istype(turf, /turf/space))
 			continue
 
-		if(istype(turf,/turf/simulated/floor)) // Floors don't count if they don't have gravity
-			var/area/A = turf.loc
-			if(istype(A) && A.has_gravity == 0)
+		if(istype(turf, /turf/simulated/floor)) // Floors don't count if they don't have gravity
+			if(!mob_has_gravity(turf))
 				if(shoegrip == null)
 					shoegrip = Check_Shoegrip() //Shoegrip is only ever checked when a zero-gravity floor is encountered to reduce load
 				if(!shoegrip)
@@ -523,19 +569,21 @@
 		dense_object++
 		break
 
-	if(!dense_object && (locate(/obj/structure/lattice) in oview(1, src)))
+	if(!dense_object && (locate(/obj/structure/lattice) in range(1, src)))
 		dense_object++
 
-	if(!dense_object && (locate(/obj/structure/catwalk) in oview(1, src)))
+	if(!dense_object && (locate(/obj/structure/catwalk) in range(1, src)))
 		dense_object++
 
+	if(!dense_object && (locate(/obj/structure/grille) in range(1, src)))
+		dense_object++
 
 	//Lastly attempt to locate any dense objects we could push off of
 	//TODO: If we implement objects drifing in space this needs to really push them
 	//Due to a few issues only anchored and dense objects will now work.
 	if(!dense_object)
-		for(var/obj/O in oview(1, src))
-			if((O) && (O.density) && (O.anchored))
+		for(var/obj/O in range(1, src))
+			if(O && O.density && O.anchored)
 				dense_object++
 				break
 
@@ -551,10 +599,8 @@
 		return 0
 	if(Check_Shoegrip())
 		return 0
-	return prob_slip
-
 	prob_slip = round(prob_slip)
-	return(prob_slip)
+	return prob_slip
 
 /mob/proc/mob_has_gravity(turf/T)
 	return has_gravity(src, T)

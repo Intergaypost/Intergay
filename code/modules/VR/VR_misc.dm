@@ -6,6 +6,9 @@
 	light_range = 2
 	light_power = 3
 
+
+/turf/simulated/floor/cyber/random
+
 /turf/simulated/floor/fixed/cyber
 	name = "code floor"
 	desc = "This flooring does not, strictly, exist. It is only an aid in your quest for data, built by your deck"
@@ -126,3 +129,13 @@
 
 /obj/item/clothing/head/cyberdeck/dropped(mob/living/carbon/human/M)
 	M.adjustInteligence(-3)
+
+/area/cyberspace
+	name = "Cyberspace"
+	icon_state = "thunder"
+	has_gravity = 1
+	forced_ambience = list('sound/ambience/hacker.ogg')
+
+/turf/simulated/floor/cyber/random/Initialize()
+	. = ..()
+	ChangeTurf(pick(1;/turf/simulated/floor/cyber, 2;/turf/simulated/floor/cyber/redice, 4;/turf/unsimulated/wall/cyber/blueice, 4;/turf/simulated/floor/fixed/cyber))

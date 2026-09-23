@@ -21,6 +21,16 @@ SUBSYSTEM_DEF(shuttle)
 	initialize_shuttles()
 	. = ..()
 
+/datum/controller/subsystem/shuttle/Recover()
+	initialized = SSshuttle.initialized
+	shuttles = SSshuttle.shuttles
+	process_shuttles = SSshuttle.process_shuttles
+	registered_shuttle_landmarks = SSshuttle.registered_shuttle_landmarks
+	last_landmark_registration_time = SSshuttle.last_landmark_registration_time
+	shuttle_logs = SSshuttle.shuttle_logs
+	landmarks_awaiting_sector = SSshuttle.landmarks_awaiting_sector
+	landmarks_still_needed = SSshuttle.landmarks_still_needed
+
 /datum/controller/subsystem/shuttle/fire(resumed = FALSE)
 	if (!resumed)
 		working_shuttles = process_shuttles.Copy()

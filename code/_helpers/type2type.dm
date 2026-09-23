@@ -243,10 +243,13 @@
 		switch(child)
 			if(/datum)
 				return
-			if(/obj || /mob)
+			if(/obj, /mob)
 				return /atom/movable
-			if(/area || /turf)
+			if(/area, /turf)
 				return /atom
 			else
 				return /datum
 	return text2path(copytext(string_type, 1, last_slash))
+
+/proc/return_typenames(type)
+	return splittext("[type]", "/")

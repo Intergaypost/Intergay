@@ -98,7 +98,8 @@
 		//For stopping runtimes with NPCs
 		rest?.icon_state = "rest1"
 		fixeye?.icon_state = "fixeye"
-		walk_to(src,0)
+		SSmove_manager.stop_looping(src)
+
 
 /mob/verb/mob_rest_hotkey()
 	set name = ".mob_rest"

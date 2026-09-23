@@ -104,7 +104,7 @@
 	if(held_item)
 		held_item.loc = src.loc
 		held_item = null
-	walk(src,0)
+	SSmove_manager.stop_looping(src)
 	..(gibbed, deathmessage, show_dead_message)
 
 /mob/living/simple_animal/parrot/Stat()
@@ -120,9 +120,9 @@
 
 	var/dat = 	"<div align='center'><b>Inventory of [name]</b></div><p>"
 	if(ears)
-		dat +=	"<br><b>Headset:</b> [ears] (<a href='?src=\ref[src];remove_inv=ears'>Remove</a>)"
+		dat +=	"<br><b>Headset:</b> [ears] (<a href='byond://?src=\ref[src];remove_inv=ears'>Remove</a>)"
 	else
-		dat +=	"<br><b>Headset:</b> <a href='?src=\ref[src];add_inv=ears'>Nothing</a>"
+		dat +=	"<br><b>Headset:</b> <a href='byond://?src=\ref[src];add_inv=ears'>Nothing</a>"
 
 	user << browse(dat, text("window=mob[];size=325x500", name))
 	onclose(user, "mob[real_name]")
@@ -346,7 +346,7 @@
 //-----WANDERING - This is basically a 'I dont know what to do yet' state
 	else if(parrot_state == PARROT_WANDER)
 		//Stop movement, we'll set it later
-		walk(src, 0)
+		SSmove_manager.stop_looping(src)
 		parrot_interest = null
 
 		//Wander around aimlessly. This will help keep the loops from searches down
@@ -369,11 +369,11 @@
 					return
 			return
 
-		if(parrot_interest && parrot_interest in view(src))
+		if(parrot_interest && (parrot_interest in view(src)))
 			parrot_state = PARROT_SWOOP | PARROT_STEAL
 			return
 
-		if(parrot_perch && parrot_perch in view(src))
+		if(parrot_perch && (parrot_perch in view(src)))
 			parrot_state = PARROT_SWOOP | PARROT_RETURN
 			return
 
@@ -384,7 +384,7 @@
 				return
 //-----STEALING
 	else if(parrot_state == (PARROT_SWOOP | PARROT_STEAL))
-		walk(src,0)
+		SSmove_manager.stop_looping(src)
 		if(!parrot_interest || held_item)
 			parrot_state = PARROT_SWOOP | PARROT_RETURN
 			return
@@ -408,12 +408,12 @@
 			parrot_state = PARROT_SWOOP | PARROT_RETURN
 			return
 
-		walk_to(src, parrot_interest, 1, parrot_speed)
+		SSmove_manager.move_to(src, parrot_interest, 1, parrot_speed)
 		return
 
 //-----RETURNING TO PERCH
 	else if(parrot_state == (PARROT_SWOOP | PARROT_RETURN))
-		walk(src, 0)
+		SSmove_manager.stop_looping(src)
 		if(!parrot_perch || !isturf(parrot_perch.loc)) //Make sure the perch exists and somehow isnt inside of something else.
 			parrot_perch = null
 			parrot_state = PARROT_WANDER
@@ -426,16 +426,16 @@
 			icon_state = "parrot_sit"
 			return
 
-		walk_to(src, parrot_perch, 1, parrot_speed)
+		SSmove_manager.move_to(src, parrot_perch, 1, parrot_speed)
 		return
 
 //-----FLEEING
 	else if(parrot_state == (PARROT_SWOOP | PARROT_FLEE))
-		walk(src,0)
+		SSmove_manager.stop_looping(src)
 		if(!parrot_interest || !isliving(parrot_interest)) //Sanity
 			parrot_state = PARROT_WANDER
 
-		walk_away(src, parrot_interest, 1, parrot_speed-parrot_been_shot)
+		SSmove_manager.move_away(src, parrot_interest, 1, parrot_speed-parrot_been_shot)
 		parrot_been_shot--
 		return
 
@@ -483,11 +483,11 @@
 
 		//Otherwise, fly towards the mob!
 		else
-			walk_to(src, parrot_interest, 1, parrot_speed)
+			SSmove_manager.move_to(src, parrot_interest, 1, parrot_speed)
 		return
 //-----STATE MISHAP
 	else //This should not happen. If it does lets reset everything and try again
-		walk(src,0)
+		SSmove_manager.stop_looping(src)
 		parrot_interest = null
 		parrot_perch = null
 		drop_held_item()

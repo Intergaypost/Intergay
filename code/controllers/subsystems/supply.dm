@@ -46,6 +46,15 @@ SUBSYSTEM_DEF(supply)
 	. = ..()
 	ordernum = rand(1,9000)
 
+/datum/controller/subsystem/supply/Recover()
+	points = SSsupply.points
+	ordernum = SSsupply.ordernum
+	shoppinglist = SSsupply.shoppinglist
+	requestlist = SSsupply.requestlist
+	donelist = SSsupply.donelist
+	sell_order_list = SSsupply.sell_order_list
+	shuttle = SSsupply.shuttle
+
 	//Build master supply list
 	for(var/decl/hierarchy/supply_pack/sp in cargo_supply_pack_root.children)
 		if(sp.is_category())
@@ -146,7 +155,8 @@ SUBSYSTEM_DEF(supply)
 			return 1
 	// Sell Requests
 	for(var/key in sell_order_list) //for every request
-		if(sell_order_list[key].add_item(A))
+		var/datum/sell_order/SO = sell_order_list[key]
+		if(SO.add_item(A))
 			return 1
 
 	// Must sell ore detector disks

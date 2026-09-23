@@ -4,7 +4,7 @@
 	if(istype(mover,/obj/item/projectile))
 		return (check_cover(mover,target))
 	if (flipped == 1)
-		if (get_dir(loc, target) == dir)
+		if (get_dir(loc, target) & dir)
 			return !density
 		else
 			return 1
@@ -57,7 +57,7 @@
 	if(istype(O) && O.checkpass(PASS_FLAG_TABLE))
 		return 1
 	if (flipped==1)
-		if (get_dir(loc, target) == dir)
+		if (get_dir(loc, target) & dir)
 			return !density
 		else
 			return 1

@@ -14,8 +14,8 @@ proc/Intoxicated(phrase)
 			if(lowertext(newletter)=="a")	newletter="ah"
 			if(lowertext(newletter)=="c")	newletter="k"
 		switch(rand(1,7))
-			if(1,3,5,8)	newletter="[rlowertext(newletter)]"
-			if(2,4,6,15)	newletter="[ruppertext(newletter)]"
+			if(1,3,5)	newletter="[rlowertext(newletter)]"
+			if(2,4,6)	newletter="[ruppertext(newletter)]"
 			if(7)	newletter+="'"
 			//if(9,10)	newletter="<b>[newletter]</b>"
 			//if(11,12)	newletter="<big>[newletter]</big>"
@@ -134,14 +134,14 @@ proc/RadioChat(mob/living/user, message, distortion_chance = 60, distortion_spee
 					if(english_only)
 						newletter += "*"
 					else
-						newletter = pick("ø", "Ð", "%", "æ", "µ")
+						newletter = pick("Ñˆ", "Ð ", "%", "Ð¶", "Âµ")
 				distortion += 0.5 * distortion_speed
 			else if(prob(0.75 * distortion)) // Incomprehensible
 				newletter = pick("<", ">", "!", "$", "%", "^", "&", "*", "~", "#")
 				distortion += 0.75 * distortion_speed
 			else if(prob(0.05 * distortion)) // Total cut out
 				if(!english_only)
-					newletter = "¦w¡¼b»%> -BZZT-"
+					newletter = "Â¦wÐŽÑ˜bÂ»%> -BZZT-"
 				else
 					newletter = "srgt%$hjc< -BZZT-"
 				new_message += newletter
@@ -151,15 +151,15 @@ proc/RadioChat(mob/living/user, message, distortion_chance = 60, distortion_spee
 					if("s")
 						newletter = "$"
 					if("e")
-						newletter = "€"
+						newletter = "Ð‚"
 					if("w")
-						newletter = "ø"
+						newletter = "Ñˆ"
 					if("y")
-						newletter = "¡"
+						newletter = "ÐŽ"
 					if("x")
-						newletter = "æ"
+						newletter = "Ð¶"
 					if("u")
-						newletter = "µ"
+						newletter = "Âµ"
 		else
 			if(prob(0.2 * distortion))
 				newletter = " *crackle* "

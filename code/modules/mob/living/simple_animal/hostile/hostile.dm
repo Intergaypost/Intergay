@@ -71,10 +71,10 @@
 			if(get_dist(src, target_mob) <= 6)
 				OpenFire(target_mob)
 			else
-				walk_to(src, target_mob, 1, move_to_delay)
+				SSmove_manager.move_to(src, target_mob, 1, move_to_delay)
 		else
 			stance = HOSTILE_STANCE_ATTACKING
-			walk_to(src, target_mob, 1, move_to_delay)
+			SSmove_manager.move_to(src, target_mob, 1, move_to_delay)
 
 /mob/living/simple_animal/hostile/proc/AttackTarget()
 	stop_automated_movement = 1
@@ -111,11 +111,11 @@
 /mob/living/simple_animal/hostile/proc/LoseTarget()
 	stance = HOSTILE_STANCE_IDLE
 	target_mob = null
-	walk(src, 0)
+	SSmove_manager.stop_looping(src)
 
 /mob/living/simple_animal/hostile/proc/LostTarget()
 	stance = HOSTILE_STANCE_IDLE
-	walk(src, 0)
+	SSmove_manager.stop_looping(src)
 
 
 /mob/living/simple_animal/hostile/proc/ListTargets(var/dist = 7)
@@ -129,13 +129,13 @@
 
 /mob/living/simple_animal/hostile/death(gibbed, deathmessage, show_dead_message)
 	..(gibbed, deathmessage, show_dead_message)
-	walk(src, 0)
+	SSmove_manager.stop_looping(src)
 
 /mob/living/simple_animal/hostile/Life()
 
 	. = ..()
 	if(!.)
-		walk(src, 0)
+		SSmove_manager.stop_looping(src)
 		return 0
 	if(client)
 		return 0
@@ -159,8 +159,9 @@
 	else
 		if(stance != HOSTILE_STANCE_INSIDE)
 			stance = HOSTILE_STANCE_INSIDE
-			walk(src,0)
+			SSmove_manager.stop_looping(src)
 			target_mob = null
+
 
 
 /mob/living/simple_animal/hostile/attackby(var/obj/item/O, var/mob/user)

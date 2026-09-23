@@ -2,6 +2,9 @@
 #define RAND_F(LOW, HIGH) (rand()*(HIGH-LOW) + LOW)
 #define ceil(x) (-round(-(x)))
 #define CEILING(x, y) ( -round(-(x) / (y)) * (y) )
+#define FLOOR(x, y) ( round((x) / (y)) * (y) )
+#define MODULUS(x, y) ( (x) - FLOOR(x, y) )
+
 
 // min is inclusive, max is exclusive
 /proc/Wrap(val, min, max)

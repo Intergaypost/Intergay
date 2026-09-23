@@ -229,7 +229,7 @@ proc/slur(phrase)
 			if(2,4,6,15)	newletter="[ruppertext(newletter)]"
 			if(7)	newletter+="'"
 			if(9,10)	newletter="<b>[newletter]</b>"
-			if(11,12)	newletter="<big>[newletter]</big>"
+			if(11,12,14)	newletter="<big>[newletter]</big>"
 			if(13)	newletter="<small>[newletter]</small>"
 		newphrase+="[newletter]";counter-=1
 	return newphrase
@@ -348,7 +348,7 @@ It's fairly easy to fix if dealing with single letters but not so much with comp
 			aiEyeFlag = 1
 
 		var/x
-		for(x=0; x<duration, x++)
+		for(x=0, x<duration, x++)
 			if(aiEyeFlag)
 				M.client.eye = locate(dd_range(1,oldeye.loc.x+rand(-strength,strength),world.maxx),dd_range(1,oldeye.loc.y+rand(-strength,strength),world.maxy),oldeye.loc.z)
 			else
@@ -391,9 +391,8 @@ var/list/intents = list(I_HELP,I_DISARM,I_GRAB,I_HURT)
 			else			return I_HURT
 
 //change a mob's act-intent. Input the intent as a string such as "help" or use "right"/"left
-/mob/verb/a_intent_change(input as text)
-	set name = "a-intent"
-	set hidden = 1
+/mob/proc/a_intent_change(input)
+
 
 	if(ishuman(src) || isbrain(src) || isslime(src))
 		switch(input)

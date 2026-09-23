@@ -1,0 +1,548 @@
+/* Character Setup - NanoUI Layout & Styling */
+
+html, body {
+	height: 100% !important;
+	width: 100% !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	background: #121212 url('uiBackground.png') 50% 0 repeat;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #d0d0d0;
+}
+
+#uiWrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+#uiTitleWrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 32px;
+	box-sizing: border-box;
+	z-index: 10;
+}
+
+#uiContent {
+	position: absolute;
+	top: 32px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	padding: 6px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+/* Full Window Flex Layout */
+.charsetup-wrapper {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.charsetup-row {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: 6px;
+	box-sizing: border-box;
+}
+
+/* Left Sidebar */
+.charsetup-sidebar-cell {
+	flex: 0 0 175px;
+	width: 175px;
+	height: 100%;
+	vertical-align: top;
+	background: #181818;
+	border: 1px solid #333333;
+	padding: 8px 6px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+/* Main Center Content */
+.charsetup-main-cell {
+	flex: 1 1 auto;
+	height: 100%;
+	vertical-align: top;
+	padding: 0 4px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+/* Right Preview & Action Panel */
+.charsetup-preview-cell {
+	flex: 0 0 230px;
+	width: 230px;
+	height: 100%;
+	vertical-align: top;
+	background: #181818;
+	border: 1px solid #333333;
+	padding: 8px;
+	box-sizing: border-box;
+	text-align: center;
+	overflow-y: auto;
+}
+
+/* Sidebar Slot Card */
+.charsetup-slot-box {
+	background: #252525;
+	border: 1px solid #40628a;
+	padding: 6px 4px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.charsetup-slot-title {
+	font-size: 13px;
+	font-weight: bold;
+	color: #e9c183;
+	margin-bottom: 4px;
+}
+
+.charsetup-slot-actions {
+	margin-top: 6px;
+	text-align: center;
+}
+
+.charsetup-slot-actions .link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	margin: 2px 1px !important;
+	padding: 3px 6px !important;
+	font-size: 11px !important;
+}
+
+/* Sidebar Navigation Tabs */
+.charsetup-nav-list {
+	list-style-type: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.charsetup-nav-item {
+	margin-bottom: 5px !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.charsetup-nav-list .charsetup-nav-btn,
+.charsetup-nav-btn.link {
+	float: none !important;
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+	min-height: 32px !important;
+	line-height: 20px !important;
+	padding: 6px 10px !important;
+	margin: 0 !important;
+	font-size: 13px !important;
+	font-weight: bold !important;
+	font-family: inherit !important;
+	color: #d0d0d0 !important;
+	background: #252525 !important;
+	border: 1px solid #3d3d3d !important;
+	text-align: left !important;
+	box-sizing: border-box !important;
+	cursor: pointer !important;
+	text-decoration: none !important;
+	white-space: normal !important;
+}
+
+.charsetup-nav-list .charsetup-nav-btn:hover,
+.charsetup-nav-btn.linkActive:hover {
+	background: #333333 !important;
+	color: #ffffff !important;
+	border-color: #555555 !important;
+}
+
+.charsetup-nav-list .charsetup-nav-btn.active,
+.charsetup-nav-list .charsetup-nav-btn.selected,
+.charsetup-nav-btn.active.link,
+.charsetup-nav-btn.selected.link {
+	background: #1c3b5e !important;
+	color: #ffffff !important;
+	border-color: #3b7dc4 !important;
+	border-left: 4px solid #5dade2 !important;
+}
+
+/* Character Preview Box */
+.charsetup-preview-card {
+	background: #000000;
+	border: 2px solid #40628a;
+	padding: 8px 4px;
+	margin-bottom: 8px;
+}
+
+.charsetup-preview-img {
+	image-rendering: -moz-crisp-edges;
+	image-rendering: pixelated;
+	display: block;
+	margin: 0 auto;
+}
+
+.charsetup-preview-summary {
+	background: #252525;
+	border: 1px solid #3d3d3d;
+	padding: 6px 8px;
+	margin-bottom: 8px;
+	text-align: left;
+	font-size: 11px;
+	line-height: 18px;
+}
+
+.charsetup-preview-actions {
+	margin-top: 8px;
+}
+
+.charsetup-preview-actions .link {
+	float: none !important;
+	display: block !important;
+	width: 95% !important;
+	height: auto !important;
+	line-height: 18px !important;
+	margin: 5px auto !important;
+	padding: 5px 8px !important;
+	text-align: center !important;
+	box-sizing: border-box !important;
+}
+
+/* Content Sections */
+.charsetup-section {
+	background: #222222;
+	border: 1px solid #333333;
+	padding: 8px 12px;
+	margin-bottom: 10px;
+}
+
+.charsetup-section-title {
+	font-size: 13px;
+	font-weight: bold;
+	color: #e9c183;
+	border-bottom: 1px solid #40628a;
+	padding-bottom: 3px;
+	margin-bottom: 8px;
+}
+
+.charsetup-section .item {
+	margin: 4px 0;
+	padding: 2px 0;
+	clear: both;
+	overflow: auto;
+	display: block;
+}
+
+.charsetup-section .itemLabel {
+	float: left;
+	width: 32%;
+	color: #00dd00;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+.charsetup-section .itemContent {
+	float: right;
+	width: 66%;
+	line-height: 22px;
+	text-align: left;
+}
+
+.charsetup-section .itemContent .link {
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 6px !important;
+	margin: 1px 3px 1px 0 !important;
+	display: inline-block !important;
+	float: none !important;
+}
+
+/* Two-column layout inside content */
+.charsetup-row-flex {
+	width: 100%;
+	clear: both;
+}
+
+.charsetup-half-left {
+	float: left;
+	width: 49%;
+}
+
+.charsetup-half-right {
+	float: right;
+	width: 49%;
+}
+
+/* Color swatch preview badge */
+.charsetup-color-swatch {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	border: 1px solid #ffffff;
+	vertical-align: middle;
+	margin-left: 4px;
+}
+
+/* Job Listing Styles */
+.charsetup-job-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 11px;
+}
+
+.charsetup-job-row {
+	border-bottom: 1px solid #2d2d2d;
+}
+
+.charsetup-job-row:hover {
+	background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.charsetup-job-name {
+	padding: 5px 8px;
+	font-weight: normal;
+	color: #ffffff;
+}
+
+.charsetup-job-alt {
+	padding: 4px 6px;
+	font-style: italic;
+	color: #aaaaaa;
+}
+
+.charsetup-job-alt .link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 14px !important;
+	padding: 1px 4px !important;
+	font-size: 10px !important;
+}
+
+.charsetup-job-btn-cell {
+	padding: 3px 6px;
+	text-align: right;
+	width: 90px;
+}
+
+.charsetup-job-btn-cell .link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 8px !important;
+	font-size: 11px !important;
+	font-weight: bold !important;
+	min-width: 50px !important;
+	text-align: center !important;
+}
+
+.job-priority-high {
+	background-color: #2f943c !important;
+	border-color: #44dd55 !important;
+	color: #ffffff !important;
+}
+
+.job-priority-medium {
+	background-color: #b8860b !important;
+	border-color: #e6c229 !important;
+	color: #ffffff !important;
+}
+
+.job-priority-low {
+	background-color: #8b2500 !important;
+	border-color: #cd5555 !important;
+	color: #ffffff !important;
+}
+
+.job-priority-never {
+	background-color: #383838 !important;
+	border-color: #555555 !important;
+	color: #888888 !important;
+}
+
+.job-unavailable-badge {
+	color: #ff5555;
+	font-weight: bold;
+	font-size: 10px;
+}
+
+/* Preference Option Buttons */
+.charsetup-pref-row {
+	padding: 4px 0;
+	border-bottom: 1px dotted #383838;
+	clear: both;
+	overflow: auto;
+}
+
+.charsetup-pref-label {
+	float: left;
+	width: 48%;
+	color: #00dd00;
+	font-weight: bold;
+	line-height: 22px;
+}
+
+.charsetup-pref-options {
+	float: right;
+	width: 50%;
+	text-align: right;
+}
+
+.charsetup-pref-options .link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 6px !important;
+	margin-left: 3px !important;
+}
+
+/* Backstory description card */
+.charsetup-backstory-box {
+	background: #1c1c1c;
+	border: 1px solid #383838;
+	border-left: 3px solid #5dade2;
+	padding: 6px 8px;
+	margin-top: 5px;
+	font-size: 11px;
+	line-height: 16px;
+	color: #bfbfbf;
+}
+
+.charsetup-backstory-fluff {
+	margin-top: 5px;
+	padding-top: 5px;
+	border-top: 1px dashed #383838;
+	font-style: italic;
+	color: #9e9e9e;
+}
+
+/* Controls & Keybindings Table */
+.charsetup-kb-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 11px;
+}
+
+.charsetup-kb-row {
+	border-bottom: 1px solid #2d2d2d;
+}
+
+.charsetup-kb-row:hover {
+	background-color: rgba(255, 255, 255, 0.05);
+}
+
+.charsetup-kb-name {
+	padding: 5px 8px;
+	vertical-align: middle;
+	color: #ffffff;
+	width: 42%;
+}
+
+.charsetup-kb-keys {
+	padding: 4px 6px;
+	vertical-align: middle;
+	text-align: left;
+	width: 44%;
+}
+
+.charsetup-kb-reset-cell {
+	padding: 3px 6px;
+	vertical-align: middle;
+	text-align: right;
+	width: 14%;
+}
+
+.charsetup-kb-key-btn.link,
+.charsetup-kb-key-btn {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 7px !important;
+	margin: 1px 3px 1px 0 !important;
+	font-family: Consolas, "Lucida Console", Monaco, monospace, sans-serif !important;
+	font-weight: bold !important;
+	font-size: 11px !important;
+	background: #1f3a52 !important;
+	border: 1px solid #3b6e9b !important;
+	color: #e0f0ff !important;
+	text-align: center !important;
+}
+
+.charsetup-kb-key-btn.link:hover {
+	background: #2b5275 !important;
+	border-color: #5ea4e0 !important;
+	color: #ffffff !important;
+}
+
+.charsetup-kb-add-btn.link,
+.charsetup-kb-add-btn {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 6px !important;
+	margin: 1px 3px 1px 0 !important;
+	font-size: 10px !important;
+	border: 1px dashed #555555 !important;
+	background: transparent !important;
+	color: #888888 !important;
+}
+
+.charsetup-kb-add-btn.link:hover {
+	border-color: #2f943c !important;
+	color: #55ee66 !important;
+	background: rgba(47, 148, 60, 0.15) !important;
+}
+
+.charsetup-kb-unbound-btn.link,
+.charsetup-kb-unbound-btn {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 6px !important;
+	margin: 1px 3px 1px 0 !important;
+	font-size: 10px !important;
+	font-style: italic !important;
+	background: #331f1f !important;
+	border: 1px solid #663333 !important;
+	color: #ff8888 !important;
+}
+
+.charsetup-kb-unbound-btn.link:hover {
+	background: #4a2929 !important;
+	border-color: #aa4444 !important;
+	color: #ffaaaa !important;
+}
+
+.charsetup-kb-reset-btn.link,
+.charsetup-kb-reset-btn {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 6px !important;
+	font-size: 10px !important;
+}
+
+

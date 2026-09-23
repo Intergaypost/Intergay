@@ -33,8 +33,6 @@
 /obj/effect/step_trigger/thrower/Trigger(var/atom/movable/AM)
 	if(!AM || !istype(AM) || !AM.simulated)
 		return
-	var/curtiles = 0
-	var/stopthrow = 0
 	for(var/obj/effect/step_trigger/thrower/T in orange(2, src))
 		if(AM in T.affecting)
 			return
@@ -44,42 +42,45 @@
 		if(immobilize)
 			M.canmove = 0
 
-	affecting.Add(AM)
-	while(AM && !stopthrow)
-		if(tiles)
-			if(curtiles >= tiles)
-				break
-		if(AM.z != src.z)
-			break
+	affecting[AM] = AM.dir
+	var/datum/move_loop/loop = SSmove_manager.move(AM, direction, speed, tiles ? tiles * speed : INFINITY)
+	RegisterSignal(loop, COMSIG_MOVELOOP_PREPROCESS_CHECK, .proc/pre_move)
+	RegisterSignal(loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/post_move)
+	RegisterSignal(loop, COMSIG_PARENT_QDELETING, .proc/set_to_normal)
 
-		curtiles++
+/obj/effect/step_trigger/thrower/proc/pre_move(datum/move_loop/source)
+	SIGNAL_HANDLER
+	var/atom/movable/being_moved = source.moving
+	affecting[being_moved] = being_moved.dir
 
-		sleep(speed)
+/obj/effect/step_trigger/thrower/proc/post_move(datum/move_loop/source)
+	SIGNAL_HANDLER
+	var/atom/movable/being_moved = source.moving
+	if(!facedir)
+		being_moved.set_dir(affecting[being_moved])
+	if(being_moved.z != z)
+		qdel(source)
+		return
+	if(!nostop)
+		for(var/obj/effect/step_trigger/T in get_turf(being_moved))
+			if(T.stopper && T != src)
+				qdel(source)
+				return
+	else
+		for(var/obj/effect/step_trigger/teleporter/T in get_turf(being_moved))
+			if(T.stopper)
+				qdel(source)
+				return
 
-		// Calculate if we should stop the process
-		if(!nostop)
-			for(var/obj/effect/step_trigger/T in get_step(AM, direction))
-				if(T.stopper && T != src)
-					stopthrow = 1
-		else
-			for(var/obj/effect/step_trigger/teleporter/T in get_step(AM, direction))
-				if(T.stopper)
-					stopthrow = 1
-
-		if(AM)
-			var/predir = AM.dir
-			step(AM, direction)
-			if(!facedir)
-				AM.set_dir(predir)
-
-
-
-	affecting.Remove(AM)
-
-	if(ismob(AM))
-		var/mob/M = AM
+/obj/effect/step_trigger/thrower/proc/set_to_normal(datum/move_loop/source)
+	SIGNAL_HANDLER
+	var/atom/movable/being_moved = source.moving
+	affecting -= being_moved
+	if(ismob(being_moved))
+		var/mob/M = being_moved
 		if(immobilize)
 			M.canmove = 1
+
 
 /* Stops things thrown by a thrower, doesn't do anything */
 

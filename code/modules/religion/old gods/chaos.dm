@@ -51,7 +51,8 @@
 			playsound(target.loc, 'sound/effects/xom_laugh.ogg', 100, 0)
 			target.say("I feel like that this station we're in is just a simulation, a game, it's just a game, and nothing is real...")
 			target.apply_damage(rand(1, 3), BRUTE)
-			target.organs_by_name["head"].pain += 30
+			var/obj/item/organ/external/head = target.organs_by_name["head"]
+			if(head) head.pain += 30
 		if(prob(40))
 			to_chat(target, "<span class='danger'>You feel emptier.</span>")
 			playsound('sound/effects/singlebeat.ogg', 100, 0)
@@ -60,8 +61,9 @@
 	//We want to leave behind lit candles
 	spell_consume(var/list/spell_components)
 		for(var/O in spell_components)
-			if(istype(spell_components[O],/obj/item/weapon/flame/candle/))
-				spell_components[O].light("Xom")
+			var/obj/item/weapon/flame/candle/C = spell_components[O]
+			if(istype(C))
+				C.light("Xom")
 		return
 
 /obj/old_god_shrine/hasard_shrine

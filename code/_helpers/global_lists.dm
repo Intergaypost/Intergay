@@ -133,7 +133,19 @@ var/global/list/string_slot_flags = list(
 		var/datum/sprite_accessory/marking/M = new path()
 		GLOB.body_marking_styles_list[M.name] = M
 
+	// Keybindings
+	for(var/KB in subtypesof(/datum/keybinding))
+		var/datum/keybinding/keybinding = KB
+		if(!initial(keybinding.name))
+			continue
+		var/datum/keybinding/instance = new keybinding
+		GLOB.keybindings_by_name[instance.name] = instance
+		if(length(instance.hotkey_keys))
+			for(var/bound_key in instance.hotkey_keys)
+				GLOB.hotkey_keybinding_list_by_key[bound_key] += list(instance.name)
+
 	//Surgery Steps - Initialize all /datum/surgery_step into a list
+
 	paths = typesof(/datum/surgery_step)-/datum/surgery_step
 	for(var/T in paths)
 		var/datum/surgery_step/S = new T

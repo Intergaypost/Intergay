@@ -52,9 +52,9 @@
 	/*
 	var/list/visible_locations = SSverina.get_shrine_locations()
 	var/dat = list()
-	dat = text("Insert ID to confirm identity: <A href='?src=\ref[];choice=Confirm Identity'>----------</A><HR>", src)
+	dat = text("Insert ID to confirm identity: <a href='byond://?src=\ref[];choice=Confirm Identity'>----------</A><HR>", src)
 	if (scan)
-		dat = text("Speak the prayer to confirm identity: <A href='?src=\ref[];choice=Confirm Identity'>[]</A><HR>", src, scan.name)
+		dat = text("Speak the prayer to confirm identity: <a href='byond://?src=\ref[];choice=Confirm Identity'>[]</A><HR>", src, scan.name)
 	if (authenticated)
 		if (SSverina.request_item )
 			dat += text("Verina is currently demanding <b> [SSverina.request_amount] [SSverina.request_item]s </b>, in <b>[round(SSverina.request_time/60)] minutes! </b><HR>")
@@ -62,7 +62,7 @@
 			dat += text("Verina is currently satiated. <HR>")
 		if(visible_locations.len > 0)
 			dat += text("verina has detected shrines in the following locations: <strong>[visible_locations.Join(", ")]<strong> <HR>")
-		dat += text("<A href='?src=\ref[];choice=Log Out'>{Log Out}</A>",src)
+		dat += text("<a href='byond://?src=\ref[];choice=Log Out'>{Log Out}</A>",src)
 	user << browse(text("<HEAD><TITLE>Arbiter Records</TITLE></HEAD><TT>[]</TT>", dat), "window=arbiter_rec;size=600x400")
 	onclose(user, "arbiter_rec")
 	*/

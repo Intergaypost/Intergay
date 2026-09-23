@@ -114,8 +114,18 @@ SUBSYSTEM_DEF(air)
 	Initialize(REALTIMEOFDAY, simulate = FALSE)
 
 	// Update next_fire so the MC doesn't try to make up for missed ticks.
-	next_fire = world.time + wait
+	update_nextfire(reset_time = TRUE)
 	can_fire = TRUE
+
+/datum/controller/subsystem/air/Recover()
+	zones = SSair.zones
+	edges = SSair.edges
+	tiles_to_update = SSair.tiles_to_update
+	zones_to_update = SSair.zones_to_update
+	active_fire_zones = SSair.active_fire_zones
+	active_hotspots = SSair.active_hotspots
+	active_edges = SSair.active_edges
+	next_id = SSair.next_id
 
 /datum/controller/subsystem/air/stat_entry()
 	var/list/out = list(

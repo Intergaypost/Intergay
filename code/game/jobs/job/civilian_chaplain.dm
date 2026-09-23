@@ -18,7 +18,7 @@
 			return
 		if(!ask_questions)
 			return
-
+		/*
 		var/obj/item/weapon/storage/bible/B = locate(/obj/item/weapon/storage/bible) in H
 		if(!B)
 			return
@@ -75,4 +75,5 @@
 							accepted = 1
 
 			SSstatistics.set_field_details("religion_book","[new_book_style]")
+		*/
 		return 1

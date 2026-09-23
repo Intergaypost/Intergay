@@ -391,8 +391,10 @@ default behaviour is:
 	return 1
 
 /mob/living/proc/get_organ_target()
-	var/mob/shooter = src
-	var/t = shooter:zone_sel.selecting
+	var/t = BP_CHEST
+	if(zone_sel)
+		var/obj/screen/zone_sel/ZS = zone_sel
+		t = ZS.selecting
 	if ((t in list( BP_EYES, BP_MOUTH )))
 		t = BP_HEAD
 	var/obj/item/organ/external/def_zone = ran_zone(t)
@@ -514,6 +516,17 @@ default behaviour is:
 	return
 
 /mob/living/Move(a, b, flag)
+	for(var/client/C in in_vision_cones)
+		if(src in C.hidden_mobs)
+			var/turf/VT = get_turf(src)
+			var/image/I = image('icons/effects/footstepsound.dmi', loc = VT, icon_state = "default", layer = 18)
+			C.images += I
+			spawn(4)
+				if(C)
+					C.images -= I
+		else
+			in_vision_cones.Remove(C)
+
 	if (buckled)
 		return
 
@@ -904,18 +917,10 @@ default behaviour is:
 /mob/living/proc/getTrail() //silicon and simple_animals don't get blood trails
     return null
 
-/mob/living/Move(NewLoc, direct)
-	for(var/client/C in in_vision_cones)
-		if(src in C.hidden_mobs)
-			var/turf/T = get_turf(src)
-			var/image/I = image('icons/effects/footstepsound.dmi', loc = T, icon_state = "default", layer = 18)
-			C.images += I
-			spawn(4)
-				if(C)
-					C.images -= I
-		else
-			in_vision_cones.Remove(C)
-	. = ..()
+/mob/living/set_glide_size(target = 8)
+	..()
+	if(buckled && ismovable(buckled))
+		buckled.set_glide_size(target)
 
 /mob/living/proc/remove_aura(var/obj/aura/aura)
 	LAZYREMOVE(auras,aura)
@@ -927,3 +932,6 @@ default behaviour is:
 		for(var/a in auras)
 			remove_aura(a)
 	return ..()
+
+/mob/living/get_speech_bubble_state_modifier()
+	return isSynthetic() ? "synth" : ..()

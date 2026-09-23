@@ -23,14 +23,14 @@
 
 /obj/machinery/libraryscanner/attack_hand(var/mob/user as mob)
 	usr.set_machine(src)
-	var/dat = "<HEAD><TITLE>Scanner Control Interface</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
+	var/dat = "<HEAD><meta charset='utf-8'><TITLE>Scanner Control Interface</TITLE></HEAD><BODY>\n" // <META HTTP-EQUIV='Refresh' CONTENT='10'>
 	if(cache)
 		dat += "<FONT color=#005500>Data stored in memory.</FONT><BR>"
 	else
 		dat += "No data stored in memory.<BR>"
-	dat += "<A href='?src=\ref[src];scan=1'>\[Scan\]</A>"
+	dat += "<a href='byond://?src=\ref[src];scan=1'>\[Scan\]</A>"
 	if(cache)
-		dat += "       <A href='?src=\ref[src];clear=1'>\[Clear Memory\]</A><BR><BR><A href='?src=\ref[src];eject=1'>\[Remove Book\]</A>"
+		dat += "       <a href='byond://?src=\ref[src];clear=1'>\[Clear Memory\]</A><BR><BR><a href='byond://?src=\ref[src];eject=1'>\[Remove Book\]</A>"
 	else
 		dat += "<BR>"
 	user << browse(dat, "window=scanner")

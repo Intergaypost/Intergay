@@ -549,12 +549,12 @@
 	icon_state = "hippocrates"
 
 /obj/structure/sign/tetracorp
-	name = "TetraCorp"
+	name = "New Order League"
 	desc = "You serve them!"
 	icon_state = "tetracorp"
 
 /obj/structure/sign/tetracorpbig
-	name = "TetraCorp"
+	name = "New Order League"
 	desc = "You serve them!"
 	icon_state = "tetracorpbig"
 

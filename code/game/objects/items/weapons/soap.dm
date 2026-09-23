@@ -82,7 +82,7 @@
 		overlays += image('icons/obj/items.dmi', icon_state = "soap_key_overlay")
 
 /obj/item/weapon/soap/nanotrasen
-	desc = "A TetraCorp-brand bar of soap. Smells of freedom."
+	desc = "A Tri-Net Corp-brand bar of soap. Smells of freedom."
 	icon_state = "soapnt"
 
 /obj/item/weapon/soap/deluxe

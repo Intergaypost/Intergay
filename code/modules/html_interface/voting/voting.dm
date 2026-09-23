@@ -133,11 +133,11 @@ datum/controller/vote
 		var/third = list()
 		for(var/option in choices)
 			if(choices[option] == greatest_votes && greatest_votes)
-				first += utf8_to_cp1251(option)
+				first += option
 			else if(choices[option] == second_greatest_votes && second_greatest_votes)
-				second += utf8_to_cp1251(option)
+				second += option
 			else if(choices[option] == third_greatest_votes && third_greatest_votes)
-				third += utf8_to_cp1251(option)
+				third += option
 		return list(first, second, third)
 
 	proc/announce_result()
@@ -357,10 +357,10 @@ datum/controller/vote
 					for(var/name in GLOB.all_maps)
 						choices.Add(name)
 				if("custom")
-					question = cp1251_to_utf8(sanitizeSafe(input(usr,"What is the vote for?") as text|null))
+					question = sanitizeSafe(input(usr,"What is the vote for?") as text|null)
 					if(!question)	return 0
 					for(var/i=1,i<=10,i++)
-						var/option = cp1251_to_utf8(capitalize(sanitize(input_cp1251(usr,"Please enter an option or hit cancel to finish"))))
+						var/option = capitalize(sanitize(input(usr,"Please enter an option or hit cancel to finish")))
 						if(!option || mode || !usr.client)	break
 						choices.Add(option)
 				else
@@ -370,10 +370,10 @@ datum/controller/vote
 			started_time = world.time
 			var/text = "[capitalize(mode)] vote started by [initiator]."
 			if(mode == "custom")
-				text += "\n[utf8_to_cp1251(question)]"
+				text += "\n[question]"
 
 			log_vote(text)
-			to_world("<font color='purple'><b>[text]</b>\nType <b>vote</b> or click <a href='?src=\ref[src]'>here</a> to place your votes.\nYou have [config.vote_period/10] seconds to vote.</font>")
+			to_world("<font color='purple'><b>[text]</b>\nType <b>vote</b> or click <a href='byond://?src=\ref[src]'>here</a> to place your votes.\nYou have [config.vote_period/10] seconds to vote.</font>")
 
 			to_world(sound('sound/ambience/alarm4.ogg', repeat = 0, wait = 0, volume = 50, channel = 3))
 
@@ -396,7 +396,7 @@ datum/controller/vote
 				trialmin = 1 // don't know why we use both of these it's really weird, but I'm 2 lasy to refactor this all to use just admin.
 		voting |= C
 
-		. = "<html><head><title>Voting Panel</title></head><body>"
+		. = "<html><head><meta charset='utf-8'><title>Voting Panel</title></head><body>"
 		if(mode)
 			if(question)	. += "<h2>Vote: '[question]'</h2>"
 			else			. += "<h2>Vote: [capitalize(mode)]</h2>"
@@ -423,19 +423,19 @@ datum/controller/vote
 					. += "[choices[i]]"
 				. += "</td><td>"
 				if(current_high_votes[C.ckey] == i)
-					. += "<b><a href='?src=\ref[src];high_vote=[i]'>First</a></b>"
+					. += "<b><a href='byond://?src=\ref[src];high_vote=[i]'>First</a></b>"
 				else
-					. += "<a href='?src=\ref[src];high_vote=[i]'>First</a>"
+					. += "<a href='byond://?src=\ref[src];high_vote=[i]'>First</a>"
 				. += "</td><td>"
 				if(current_med_votes[C.ckey] == i)
-					. += "<b><a href='?src=\ref[src];med_vote=[i]'>Second</a></b>"
+					. += "<b><a href='byond://?src=\ref[src];med_vote=[i]'>Second</a></b>"
 				else
-					. += "<a href='?src=\ref[src];med_vote=[i]'>Second</a>"
+					. += "<a href='byond://?src=\ref[src];med_vote=[i]'>Second</a>"
 				. += "</td><td>"
 				if(current_low_votes[C.ckey] == i)
-					. += "<b><a href='?src=\ref[src];low_vote=[i]'>Third</a></b>"
+					. += "<b><a href='byond://?src=\ref[src];low_vote=[i]'>Third</a></b>"
 				else
-					. += "<a href='?src=\ref[src];low_vote=[i]'>Third</a>"
+					. += "<a href='byond://?src=\ref[src];low_vote=[i]'>Third</a>"
 				. += "</td><td align = 'center'>[votepercent]%</td>"
 				if (additional_text.len >= i)
 					. += additional_text[i]
@@ -443,47 +443,47 @@ datum/controller/vote
 
 			. += "</table><hr>"
 			if(admin)
-				. += "(<a href='?src=\ref[src];vote=cancel'>Cancel Vote</a>) "
+				. += "(<a href='byond://?src=\ref[src];vote=cancel'>Cancel Vote</a>) "
 		else
 			. += "<h2>Start a vote:</h2><hr><ul><li>"
 			//restart
 			if(trialmin || config.allow_vote_restart)
-				. += "<a href='?src=\ref[src];vote=restart'>Restart</a>"
+				. += "<a href='byond://?src=\ref[src];vote=restart'>Restart</a>"
 			else
 				. += "<font color='grey'>Restart (Disallowed)</font>"
 			. += "</li><li>"
 			if(trialmin || config.allow_vote_restart)
-				. += "<a href='?src=\ref[src];vote=crew_transfer'>Crew Transfer</a>"
+				. += "<a href='byond://?src=\ref[src];vote=crew_transfer'>Crew Transfer</a>"
 			else
 				. += "<font color='grey'>Crew Transfer (Disallowed)</font>"
 			if(trialmin)
-				. += "\t(<a href='?src=\ref[src];vote=toggle_restart'>[config.allow_vote_restart?"Allowed":"Disallowed"]</a>)"
+				. += "\t(<a href='byond://?src=\ref[src];vote=toggle_restart'>[config.allow_vote_restart?"Allowed":"Disallowed"]</a>)"
 			. += "</li><li>"
 			//gamemode
 			if(trialmin || config.allow_vote_mode)
-				. += "<a href='?src=\ref[src];vote=gamemode'>GameMode</a>"
+				. += "<a href='byond://?src=\ref[src];vote=gamemode'>GameMode</a>"
 			else
 				. += "<font color='grey'>GameMode (Disallowed)</font>"
 			if(trialmin)
-				. += "\t(<a href='?src=\ref[src];vote=toggle_gamemode'>[config.allow_vote_mode?"Allowed":"Disallowed"]</a>)"
+				. += "\t(<a href='byond://?src=\ref[src];vote=toggle_gamemode'>[config.allow_vote_mode?"Allowed":"Disallowed"]</a>)"
 			. += "</li><li>"
 			//map!
 			if(trialmin && config.allow_map_switching)
-				. += "<a href='?src=\ref[src];vote=map'>Map</a>"
+				. += "<a href='byond://?src=\ref[src];vote=map'>Map</a>"
 			else
 				. += "<font color='grey'>Map (Disallowed)</font>"
 			. += "</li><li>"
 			//extra antagonists
 			if(config.allow_extra_antags && is_addantag_allowed(0))
-				. += "<a href='?src=\ref[src];vote=add_antagonist'>Add Antagonist Type</a>"
+				. += "<a href='byond://?src=\ref[src];vote=add_antagonist'>Add Antagonist Type</a>"
 			else
 				. += "<font color='grey'>Add Antagonist (Disallowed)</font>"
 			. += "</li>"
 			//custom
 			if(trialmin)
-				. += "<li><a href='?src=\ref[src];vote=custom'>Custom</a></li>"
+				. += "<li><a href='byond://?src=\ref[src];vote=custom'>Custom</a></li>"
 			. += "</ul><hr>"
-		. += "<a href='?src=\ref[src];vote=close' style='position:absolute;right:50px'>Close</a></body></html>"
+		. += "<a href='byond://?src=\ref[src];vote=close' style='position:absolute;right:50px'>Close</a></body></html>"
 		return .
 
 

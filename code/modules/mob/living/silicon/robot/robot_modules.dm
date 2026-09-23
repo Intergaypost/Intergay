@@ -25,7 +25,7 @@ var/global/list/robot_modules = list(
 	var/languages = list(
 		LANGUAGE_SOL_COMMON = 1,
 		LANGUAGE_LUNAR = 1,
-		LANGUAGE_UNATHI = 0,
+		LANGUAGE_BIOSLAVE = 0,
 		LANGUAGE_SIIK_MAAS = 0,
 		LANGUAGE_SKRELLIAN = 0,
 		LANGUAGE_GUTTER = 1,
@@ -484,7 +484,7 @@ var/global/list/robot_modules = list(
 	channels = list("Service" = 1)
 	languages = list(
 					LANGUAGE_SOL_COMMON	= 1,
-					LANGUAGE_UNATHI		= 1,
+					LANGUAGE_BIOSLAVE		= 1,
 					LANGUAGE_SIIK_MAAS	= 1,
 					LANGUAGE_SIIK_TAJR	= 0,
 					LANGUAGE_SKRELLIAN	= 1,

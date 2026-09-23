@@ -223,16 +223,21 @@ var/global/list/image/splatter_cache=list()
 
 
 /obj/effect/decal/cleanable/blood/gibs/proc/streak(var/list/directions)
-	spawn (0)
-		var/direction = pick(directions)
-		for (var/i = 0, i < pick(1, 200; 2, 150; 3, 50; 4), i++)
-			sleep(3)
-			if (i > 0)
-				var/obj/effect/decal/cleanable/blood/b = new /obj/effect/decal/cleanable/blood/splatter(loc)
-				b.basecolor = src.basecolor
-				b.update_icon()
-			if (step_to(src, get_step(src, direction), 0))
-				break
+	var/direction = pick(directions)
+	var/target_turf = get_step(src, direction)
+	if(!target_turf)
+		return
+	var/range = pick(1, 200; 2, 150; 3, 50; 4)
+	var/delay = 3
+	var/datum/move_loop/loop = SSmove_manager.move_to(src, target_turf, delay = delay, timeout = range * delay, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
+	RegisterSignal(loop, COMSIG_MOVELOOP_POSTPROCESS, .proc/spread_movement_effects)
+
+/obj/effect/decal/cleanable/blood/gibs/proc/spread_movement_effects(datum/move_loop/source)
+	SIGNAL_HANDLER
+	var/obj/effect/decal/cleanable/blood/b = new /obj/effect/decal/cleanable/blood/splatter(loc)
+	b.basecolor = src.basecolor
+	b.update_icon()
+
 
 /obj/effect/decal/cleanable/mucus
 	name = "mucus"

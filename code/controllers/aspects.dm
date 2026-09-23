@@ -59,7 +59,7 @@
 /*
 /datum/round_event/ghetto_medbay
 	id = "ghettomedbay"
-	event_message = "TetraCorp back on the line! Nothing will stop brave doctors from showing their competence again and proving that they are the best of their kind!.. Even despite the low budget."
+	event_message = "New Order League back on the line! Nothing will stop brave doctors from showing their competence again and proving that they are the best of their kind!.. Even despite the low budget."
 
 /datum/round_event/ghetto_medbay/apply_event()
 	for(var/area/medical/M in world)

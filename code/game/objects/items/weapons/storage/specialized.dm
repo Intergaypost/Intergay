@@ -84,7 +84,7 @@
 
 
 // Modified handle_item_insertion.  Would prefer not to, but...
-	handle_item_insertion(obj/item/W as obj, prevent_warning = 0)
+	handle_item_insertion(var/obj/item/W, var/store_x = -1, var/store_y = -1, var/prevent_warning = 0, var/NoUpdate = 0)
 		var/obj/item/stack/material/S = W
 		if(!istype(S)) return 0
 

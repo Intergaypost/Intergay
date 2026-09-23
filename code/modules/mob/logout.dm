@@ -5,6 +5,10 @@
 	log_access("Logout: [key_name(src)]")
 	handle_admin_logout()
 	hide_client_images()
+	if(typing_indicator)
+		vis_contents -= typing_indicator
+	is_typing = FALSE
+	SStyping.set_indicator_state(client, FALSE)
 	..()
 
 	my_client = null

@@ -121,7 +121,7 @@ datum/announcement/proc/NewsCast(message as text, message_title as text)
 /proc/get_announcement_frequency(var/datum/job/job)
 	//This is just returning common utill we want to re-enable this
 	return "Common"
-	// During red alert all jobs are announced on main frequency.
+	/* During red alert all jobs are announced on main frequency.
 	var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 	if (security_state.current_security_level_is_same_or_higher_than(security_state.high_security_level))
 		return "Common"
@@ -147,3 +147,4 @@ datum/announcement/proc/NewsCast(message as text, message_title as text)
 	if(job.department_flag & CRH)
 		return "Inquisition"
 	return "Common"
+	*/

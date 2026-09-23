@@ -1,15 +1,9 @@
 
 #define TIMER_NO_INVOKE_WARNING 600 //number of byond ticks that are allowed to pass before the timer subsystem thinks it hung on something
 
-#define TIMER_ID_NULL -1
-
 //For servers that can't do with any additional lag, set this to none in flightpacks.dm in subsystem/processing.
 #define FLIGHTSUIT_PROCESSING_NONE 0
 #define FLIGHTSUIT_PROCESSING_FULL 1
-
-#define INITIALIZATION_INSSATOMS 0	//New should not call Initialize
-#define INITIALIZATION_INNEW_MAPLOAD 1	//New should call Initialize(TRUE)
-#define INITIALIZATION_INNEW_REGULAR 2	//New should call Initialize(FALSE)
 
 #define INITIALIZE_HINT_NORMAL   0  //Nothing happens
 #define INITIALIZE_HINT_LATELOAD 1  //Call LateInitialize
@@ -51,6 +45,12 @@
 #define INIT_ORDER_AIR -1
 #define INIT_ORDER_MINIMAP -2
 #define INIT_ORDER_ASSETS -3
+// Amount of time(ds) MAX to send per asset, if this get exceeded we cancel the sleeping.
+#define ASSET_CACHE_SEND_TIMEOUT 7
+// When sending mutiple assets, how many before we give the client a quaint little sending resources message
+#define ASSET_CACHE_TELL_CLIENT_AMOUNT 8
+// When passively preloading assets, how many to send at once?
+#define ASSET_CACHE_PRELOAD_CONCURRENT 3
 #define INIT_ORDER_ICON_SMOOTHING -5
 #define INIT_ORDER_OVERLAY -6
 #define INIT_ORDER_XKEYSCORE -10
@@ -68,7 +68,9 @@
 // Subsystems shutdown in the reverse of the order they initialize in
 // The numbers just define the ordering, they are meaningless otherwise.
 
+#define SS_INIT_INPUT            20
 #define SS_INIT_EARLY            19
+
 #define SS_INIT_GARBAGE          18
 #define SS_INIT_CHEMISTRY        17
 #define SS_INIT_PLANTS           16

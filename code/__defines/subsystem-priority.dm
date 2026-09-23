@@ -9,6 +9,8 @@
 #define SS_PRIORITY_OVERLAY        100 // Applies overlays. May cause overlay pop-in if it gets behind.
 #define SS_PRIORITY_TIMER          20
 #define SS_PRIORITY_ICON_UPDATE    20  // Queued icon updates. Mostly used by APCs and tables.
+#define SS_PRIORITY_INPUT          20  // Input things.
+
 
 // Normal
 #define SS_PRIORITY_TICKER         100 // Gameticker.
@@ -54,5 +56,12 @@
 #define SS_PRIORITY_WIRELESS      10	// Wireless connection setup.
 
 
+#define SS_PRIORITY_MOVEMENT       50
+#define SS_PRIORITY_CONVEYORS      40
+
+#define FIRE_PRIORITY_SPACEDRIFT SS_PRIORITY_SPACEDRIFT
+#define FIRE_PRIORITY_MOVEMENT SS_PRIORITY_MOVEMENT
+#define FIRE_PRIORITY_CONVEYORS SS_PRIORITY_CONVEYORS
+
 // Subsystem fire priority, from lowest to highest priority
-// If the subsystem isn't listed here it's either DEFAULT or PROCESS (if it's a processing subsystem child)
+// If the subsystem isn't listed here it's either DEFAULT or PROCESS (if it's a processing subsystem child)

@@ -17,7 +17,7 @@
 	var/heat_capacity = 1
 
 	//Properties for both
-	var/temperature = 253.5      // Initial turf temperature.
+	var/temperature = T20C       // Initial turf temperature.
 	var/blocks_air = 0          // Does this turf contain air/let air through?
 
 	// General properties.

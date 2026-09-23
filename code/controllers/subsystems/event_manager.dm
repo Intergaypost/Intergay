@@ -29,7 +29,7 @@ SUBSYSTEM_DEF(event)
 	if(!all_events)
 		all_events = subtypesof(/datum/event)
 	if(!event_containers)
-		event_containers = list(
+		event_containers = alist(
 				EVENT_LEVEL_MUNDANE 	= new/datum/event_container/mundane,
 				EVENT_LEVEL_MODERATE	= new/datum/event_container/moderate,
 				EVENT_LEVEL_MAJOR 		= new/datum/event_container/major
@@ -59,8 +59,7 @@ SUBSYSTEM_DEF(event)
 			return
 
 	while (pos <= EVENT_LEVEL_MAJOR)
-		var/list/datum/event_container/EC = event_containers[pos]
-		EC.process()
+		event_containers[pos].process()
 		pos++
 
 		if (MC_TICK_CHECK)
@@ -70,7 +69,7 @@ SUBSYSTEM_DEF(event)
 	..("E:[active_events.len]")
 
 //Actual event handling
-/datum/controller/subsystem/event/proc/event_complete(var/datum/event/E)
+/datum/controller/subsystem/event/proc/event_complete(datum/event/E)
 	active_events -= E
 
 	if(!E.event_meta || !E.severity)	// datum/event is used here and there for random reasons, maintaining "backwards compatibility"
@@ -86,8 +85,8 @@ SUBSYSTEM_DEF(event)
 
 	log_debug("Event '[EM.name]' has completed at [worldtime2stationtime(world.time)].")
 
-/datum/controller/subsystem/event/proc/delay_events(var/severity, var/delay)
-	var/list/datum/event_container/EC = event_containers[severity]
+/datum/controller/subsystem/event/proc/delay_events(severity, delay)
+	var/datum/event_container/EC = event_containers[severity]
 	EC.next_event_time += delay
 
 /datum/controller/subsystem/event/proc/Interact(var/mob/living/user)

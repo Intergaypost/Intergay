@@ -377,3 +377,7 @@
 
 /mob/living/silicon/get_bullet_impact_effect_type(var/def_zone)
 	return BULLET_IMPACT_METAL
+
+/mob/living/silicon/get_speech_bubble_state_modifier()
+	return "synth"
+

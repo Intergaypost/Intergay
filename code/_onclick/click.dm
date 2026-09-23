@@ -54,6 +54,10 @@
 	if(modifiers["middle"] && modifiers["shift"])
 		ShiftMiddleClickOn(A)
 		return 1
+	if(modifiers["middle"] && modifiers["alt"])
+		AltMiddleClickOn(A)
+		return 1
+
 	if(modifiers["shift"])
 		ShiftClickOn(A)
 		return 0
@@ -209,7 +213,7 @@
 */
 /mob/proc/RangedAttack(var/atom/A, var/params)
 	if(!mutations.len) return
-	if((LASER in mutations) && a_intent == I_HURT)
+	if((LASEREYE in mutations) && a_intent == I_HURT)
 		LaserEyes(A) // moved into a proc below
 	else if(TK in mutations)
 		setClickCooldown(DEFAULT_ATTACK_COOLDOWN)
@@ -240,6 +244,10 @@
 /mob/proc/ShiftMiddleClickOn(var/atom/A)
 	A.ShiftMiddleClick(src)
 	return
+
+/mob/proc/AltMiddleClickOn(var/atom/A)
+	pointed(A)
+
 
 /atom/proc/ShiftMiddleClick(var/mob/user)
 	user.pointed(src)

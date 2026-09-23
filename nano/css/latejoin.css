@@ -1,0 +1,523 @@
+/* Latejoin Job Selection - NanoUI Layout & Styling */
+
+html, body {
+	height: 100% !important;
+	width: 100% !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+	background: #121212 url('uiBackground.png') 50% 0 repeat;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+	font-size: 12px;
+	line-height: 1.4;
+	color: #d0d0d0;
+}
+
+/* Full Window Flex Layout */
+.latejoin-wrapper {
+	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.latejoin-row {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	gap: 6px;
+	box-sizing: border-box;
+}
+
+/* Left Sidebar */
+.latejoin-sidebar-cell {
+	flex: 0 0 190px;
+	width: 190px;
+	height: 100%;
+	vertical-align: top;
+	background: #181818;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	padding: 8px 6px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+/* Main Center Content */
+.latejoin-main-cell {
+	flex: 1 1 auto;
+	height: 100%;
+	vertical-align: top;
+	padding: 0 4px;
+	box-sizing: border-box;
+	overflow-y: auto;
+}
+
+/* Right Preview & Quick Setup Panel */
+.latejoin-preview-cell {
+	flex: 0 0 235px;
+	width: 235px;
+	height: 100%;
+	vertical-align: top;
+	background: #181818;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	padding: 8px;
+	box-sizing: border-box;
+	text-align: center;
+	overflow-y: auto;
+}
+
+/* Station Information Card */
+.latejoin-station-box {
+	background: #252525;
+	border: 1px solid #40628a;
+	border-radius: 4px;
+	padding: 8px 6px;
+	margin-bottom: 8px;
+	text-align: center;
+}
+
+.latejoin-station-name {
+	font-size: 13px;
+	font-weight: bold;
+	color: #e9c183;
+	margin-bottom: 6px;
+	border-bottom: 1px solid #383838;
+	padding-bottom: 4px;
+}
+
+.latejoin-station-status {
+	font-size: 11px;
+	text-align: left;
+	line-height: 18px;
+}
+
+.latejoin-info-line {
+	margin-bottom: 2px;
+}
+
+.latejoin-info-label {
+	color: #888888;
+}
+
+/* Status Badges */
+.latejoin-status-badge {
+	display: block;
+	margin-top: 6px;
+	padding: 3px 6px;
+	border-radius: 3px;
+	font-size: 10px;
+	font-weight: bold;
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.badge-danger {
+	background: rgba(217, 83, 79, 0.25);
+	border: 1px solid #d9534f;
+	color: #ff7777;
+}
+
+.badge-warning {
+	background: rgba(240, 173, 78, 0.25);
+	border: 1px solid #f0ad4e;
+	color: #f7c96e;
+}
+
+.badge-normal {
+	background: rgba(92, 184, 92, 0.25);
+	border: 1px solid #5cb85c;
+	color: #70d670;
+}
+
+/* Filter Box */
+.latejoin-filter-box {
+	background: #202020;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	padding: 6px;
+	margin-bottom: 8px;
+}
+
+.latejoin-section-header {
+	font-size: 11px;
+	font-weight: bold;
+	color: #e9c183;
+	margin-bottom: 5px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.latejoin-toggle-btn.link {
+	float: none !important;
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 4px 6px !important;
+	font-size: 11px !important;
+	text-align: center !important;
+	border-radius: 3px !important;
+	box-sizing: border-box !important;
+}
+
+.latejoin-toggle-btn.active.link {
+	background: #2c4d3b !important;
+	border-color: #4da674 !important;
+	color: #ffffff !important;
+}
+
+/* Department Navigation */
+.latejoin-nav-header {
+	font-size: 11px;
+	font-weight: bold;
+	color: #e9c183;
+	margin: 6px 0 4px 2px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+.latejoin-nav-list {
+	list-style-type: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+.latejoin-nav-item {
+	margin-bottom: 4px !important;
+	padding: 0 !important;
+	list-style: none !important;
+}
+
+.latejoin-nav-list .latejoin-nav-btn,
+.latejoin-nav-btn.link {
+	float: none !important;
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+	min-height: 26px !important;
+	line-height: 18px !important;
+	padding: 4px 8px !important;
+	margin: 0 !important;
+	font-size: 12px !important;
+	font-weight: normal !important;
+	font-family: inherit !important;
+	color: #d0d0d0 !important;
+	background: #222222 !important;
+	border: 1px solid #383838 !important;
+	border-radius: 3px !important;
+	text-align: left !important;
+	box-sizing: border-box !important;
+	cursor: pointer !important;
+	text-decoration: none !important;
+}
+
+.latejoin-nav-list .latejoin-nav-btn:hover,
+.latejoin-nav-btn.linkActive:hover {
+	background: #303030 !important;
+	color: #ffffff !important;
+	border-color: #555555 !important;
+}
+
+.latejoin-nav-list .latejoin-nav-btn.active,
+.latejoin-nav-list .latejoin-nav-btn.selected,
+.latejoin-nav-btn.active.link,
+.latejoin-nav-btn.selected.link {
+	background: #1c3b5e !important;
+	color: #ffffff !important;
+	border-color: #3b7dc4 !important;
+	border-left: 4px solid #5dade2 !important;
+	font-weight: bold !important;
+}
+
+/* Alert Banners */
+.latejoin-banner {
+	padding: 8px 12px;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	font-size: 12px;
+	line-height: 18px;
+}
+
+.banner-danger {
+	background: rgba(180, 40, 40, 0.25);
+	border: 1px solid #d9534f;
+	color: #ff8888;
+}
+
+.banner-warning {
+	background: rgba(200, 140, 30, 0.25);
+	border: 1px solid #f0ad4e;
+	color: #f7c96e;
+}
+
+.banner-info {
+	background: rgba(40, 120, 180, 0.25);
+	border: 1px solid #5dade2;
+	color: #a0d8ef;
+}
+
+.latejoin-banner-actions {
+	margin-top: 6px;
+}
+
+.latejoin-banner-actions .link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 3px 8px !important;
+	margin-right: 6px !important;
+	font-size: 11px !important;
+	border-radius: 2px !important;
+}
+
+/* Department Cards */
+.latejoin-dept-card {
+	background: #1e1e1e;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+
+.latejoin-dept-header {
+	background: #252525;
+	border-bottom: 1px solid #3a3a3a;
+	padding: 6px 10px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.latejoin-dept-title {
+	font-size: 13px;
+	font-weight: bold;
+	color: #e9c183;
+}
+
+.latejoin-dept-stats {
+	font-size: 11px;
+	color: #aaaaaa;
+}
+
+/* Job List and Items */
+.latejoin-job-list {
+	padding: 4px;
+}
+
+.latejoin-job-item {
+	background: #242424;
+	border: 1px solid #353535;
+	border-left: 5px solid #555555;
+	border-radius: 3px;
+	padding: 6px 10px;
+	margin-bottom: 4px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	transition: background 0.15s ease-in-out;
+}
+
+.latejoin-job-item:hover {
+	background: #2c2c2c;
+}
+
+.job-restricted {
+	opacity: 0.75;
+	background: #1c1c1c;
+}
+
+.latejoin-job-info {
+	flex: 1 1 auto;
+}
+
+.latejoin-job-title-row {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 3px;
+}
+
+.latejoin-job-title {
+	font-size: 13px;
+	font-weight: 500;
+	color: #ffffff;
+}
+
+.latejoin-job-title.job-head {
+	font-weight: bold;
+	color: #ffd700;
+	text-shadow: 0 0 2px rgba(255, 215, 0, 0.3);
+}
+
+.latejoin-alt-title-btn.link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 13px !important;
+	padding: 1px 5px !important;
+	font-size: 10px !important;
+	font-style: italic !important;
+	color: #9cc2e8 !important;
+	background: #1b2d42 !important;
+	border-color: #3b608a !important;
+	border-radius: 2px !important;
+}
+
+.latejoin-job-meta {
+	display: flex;
+	gap: 12px;
+	font-size: 11px;
+	color: #999999;
+}
+
+.latejoin-meta-tag {
+	display: inline-block;
+}
+
+.latejoin-job-actions {
+	flex: 0 0 auto;
+	text-align: right;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.latejoin-join-btn.link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	min-height: 24px !important;
+	line-height: 18px !important;
+	padding: 3px 12px !important;
+	font-size: 11px !important;
+	font-weight: bold !important;
+	background: #1e5e2e !important;
+	border-color: #38a152 !important;
+	color: #ffffff !important;
+	border-radius: 3px !important;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+	text-decoration: none !important;
+}
+
+.latejoin-join-btn.link:hover {
+	background: #277c3d !important;
+	border-color: #4bd86e !important;
+}
+
+.latejoin-join-btn-disabled.link {
+	float: none !important;
+	display: inline-block !important;
+	height: auto !important;
+	line-height: 16px !important;
+	padding: 2px 8px !important;
+	font-size: 10px !important;
+	background: #333333 !important;
+	border-color: #444444 !important;
+	color: #777777 !important;
+	cursor: not-allowed !important;
+	border-radius: 2px !important;
+}
+
+.latejoin-unavailable-tag {
+	font-size: 10px;
+	font-weight: bold;
+	color: #ff6666;
+	background: rgba(180, 50, 50, 0.15);
+	border: 1px solid rgba(255, 100, 100, 0.3);
+	border-radius: 2px;
+	padding: 2px 6px;
+	display: inline-block;
+}
+
+/* Spawnpoint Box */
+.latejoin-spawnpoint-box {
+	background: #222222;
+	border: 1px solid #333333;
+	border-radius: 4px;
+	padding: 6px;
+	margin-bottom: 8px;
+}
+
+.latejoin-spawn-btn.link {
+	float: none !important;
+	display: block !important;
+	width: 100% !important;
+	height: auto !important;
+	line-height: 18px !important;
+	padding: 4px 6px !important;
+	font-size: 11px !important;
+	font-weight: bold !important;
+	text-align: center !important;
+	border-radius: 3px !important;
+	box-sizing: border-box !important;
+	background: #1e334a !important;
+	border-color: #3a628e !important;
+	color: #88c0f7 !important;
+}
+
+.latejoin-spawn-btn.link:hover {
+	background: #294869 !important;
+	color: #ffffff !important;
+}
+
+/* Slot Buttons Grid */
+.latejoin-slot-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 3px;
+	justify-content: center;
+	margin-top: 4px;
+}
+
+.latejoin-slot-btn.link {
+	float: none !important;
+	display: inline-block !important;
+	min-width: 22px !important;
+	height: auto !important;
+	line-height: 14px !important;
+	padding: 2px 4px !important;
+	font-size: 11px !important;
+	text-align: center !important;
+	border-radius: 2px !important;
+	margin: 0 !important;
+}
+
+.latejoin-slot-btn.active.link,
+.latejoin-slot-btn.selected.link {
+	background: #1c3b5e !important;
+	border-color: #5dade2 !important;
+	color: #ffffff !important;
+	font-weight: bold !important;
+}
+
+/* Right Panel Action Buttons */
+.latejoin-full-btn.link {
+	float: none !important;
+	display: block !important;
+	width: 96% !important;
+	height: auto !important;
+	line-height: 18px !important;
+	margin: 4px auto !important;
+	padding: 4px 8px !important;
+	text-align: center !important;
+	border-radius: 3px !important;
+	box-sizing: border-box !important;
+	font-size: 11px !important;
+}
+
+.latejoin-btn-highlight.link {
+	background: #1c3b5e !important;
+	border-color: #3b7dc4 !important;
+	color: #ffffff !important;
+	font-weight: bold !important;
+}
+
+.latejoin-btn-highlight.link:hover {
+	background: #255080 !important;
+	border-color: #5dade2 !important;
+}

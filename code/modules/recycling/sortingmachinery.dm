@@ -348,13 +348,13 @@
 
 	dat += "<table style='width:100%; padding:4px;'><tr>"
 	for(var/i = 1, i <= GLOB.tagger_locations.len, i++)
-		dat += "<td><a href='?src=\ref[src];nextTag=[GLOB.tagger_locations[i]]'>[GLOB.tagger_locations[i]]</a></td>"
+		dat += "<td><a href='byond://?src=\ref[src];nextTag=[GLOB.tagger_locations[i]]'>[GLOB.tagger_locations[i]]</a></td>"
 
 		if (i%4==0)
 			dat += "</tr><tr>"
 
 	dat += "</tr></table><br>Current Selection: [currTag ? currTag : "None"]</tt>"
-	dat += "<br><a href='?src=\ref[src];nextTag=CUSTOM'>Enter custom location.</a>"
+	dat += "<br><a href='byond://?src=\ref[src];nextTag=CUSTOM'>Enter custom location.</a>"
 	user << browse(dat, "window=destTagScreen;size=450x375")
 	onclose(user, "destTagScreen")
 
@@ -362,7 +362,7 @@
 	openwindow(user)
 
 /obj/item/device/destTagger/OnTopic(user, href_list, state)
-	if(href_list["nextTag"] && href_list["nextTag"] in GLOB.tagger_locations)
+	if(href_list["nextTag"] && (href_list["nextTag"] in GLOB.tagger_locations))
 		src.currTag = href_list["nextTag"]
 		. = TOPIC_REFRESH
 	if(href_list["nextTag"] == "CUSTOM")

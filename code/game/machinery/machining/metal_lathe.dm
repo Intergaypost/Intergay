@@ -44,19 +44,23 @@
 		to_chat(user, "<span class='danger'>\The [src] is disabled!</span>")
 		return
 
-	var/dat = "<center><h1>metal_lathe Control Panel</h1><hr/>"
+	var/dat = ""
 
 	if(!disabled)
-		dat += "<table width = '100%'>"
+		dat += "<div class='statusDisplay'>"
+		dat += "<table style='width: 100%; text-align: center;'>"
 		var/material_top = "<tr>"
 		var/material_bottom = "<tr>"
 
 		for(var/material in stored_material)
-			material_top += "<td width = '25%' align = center><b>[material]</b></td>"
-			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity[material]]</b></td>"
+			material_top += "<td><b>[capitalize(material)]</b></td>"
+			material_bottom += "<td>[stored_material[material]] / [storage_capacity[material]]</td>"
 
-		dat += "[material_top]</tr>[material_bottom]</tr></table><hr>"
-		dat += "<h2>Printable Designs</h2><h3>Showing: <a href='?src=\ref[src];change_category=1'>[show_category]</a>.</h3></center><table width = '100%'>"
+		dat += "[material_top]</tr>[material_bottom]</tr></table></div>"
+		dat += "<div class='block'>"
+		dat += "<b>Category:</b> <a href='byond://?src=\ref[src];change_category=1'>[show_category]</a>"
+		dat += "</div>"
+		dat += "<table style='width: 100%;'>"
 
 		var/index = 0
 		for(var/datum/metal_lathe/recipe/R in machine_recipes)
@@ -69,7 +73,7 @@
 			var/max_sheets
 			var/comma
 			if(!R.resources || !R.resources.len)
-				material_string = "No resources required.</td>"
+				material_string = "No resources required."
 			else
 				//Make sure it's buildable and list requires resources.
 				for(var/material in R.resources)
@@ -83,21 +87,23 @@
 					else
 						material_string += ", "
 					material_string += "[round(R.resources[material] * mat_efficiency)] [material]"
-				material_string += ".<br></td>"
+				material_string += "."
 				//Build list of multipliers for sheets.
 				if(R.is_stack)
 					if(max_sheets && max_sheets > 0)
-						multiplier_string  += "<br>"
-						for(var/i = 5;i<max_sheets;i*=2) //5,10,20,40...
-							multiplier_string  += "<a href='?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a>"
-						multiplier_string += "<a href='?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
+						multiplier_string += "<br>"
+						for(var/i = 5; i < max_sheets; i *= 2) //5,10,20,40...
+							multiplier_string += "<a href='byond://?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a> "
+						multiplier_string += "<a href='byond://?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
 
-			dat += "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
+			dat += "<tr><td style='vertical-align: top; width: 55%;'>[R.hidden ? "<font color='red'>*</font>" : ""]<b>[can_make ? "<a href='byond://?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color='red'>*</font>" : ""][multiplier_string]</td><td align='right' style='vertical-align: top;'>[material_string]</td></tr>"
 
-		dat += "</table><hr>"
+		dat += "</table>"
 
-	user << browse(dat, "window=metal_lathe")
-	onclose(user, "metal_lathe")
+	var/datum/browser/popup = new(user, "metal_lathe", "Metal Lathe Control Panel", 460, 520, src)
+	popup.set_content(dat)
+	popup.set_title_image(user.browse_rsc_icon(src.icon, src.icon_state))
+	popup.open()
 
 //THE OBJECT BEING ADDED IS THE LETTER "O" NOT A 0(ZERO)
 /obj/machinery/metal_lathe/attackby(var/obj/item/O as obj, var/mob/user as mob)
@@ -221,7 +227,7 @@
 		//Exploit detection, not sure if necessary after rewrite.
 		if(!making || multiplier < 0 || multiplier > 100)
 			var/turf/exploit_loc = get_turf(usr)
-			message_admins("[key_name_admin(usr)] tried to exploit a metal_lathe to duplicate an item! ([exploit_loc ? "<a href='?_src_=holder;adminplayerobservecoodjump=1;X=[exploit_loc.x];Y=[exploit_loc.y];Z=[exploit_loc.z]'>JMP</a>" : "null"])", 0)
+			message_admins("[key_name_admin(usr)] tried to exploit a metal_lathe to duplicate an item! ([exploit_loc ? "<a href='byond://?_src_=holder;adminplayerobservecoodjump=1;X=[exploit_loc.x];Y=[exploit_loc.y];Z=[exploit_loc.z]'>JMP</a>" : "null"])", 0)
 			log_admin("EXPLOIT : [key_name(usr)] tried to exploit a metal_lathe to duplicate an item!")
 			return
 

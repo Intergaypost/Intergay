@@ -182,7 +182,8 @@
 								"<span class='danger'>[user] cuts out your tongue with [src]!</span>")
 						new T.type(H.loc, 1)
 						H.apply_damage(rand(1, 3), BRUTE, O)
-						H.organs_by_name["head"].pain += 30
+						var/obj/item/organ/external/head1 = H.organs_by_name["head"]
+						if(head1) head1.pain += 30
 						H.custom_pain("[pick("OH GOD YOUR MOUTH HURTS SO BAD!", "OH GOD WHY!", "OH GOD YOUR MOUTH!")]", 100, affecting = O)
 
 						playsound(H, 'sound/effects/gore/trauma3.ogg', 40, 1, -1) //And out it goes.
@@ -209,7 +210,8 @@
 								"<span class='danger'>[user] tears off your tooth with [src]!</span>")
 
 				H.apply_damage(rand(1, 3), BRUTE, O)
-				H.organs_by_name["head"].pain += 30
+				var/obj/item/organ/external/head2 = H.organs_by_name["head"]
+				if(head2) head2.pain += 30
 				H.custom_pain("[pick("OH GOD YOUR MOUTH HURTS SO BAD!", "OH GOD WHY!", "OH GOD YOUR MOUTH!")]", 100, affecting = O)
 
 				playsound(H, 'sound/effects/gore/trauma3.ogg', 40, 1, -1) //And out it goes.

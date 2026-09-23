@@ -38,20 +38,44 @@ var/list/department_radio_keys = list(
 	  ":Z" = "Entertainment",".Z" = "Entertainment",
 	  ":Y" = "Exploration",		".Y" = "Exploration",
 
-	  //kinda localization -- rastaf0
-	  //same keys as above, but on russian keyboard layout. This file uses cp1251 as encoding.
-	  ":ê" = "right ear",	".ê" = "right ear",
-	  ":ä" = "left ear",	".ä" = "left ear",
-	  ":ø" = "intercom",	".ø" = "intercom",
-	  ":ð" = "department",	".ð" = "department",
-	  ":ñ" = "Command",		".ñ" = "Command",
-	  ":ò" = "Science",		".ò" = "Science",
-	  ":ü" = "Medical",		".ü" = "Medical",
-	  ":ó" = "Engineering",	".ó" = "Engineering",
-	  ":û" = "Security",	".û" = "Security",
-	  ":ö" = "whisper",		".ö" = "whisper",
-	  ":å" = "Mercenary",	".å" = "Mercenary",
-	  ":é" = "Supply",		".é" = "Supply",
+	  // Russian layout keys
+	  ":к" = "right ear",	".к" = "right ear",
+	  ":д" = "left ear",	".д" = "left ear",
+	  ":ш" = "intercom",	".ш" = "intercom",
+	  ":р" = "department",	".р" = "department",
+	  ":с" = "Command",		".с" = "Command",
+	  ":т" = "Science",		".т" = "Science",
+	  ":ь" = "Medical",		".ь" = "Medical",
+	  ":у" = "Engineering",	".у" = "Engineering",
+	  ":ы" = "Security",	".ы" = "Security",
+	  ":ц" = "whisper",		".ц" = "whisper",
+	  ":е" = "Mercenary",	".е" = "Mercenary",
+	  ":ч" = "Raider",		".ч" = "Raider",
+	  ":г" = "Supply",		".г" = "Supply",
+	  ":м" = "Service",		".м" = "Service",
+	  ":в" = "Inquisition",	".в" = "Inquisition",
+	  ":з" = "AI Private",	".з" = "AI Private",
+	  ":я" = "Entertainment",".я" = "Entertainment",
+	  ":н" = "Exploration",	".н" = "Exploration",
+
+	  ":К" = "right ear",	".К" = "right ear",
+	  ":Д" = "left ear",	".Д" = "left ear",
+	  ":Ш" = "intercom",	".Ш" = "intercom",
+	  ":Р" = "department",	".Р" = "department",
+	  ":С" = "Command",		".С" = "Command",
+	  ":Т" = "Science",		".Т" = "Science",
+	  ":Ь" = "Medical",		".Ь" = "Medical",
+	  ":У" = "Engineering",	".У" = "Engineering",
+	  ":Ы" = "Security",	".Ы" = "Security",
+	  ":Ц" = "whisper",		".Ц" = "whisper",
+	  ":Е" = "Mercenary",	".Е" = "Mercenary",
+	  ":Ч" = "Raider",		".Ч" = "Raider",
+	  ":Г" = "Supply",		".Г" = "Supply",
+	  ":М" = "Service",		".М" = "Service",
+	  ":В" = "Inquisition",	".В" = "Inquisition",
+	  ":З" = "AI Private",	".З" = "AI Private",
+	  ":Я" = "Entertainment",".Я" = "Entertainment",
+	  ":Н" = "Exploration",	".Н" = "Exploration",
 )
 
 
@@ -96,13 +120,13 @@ proc/get_radio_key_from_channel(var/channel)
 //Takes a list of the form list(message, verb, whispering) and modifies it as needed
 //Returns 1 if a speech problem was applied, 0 otherwise
 /mob/living/proc/handle_speech_problems(var/list/message_data)
-	var/message = rhtml_decode(message_data[1])
+	var/message = message_data[1]
 	var/verb = message_data[2]
 
 	. = 0
 
 	if((HULK in mutations) && health >= 25 && length(message))
-		message = "[ruppertext(message)]!!!"
+		message = "[uppertext(message)]!!!"
 		verb = pick("yells","roars","hollers")
 		message_data[3] = 0
 		. = 1
@@ -119,7 +143,7 @@ proc/get_radio_key_from_channel(var/channel)
 		verb = pick("tries to talk","mumbles")
 		. = 1
 
-	message_data[1] = russian_to_cp1251(message)
+	message_data[1] = message
 	message_data[2] = verb
 
 /mob/living/proc/handle_message_mode(message_mode, message, verb, speaking, used_radios, alt_name)
@@ -302,8 +326,16 @@ proc/get_radio_key_from_channel(var/channel)
 		get_mobs_and_objs_in_view_fast(T, message_range, listening, listening_obj, /datum/client_preference/ghost_ears)
 
 
-	var/speech_bubble_test = say_test(message)
-	var/image/speech_bubble = image('icons/mob/talk.dmi',src,"h[speech_bubble_test]")
+	var/speech_bubble_state = check_speech_punctuation_state(message)
+	var/speech_state_modifier = get_speech_bubble_state_modifier()
+	if(speech_bubble_state && speech_state_modifier)
+		speech_bubble_state = "[speech_state_modifier]_[speech_bubble_state]"
+
+	var/image/speech_bubble
+	if(speech_bubble_state)
+		speech_bubble = image('icons/mob/talk.dmi', src, speech_bubble_state)
+		speech_bubble.layer = layer
+		speech_bubble.plane = plane
 
 /*
 	for (var/atom/movable/AM in get_above_oo())

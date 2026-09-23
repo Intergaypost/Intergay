@@ -105,7 +105,7 @@
 
 	return locate(world.maxx/2, world.maxy/2, world.maxz)
 
-/datum/map_template/proc/load(turf/T, centered=FALSE)
+/datum/map_template/proc/load(turf/T, centered=FALSE, clear_contents=FALSE)
 	if(centered)
 		T = locate(T.x - round(width/2) , T.y - round(height/2) , T.z)
 	if(!T)

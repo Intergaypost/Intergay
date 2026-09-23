@@ -3,6 +3,11 @@
 #define UNCONSCIOUS 1
 #define DEAD        2
 
+// Job preference alternate options
+#define GET_RANDOM_JOB  0
+#define BE_ASSISTANT    1
+#define RETURN_TO_LOBBY 2
+
 // Bitflags defining which status effects could be or are inflicted on a mob.
 #define CANSTUN     0x1
 #define CANWEAKEN   0x2
@@ -217,8 +222,6 @@
 #define BP_VOICE		"vocal synthesiser"
 #define BP_STACK		"stack"
 #define BP_OPTICS		"optics"
-#define BP_VCHORDS  "vocal chords"
-#define BP_TONGUE	"tongue"
 
 // Limbs.
 #define BP_L_FOOT "l_foot"

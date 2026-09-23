@@ -117,12 +117,11 @@ var/const/MAP_HAS_RANK = 2		//Rank system, also togglable
 	)
 
 	var/list/home_system_choices = list(
-		"Sol",
-		"Nyx",
-		"Tau Ceti",
-		"Epsilon Ursae Minoris",
-		"Zamsiin-lr",
-		"Gilgamesh"
+		"Солнце",
+		"Зойша",
+		"Иртэма",
+		"Шаос",
+		"Сектор Крессент"
 		)
 
 	var/list/faction_choices = list(

@@ -43,7 +43,7 @@
 	if(.)
 		if(istype(W,/obj/item/weapon/spacecash)) //only matters if its spacecash.
 			var/obj/item/I = new /obj/item/weapon/spacecash/bundle/c1000()
-			src.handle_item_insertion(I,1)
+			src.handle_item_insertion(I, prevent_warning = 1)
 
 //IPC
 /spell/camera_connection

@@ -1,5 +1,5 @@
-#define RESPAWNS_FOR_PAYMENT 3
-#define POINTS_FOR_CHEATER 10
+#define GAMEPOD_RESPAWNS_FOR_PAYMENT 3
+#define GAMEPOD_POINTS_FOR_CHEATER 10
 
 /obj/machinery/gamepod
 	name = "\improper gamepod"
@@ -104,8 +104,8 @@
 
 	if(emagged)
 		occupant.mind.thunderfield_cheater = TRUE
-		occupant.mind.thunder_points = POINTS_FOR_CHEATER
-	occupant.mind.thunder_respawns = RESPAWNS_FOR_PAYMENT
+		occupant.mind.thunder_points = GAMEPOD_POINTS_FOR_CHEATER
+	occupant.mind.thunder_respawns = GAMEPOD_RESPAWNS_FOR_PAYMENT
 	occupant.mind.thunderfield_owner = occupant
 	vrbody.vr_mind = occupant.mind
 	occupant_mind = occupant.mind //We need to store user's mind to return it to his original body in case of some problems
@@ -152,7 +152,3 @@
 	if(occupant)
 		move_outside()
 	return ..()
-
-#undef RESPAWNS_FOR_PAYMENT
-#undef PRICE_PER_USE
-#undef POINTS_FOR_CHEATER

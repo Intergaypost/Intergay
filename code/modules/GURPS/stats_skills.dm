@@ -9,12 +9,6 @@
 // - Matt 																//
 //////////////////////////////////////////////////////////////////////////
 
-//defines
-#define CRIT_SUCCESS_NORM 1
-#define CRIT_FAILURE_NORM 1
-#define CRIT_SUCCESS 2
-#define CRIT_FAILURE 3
-
 
 
 /mob
@@ -53,7 +47,6 @@
 		if(message)
 			to_chat(src, "<span class = 'warning'>[message]</span>")
 		return 0
-	return 1
 
 /mob/proc/learn_stats(var/stat_type)
 	var/initial_stat = round(stats[stat_type])
@@ -185,6 +178,22 @@ proc/conToToxinModifier(var/constitution, var/w_class)
 	stats[STAT_HT] = rand(helt1, helt2)
 	if(gender == FEMALE)
 		stats[STAT_HT] -= (rand(1,2))
+
+	var/mob/living/carbon/human/H = src
+	var/datum/backstory/story = H.backstory
+	if(istype(story))
+		var/list/backstory_stats = story.stats
+		stats[STAT_ST] += LAZYACCESS(backstory_stats, 1)
+		stats[STAT_DX] += LAZYACCESS(backstory_stats, 2)
+		stats[STAT_IQ] += LAZYACCESS(backstory_stats, 3)
+		stats[STAT_HT] += LAZYACCESS(backstory_stats, 4)
+	var/datum/backstory/homesystem/home = H.home_system
+	if(istype(home))
+		var/list/home_stats = home.stats
+		stats[STAT_ST] += LAZYACCESS(home_stats, 1)
+		stats[STAT_DX] += LAZYACCESS(home_stats, 2)
+		stats[STAT_IQ] += LAZYACCESS(home_stats, 3)
+		stats[STAT_HT] += LAZYACCESS(home_stats, 4)
 
 /mob/living/carbon/proc/adjustStrength(var/num)
 	stats[STAT_ST] += num

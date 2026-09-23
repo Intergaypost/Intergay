@@ -86,11 +86,12 @@
 	if(working || stat || !on || a == src) //can't touch itself
 		return
 	if(isturf(a) || get_dist(src,a) > 1)
-		walk_to(src,a,0,movement_delay())
+		SSmove_manager.move_to(src, a, 0, movement_delay())
 	else if(istype(a, /obj/item))
 		pickup(a)
 	else
 		hit(a)
+
 
 /obj/item/device/bot_controller
 	name = "remote control"

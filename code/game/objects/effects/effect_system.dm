@@ -73,7 +73,6 @@ steam.start() -- spawns the effect
 		addtimer(CALLBACK(src, /datum/effect/effect/system/proc/spread, i), 0)
 
 /datum/effect/effect/system/steam_spread/spread(var/i)
-	set waitfor = 0
 	if(holder)
 		src.location = get_turf(holder)
 	var/obj/effect/effect/steam/steam = new /obj/effect/effect/steam(location)
@@ -82,9 +81,8 @@ steam.start() -- spawns the effect
 		direction = pick(GLOB.cardinal)
 	else
 		direction = pick(GLOB.alldirs)
-	for(i=0, i<pick(1,2,3), i++)
-		sleep(5)
-		step(steam,direction)
+	var/steps = pick(1, 2, 3)
+	SSmove_manager.move(steam, direction, delay = 5, timeout = steps * 5, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
 	QDEL_IN(steam, 2 SECONDS)
 
 /////////////////////////////////////////////
@@ -143,7 +141,6 @@ steam.start() -- spawns the effect
 		addtimer(CALLBACK(src, /datum/effect/effect/system/proc/spread, i), 0)
 
 /datum/effect/effect/system/spark_spread/spread(var/i)
-	set waitfor = 0
 	if(holder)
 		src.location = get_turf(holder)
 	var/obj/effect/sparks/sparks = new /obj/effect/sparks(location)
@@ -152,9 +149,9 @@ steam.start() -- spawns the effect
 		direction = pick(GLOB.cardinal)
 	else
 		direction = pick(GLOB.alldirs)
-	for(i=0, i<pick(1,2,3), i++)
-		sleep(5)
-		step(sparks,direction)
+	var/steps = pick(1, 2, 3)
+	SSmove_manager.move(sparks, direction, delay = 5, timeout = steps * 5, priority = MOVEMENT_ABOVE_SPACE_PRIORITY)
+
 
 /////////////////////////////////////////////
 //// SMOKE SYSTEMS

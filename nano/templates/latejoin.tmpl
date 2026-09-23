@@ -1,0 +1,173 @@
+<div class="latejoin-wrapper">
+	<div class="latejoin-row">
+		<!-- Left Navigation & Station Info Sidebar -->
+		<div class="latejoin-sidebar-cell">
+			<!-- Round & Station Info Box -->
+			<div class="latejoin-station-box">
+				<div class="latejoin-station-name">{{:data.station_name}}</div>
+				<div class="latejoin-station-status">
+					<div class="latejoin-info-line"><span class="latejoin-info-label">Duration:</span> <span class="highlight">{{:data.round_duration}}</span></div>
+					<div class="latejoin-info-line"><span class="latejoin-info-label">Active Crew:</span> <span class="good">{{:data.active_crew_total}}</span></div>
+					{{if data.evac_alert_level == 'danger'}}
+						<div class="latejoin-status-badge badge-danger">{{:data.evac_status}}</div>
+					{{else data.evac_alert_level == 'warning'}}
+						<div class="latejoin-status-badge badge-warning">{{:data.evac_status}}</div>
+					{{else}}
+						<div class="latejoin-status-badge badge-normal">Station Operational</div>
+					{{/if}}
+				</div>
+			</div>
+
+			<!-- Filter / View Controls -->
+			<div class="latejoin-filter-box">
+				<div class="latejoin-section-header">View Options</div>
+				<div class="latejoin-filter-item">
+					{{:helper.link((data.show_invalid_jobs ? 'Hide Unavailable' : 'Show Unavailable'), (data.show_invalid_jobs ? 'cancel' : 'check'), {'toggle_invalid_jobs': 1}, null, 'latejoin-toggle-btn' + (data.show_invalid_jobs ? ' active' : ''))}}
+				</div>
+			</div>
+
+			<!-- Department Navigation List -->
+			<div class="latejoin-nav-header">Departments</div>
+			<ul class="latejoin-nav-list">
+				<li class="latejoin-nav-item">
+					{{:helper.link('All Departments (' + data.total_open_positions + ')', 'folder-open', {'select_department': 'All'}, (data.selected_department == 'All') ? 'selected' : null, 'latejoin-nav-btn' + ((data.selected_department == 'All') ? ' active' : ''))}}
+				</li>
+				{{for data.departments}}
+					<li class="latejoin-nav-item">
+						{{:helper.link(value.name + ' (' + value.available_count + ')', null, {'select_department': value.name}, value.is_selected ? 'selected' : null, 'latejoin-nav-btn' + (value.is_selected ? ' active' : ''))}}
+					</li>
+				{{/for}}
+			</ul>
+		</div>
+
+		<!-- Center Main Content -->
+		<div class="latejoin-main-cell">
+			<!-- Critical Alert Banners -->
+			{{if data.explosion_in_progress}}
+				<div class="latejoin-banner banner-danger">
+					<b>CRITICAL WARNING:</b> The station is currently suffering catastrophic explosion! Joining would go poorly.
+				</div>
+			{{/if}}
+			{{if !data.enter_allowed}}
+				<div class="latejoin-banner banner-danger">
+					<b>ADMINISTRATIVE LOCK:</b> Late joining is currently locked by administration.
+				</div>
+			{{/if}}
+			{{if data.evac_status && data.evac_alert_level != 'normal'}}
+				<div class="latejoin-banner {{:data.evac_alert_level == 'danger' ? 'banner-danger' : 'banner-warning'}}">
+					<b>EVACUATION NOTICE:</b> {{:data.evac_status}}
+				</div>
+			{{/if}}
+			{{if data.name_taken}}
+				<div class="latejoin-banner banner-danger">
+					<b>NAME CONFLICT:</b> The name <i>"{{:data.character_name}}"</i> is already recorded in the crew manifest. Please change your name before joining.
+					<div class="latejoin-banner-actions">
+						{{:helper.link('Rename Character', 'pencil', {'rename': 1})}}
+						{{:helper.link('Random Name', 'refresh', {'random_name': 1})}}
+					</div>
+				</div>
+			{{/if}}
+			{{if data.has_gender_lock}}
+				<div class="latejoin-banner banner-info">
+					<b>GENDER LOCK:</b> Some roles are restricted based on your character's gender.
+				</div>
+			{{/if}}
+
+			<!-- Department Job Cards -->
+			{{for data.departments}}
+				{{if data.selected_department == 'All' || data.selected_department == value.name}}
+					{{if value.jobs && value.jobs.length}}
+						<div class="latejoin-dept-card">
+							<div class="latejoin-dept-header">
+								<span class="latejoin-dept-title">{{:value.name}}</span>
+								<span class="latejoin-dept-stats">
+									Open: <b class="highlight">{{:value.available_count}}</b> | Total: {{:value.total_count}} | Active: <b class="good">{{:value.active_count}}</b>
+								</span>
+							</div>
+							<div class="latejoin-job-list">
+								{{for value.jobs :jobVal:jobIndex}}
+									{{if jobVal.is_available || data.show_invalid_jobs}}
+										<div class="latejoin-job-item {{:jobVal.is_available ? 'job-available' : 'job-restricted'}}" style="border-left-color: {{:jobVal.selection_color}};">
+											<div class="latejoin-job-info">
+												<div class="latejoin-job-title-row">
+													<span class="latejoin-job-title {{:jobVal.is_head ? 'job-head' : ''}}">{{:jobVal.title}}</span>
+													{{if jobVal.has_alt_titles}}
+														{{:helper.link('[' + jobVal.alt_title + ']', 'tag', {'select_alt_title': jobVal.title}, null, 'latejoin-alt-title-btn')}}
+													{{/if}}
+												</div>
+												<div class="latejoin-job-meta">
+													<span class="latejoin-meta-tag">Positions: <b>{{:jobVal.current_positions}} / {{:jobVal.total_positions == -1 ? '∞' : jobVal.total_positions}}</b></span>
+													<span class="latejoin-meta-tag">Active in crew: <b class="{{:jobVal.active_players > 0 ? 'good' : 'idle'}}">{{:jobVal.active_players}}</b></span>
+												</div>
+											</div>
+											<div class="latejoin-job-actions">
+												{{if jobVal.is_available}}
+													{{:helper.link('Join as ' + (jobVal.alt_title || jobVal.title), 'play', {'SelectedJob': jobVal.title}, null, 'latejoin-join-btn')}}
+												{{else}}
+													<span class="latejoin-unavailable-tag">[{{:jobVal.unavailable_reason}}]</span>
+													{{if data.show_invalid_jobs}}
+														{{:helper.link('Locked', null, {'SelectedJob': jobVal.title}, 'disabled', 'latejoin-join-btn-disabled')}}
+													{{/if}}
+												{{/if}}
+											</div>
+										</div>
+									{{/if}}
+								{{/for}}
+							</div>
+						</div>
+					{{/if}}
+				{{/if}}
+			{{/for}}
+		</div>
+
+		<!-- Right Preview & Character Quick Setup Panel -->
+		<div class="latejoin-preview-cell">
+			<!-- Character Preview Box -->
+			<div class="charsetup-preview-card">
+				<img class="charsetup-preview-img" src="previewicon.png?v={{:data.preview_version}}" alt="Character Preview">
+			</div>
+
+			<!-- Character Summary -->
+			<div class="charsetup-preview-summary">
+				<div><b>Name:</b> {{:data.character_name}}</div>
+				<div><b>Species:</b> {{:data.species}}</div>
+				<div><b>Gender:</b> {{:data.gender_text}}</div>
+				<div><b>Age:</b> {{:data.age}}</div>
+				{{if data.char_branch}}
+					<div><b>Branch:</b> {{:data.char_branch}}</div>
+				{{/if}}
+				{{if data.char_rank}}
+					<div><b>Rank:</b> {{:data.char_rank}}</div>
+				{{/if}}
+			</div>
+
+			<!-- Spawn Location Selection -->
+			<div class="latejoin-spawnpoint-box">
+				<div class="latejoin-section-header">Spawn Location</div>
+				<div class="latejoin-spawnpoint-content">
+					{{:helper.link(data.spawnpoint, 'home', {'set_spawnpoint': 1}, null, 'latejoin-spawn-btn')}}
+				</div>
+			</div>
+
+			<!-- Quick Slot Switcher -->
+			<div class="charsetup-slot-box">
+				<div class="charsetup-slot-title">Character Slot {{:data.slot}} / {{:data.max_slots}}</div>
+				<div class="latejoin-slot-buttons">
+					{{for data.slots}}
+						{{:helper.link(value.num, null, {'changeslot': value.num}, value.is_current ? 'selected' : null, 'latejoin-slot-btn' + (value.is_current ? ' active' : ''))}}
+					{{/for}}
+				</div>
+			</div>
+
+			<!-- Character Quick Actions -->
+			<div class="charsetup-preview-actions">
+				{{:helper.link('Customize Character', 'gear', {'open_character_setup': 1}, null, 'latejoin-full-btn latejoin-btn-highlight')}}
+				{{:helper.link('Rename Character', 'pencil', {'rename': 1}, null, 'latejoin-full-btn')}}
+				{{:helper.link('Random Name', 'refresh', {'random_name': 1}, null, 'latejoin-full-btn')}}
+				{{:helper.link('Random Look', 'shuffle', {'random_look': 1}, null, 'latejoin-full-btn')}}
+				{{:helper.link('Cycle Background', 'image', {'cycle_bg': 1}, null, 'latejoin-full-btn')}}
+				{{:helper.link((data.preview_job_gear ? 'Hide Job Gear' : 'Show Job Gear'), 'suitcase', {'toggle_job_gear': 1}, null, data.preview_job_gear ? 'selected' : null, 'latejoin-full-btn')}}
+			</div>
+		</div>
+	</div>
+</div>

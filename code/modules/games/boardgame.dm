@@ -68,7 +68,7 @@ obj/item/weapon/board/attackby(obj/item/I as obj, mob/user as mob)
 		return
 
 	var/list/dat = list({"
-	<html><head><style type='text/css'>
+	<html><head><meta charset='utf-8'><style type='text/css'>
 	td,td a{height:50px;width:50px}table{border-spacing:0;border:none;border-collapse:collapse}td{text-align:center;padding:0;background-repeat:no-repeat;background-position:center center}td.light{background-color:#6cf}td.dark{background-color:#544b50}td.selected{background-color:#c8dbc3}td a{display:table-cell;text-decoration:none;position:relative;line-height:50px;height:50px;width:50 px;vertical-align:middle}
 	</style></head><body><table>
 	"})
@@ -92,13 +92,13 @@ obj/item/weapon/board/attackby(obj/item/I as obj, mob/user as mob)
 		else
 			dat+= ">"
 		if(!isobserver(user))
-			dat += "<a href='?src=\ref[src];select=[i];person=\ref[user]'></a>"
+			dat += "<a href='byond://?src=\ref[src];select=[i];person=\ref[user]'></a>"
 		dat += "</td>"
 
 	dat += "</table>"
 
 	if(selected >= 0 && !isobserver(user))
-		dat += "<br><A href='?src=\ref[src];remove=0'>Remove Selected Piece</A>"
+		dat += "<br><a href='byond://?src=\ref[src];remove=0'>Remove Selected Piece</A>"
 	user << browse(jointext(dat, null),"window=boardgame;size=430x500") // 50px * 8 squares + 30 margin
 	onclose(usr, "boardgame")
 
@@ -279,7 +279,7 @@ THAT STUPID GAME KIT
 	var/datum/asset/assets = get_asset_datum(/datum/asset/simple/chess)
 	assets.send(usr)
 
-	var/dat = text("<CENTER><B>Game Board</B></CENTER><BR><a href='?src=\ref[];mode=hia'>[]</a> <a href='?src=\ref[];mode=remove'> Chess Removal</a><HR><table width=256  border= 0  height=256  cellspacing= 0  cellpadding= 0 >", src, (src.selected ? text("Selected: []", src.selected) : "Nothing Selected"), src)
+	var/dat = text("<CENTER><B>Game Board</B></CENTER><BR><a href='byond://?src=\ref[];mode=hia'>[]</a> <a href='byond://?src=\ref[];mode=remove'> Chess Removal</a><HR><table width=256  border= 0  height=256  cellspacing= 0  cellpadding= 0 >", src, (src.selected ? text("Selected: []", src.selected) : "Nothing Selected"), src)
 	for (var/y = 1 to 8)
 		dat += "<tr>"
 
@@ -290,19 +290,19 @@ THAT STUPID GAME KIT
 			dat += "<td>"
 			dat += "<td style='background-color:[color]' width=64 height=64>"
 			if (piece != "BB")
-				dat += "<a href='?src=\ref[src];s_board=[x] [y]'><img src='board_[piece].png' width=64 height=64 border=0>"
+				dat += "<a href='byond://?src=\ref[src];s_board=[x] [y]'><img src='board_[piece].png' width=64 height=64 border=0>"
 			else
-				dat += "<a href='?src=\ref[src];s_board=[x] [y]'><img src='board_none.png' width=64 height=64 border=0>"
+				dat += "<a href='byond://?src=\ref[src];s_board=[x] [y]'><img src='board_none.png' width=64 height=64 border=0>"
 			dat += "</td>"
 
 		dat += "</tr>"
 
 	dat += "</table><HR><B>Chess pieces:</B><BR>"
 	for (var/piece in list("WP", "WK", "WQ", "WI", "WN", "WR"))
-		dat += "<a href='?src=\ref[src];s_piece=[piece]'><img src='board_[piece].png' width=32 height=32 border=0></a>"
+		dat += "<a href='byond://?src=\ref[src];s_piece=[piece]'><img src='board_[piece].png' width=32 height=32 border=0></a>"
 	dat += "<br>"
 	for (var/piece in list("BP", "BK", "BQ", "BI", "BN", "BR"))
-		dat += "<a href='?src=\ref[src];s_piece=[piece]'><img src='board_[piece].png' width=32 height=32 border=0></a>"
+		dat += "<a href='byond://?src=\ref[src];s_piece=[piece]'><img src='board_[piece].png' width=32 height=32 border=0></a>"
 	src.data = dat
 
 /obj/item/weapon/game_kit/attack_ai(mob/user as mob, unused, flag)
@@ -320,7 +320,6 @@ THAT STUPID GAME KIT
 		user << browse(src.data, "window=game_kit;size=600x748")
 		onclose(user, "game_kit")
 		return
-	return
 
 /obj/item/weapon/game_kit/Topic(href, href_list)
 	..()

@@ -57,11 +57,11 @@
 					dat += "<font color='gray'>alloying</font>"
 		else
 			dat += "<font color='red'>not processing</font>"
-		dat += ".</td><td width = 30><a href='?src=\ref[src];toggle_smelting=[ore]'>\[change\]</a></td></tr>"
+		dat += ".</td><td width = 30><a href='byond://?src=\ref[src];toggle_smelting=[ore]'>\[change\]</a></td></tr>"
 
 	dat += "</table><hr>"
-	dat += "Currently displaying [show_all_ores ? "all ore types" : "only available ore types"]. <A href='?src=\ref[src];toggle_ores=1'>\[[show_all_ores ? "show less" : "show more"]\]</a></br>"
-	dat += "The ore processor is currently <A href='?src=\ref[src];toggle_power=1'>[(machine.active ? "<font color='green'>processing</font>" : "<font color='red'>disabled</font>")]</a>."
+	dat += "Currently displaying [show_all_ores ? "all ore types" : "only available ore types"]. <a href='byond://?src=\ref[src];toggle_ores=1'>\[[show_all_ores ? "show less" : "show more"]\]</a></br>"
+	dat += "The ore processor is currently <a href='byond://?src=\ref[src];toggle_power=1'>[(machine.active ? "<font color='green'>processing</font>" : "<font color='red'>disabled</font>")]</a>."
 	user << browse(dat, "window=processor_console;size=400x500")
 	onclose(user, "processor_console")
 	return
@@ -151,7 +151,7 @@
 		var/obj/item/weapon/ore/O = locate() in input.loc
 		if(!O) break
 		if(O.ore && !isnull(ores_stored[O.ore.name]))
-			ores_stored[O.ore.name]++
+			LAZYLEN(ores_stored[O.ore.name])++
 		else
 			world.log << "[src] encountered ore [O] with oretag [O.ore ? O.ore : "(no ore)"] which this machine did not have an entry for!"
 
@@ -229,11 +229,11 @@
 					continue
 
 				for(var/i=0,i<can_make,i++)
-					ores_stored[metal]--
+					LAZYLEN(ores_stored[metal])--
 					sheets++
 					new M.stack_type(output.loc)
 			else
-				ores_stored[metal]--
+				LAZYLEN(ores_stored[metal])--
 				sheets++
 				new /obj/item/weapon/ore/slag(output.loc)
 		else

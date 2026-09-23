@@ -1,0 +1,4 @@
+MOVEMENT_SUBSYSTEM_DEF(conveyors)
+	name = "Conveyors"
+	priority = FIRE_PRIORITY_CONVEYORS
+	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME

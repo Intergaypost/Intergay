@@ -127,7 +127,7 @@
 	new /obj/item/weapon/pickaxe/five_pick(src)
 	new /obj/item/weapon/pickaxe/six_pick(src)
 
-/obj/item/weapon/storage/excavation/handle_item_insertion()
+/obj/item/weapon/storage/excavation/handle_item_insertion(var/obj/item/W, var/store_x = -1, var/store_y = -1, var/prevent_warning = 0, var/NoUpdate = 0)
 	..()
 	sort_picks()
 

@@ -45,13 +45,13 @@
 	var/list/connected_devices
 	var/id
 
-/datum/wifi/New(var/new_id, var/obj/O)
+/datum/wifi/New(new_id, obj/O)
 	connected_devices = new()
 	id = new_id
 	if(istype(O))
 		parent = O
 
-/datum/wifi/Destroy(var/wifi/device)
+/datum/wifi/Destroy(device)
 	parent = null
 	for(var/datum/wifi/D in connected_devices)
 		D.disconnect_device(src)

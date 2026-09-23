@@ -97,10 +97,10 @@
 				for(var/turf/T in orange(20, src))
 					move_targets.Add(T)*/
 				stop_automated_movement = 1
-				walk_to(src, pick(orange(20, src)), 1, move_to_delay)
+				SSmove_manager.move_to(src, pick(orange(20, src)), 1, move_to_delay)
 				spawn(50)
 					stop_automated_movement = 0
-					walk(src,0)
+					SSmove_manager.stop_looping(src)
 
 /mob/living/simple_animal/hostile/giant_spider/nurse/proc/GiveUp(var/C)
 	spawn(100)
@@ -122,7 +122,7 @@
 					if(C.stat)
 						cocoon_target = C
 						busy = MOVING_TO_TARGET
-						walk_to(src, C, 1, move_to_delay)
+						SSmove_manager.move_to(src, C, 1, move_to_delay)
 						//give up if we can't reach them after 10 seconds
 						GiveUp(C)
 						return
@@ -164,7 +164,7 @@
 								cocoon_target = O
 								busy = MOVING_TO_TARGET
 								stop_automated_movement = 1
-								walk_to(src, O, 1, move_to_delay)
+								SSmove_manager.move_to(src, O, 1, move_to_delay)
 								//give up if we can't reach them after 10 seconds
 								GiveUp(O)
 
@@ -173,7 +173,7 @@
 					busy = SPINNING_COCOON
 					src.visible_message("<span class='notice'>\The [src] begins to secrete a sticky substance around \the [cocoon_target].</span>")
 					stop_automated_movement = 1
-					walk(src,0)
+					SSmove_manager.stop_looping(src)
 					spawn(50)
 						if(busy == SPINNING_COCOON)
 							if(cocoon_target && istype(cocoon_target.loc, /turf) && get_dist(src,cocoon_target) <= 1)

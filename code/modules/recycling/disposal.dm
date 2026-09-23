@@ -36,8 +36,17 @@
 
 // create a new disposal
 // find the attached trunk (if present) and init gas resvr.
+
+// ALERT TODO: DISPOSALS BROKEN FOR NOW
+// PROCESS() PROC DOESN'T CALLED ON DISPOSALHOLDER
+// FOR NOW I PLACE WORKAROUND, REPLACING DISPOSALS WITH GENERIC TRASH BINS
 /obj/machinery/disposal/New()
-	..()
+	new /obj/structure/closet/crate/bin(get_turf(src))
+	qdel_self()
+
+	return
+
+	/*
 	spawn(5)
 		trunk = locate() in src.loc
 		if(!trunk)
@@ -48,6 +57,7 @@
 
 		air_contents = new/datum/gas_mixture(PRESSURE_TANK_VOLUME)
 		update_icon()
+	*/
 
 /obj/machinery/disposal/Destroy()
 	eject()
@@ -262,18 +272,18 @@
 
 	if(!ai)  // AI can't pull flush handle
 		if(flush)
-			dat += "Disposal handle: <A href='?src=\ref[src];handle=0'>Disengage</A> <B>Engaged</B>"
+			dat += "Disposal handle: <a href='byond://?src=\ref[src];handle=0'>Disengage</A> <B>Engaged</B>"
 		else
-			dat += "Disposal handle: <B>Disengaged</B> <A href='?src=\ref[src];handle=1'>Engage</A>"
+			dat += "Disposal handle: <B>Disengaged</B> <a href='byond://?src=\ref[src];handle=1'>Engage</A>"
 
-		dat += "<BR><HR><A href='?src=\ref[src];eject=1'>Eject contents</A><HR>"
+		dat += "<BR><HR><a href='byond://?src=\ref[src];eject=1'>Eject contents</A><HR>"
 
 	if(mode <= 0)
-		dat += "Pump: <B>Off</B> <A href='?src=\ref[src];pump=1'>On</A><BR>"
+		dat += "Pump: <B>Off</B> <a href='byond://?src=\ref[src];pump=1'>On</A><BR>"
 	else if(mode == 1)
-		dat += "Pump: <A href='?src=\ref[src];pump=0'>Off</A> <B>On</B> (pressurizing)<BR>"
+		dat += "Pump: <a href='byond://?src=\ref[src];pump=0'>Off</A> <B>On</B> (pressurizing)<BR>"
 	else
-		dat += "Pump: <A href='?src=\ref[src];pump=0'>Off</A> <B>On</B> (idle)<BR>"
+		dat += "Pump: <a href='byond://?src=\ref[src];pump=0'>Off</A> <B>On</B> (idle)<BR>"
 
 	var/per = 100* air_contents.return_pressure() / (SEND_PRESSURE)
 
@@ -657,10 +667,15 @@
 	// new pipe, set the icon_state as on map
 
 	Initialize()
+		qdel_self()	// CHECK LINE 40
+		return
+
+		/*
 		. = ..()
 		alpha = 255
 		base_icon_state = icon_state
 		return
+		*/
 
 	// pipe is deleted
 	// ensure if holder is present, it is expelled

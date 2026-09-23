@@ -13,20 +13,21 @@
 	accessible_z_levels = list("1"=1,"2"=1,"3"=1,"4"=1)
 
 	allowed_spawns = list("Cryogenic Storage")
+	default_spawn = "Cryogenic Storage"
 
 	station_name  = "Outpost Epsilon"
 	station_short = "Serenity"
 	dock_name     = "TCTM1-54 GR-32 ST"
-	boss_name     = "TetraCorp Announcement Relay"
-	boss_short    = "TetraCorp"
-	company_name  = "TetraCorp Announcement Relay"
-	company_short = "TRC"
+	boss_name     = "Tri-Net Announcement Relay"
+	boss_short    = "Tri-Net"
+	company_name  = "Tri-Net Announcement Relay"
+	company_short = "TNC"
 	system_name = "Zvesda"
 
 	id_hud_icons = 'maps/dreyfus/icons/assignment_hud.dmi'
 
 
-	map_admin_faxes = list("TetraCorp Central Committee")
+	map_admin_faxes = list("New Order League Central Committee")
 
 	shuttle_docked_message = "The shuttle has docked."
 	shuttle_leaving_dock = "The shuttle has departed from home dock."

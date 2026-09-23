@@ -203,7 +203,7 @@ var/world_topic_spam_protect_time = world.timeofday
 
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -253,7 +253,7 @@ var/world_topic_spam_protect_time = world.timeofday
 
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -321,7 +321,7 @@ var/world_topic_spam_protect_time = world.timeofday
 
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -344,8 +344,8 @@ var/world_topic_spam_protect_time = world.timeofday
 		if(rank == "Unknown")
 			rank = "Staff"
 
-		var/message =	"<font color='red'>[rank] PM from <b><a href='?irc_msg=[input["sender"]]'>[input["sender"]]</a></b>: [input["msg"]]</font>"
-		var/amessage =  "<font color='blue'>[rank] PM from <a href='?irc_msg=[input["sender"]]'>[input["sender"]]</a> to <b>[key_name(C)]</b> : [input["msg"]]</font>"
+		var/message =	"<font color='red'>[rank] PM from <b><a href='byond://?irc_msg=[input["sender"]]'>[input["sender"]]</a></b>: [input["msg"]]</font>"
+		var/amessage =  "<font color='blue'>[rank] PM from <a href='byond://?irc_msg=[input["sender"]]'>[input["sender"]]</a> to <b>[key_name(C)]</b> : [input["msg"]]</font>"
 
 		C.received_irc_pm = world.time
 		C.irc_admin = input["sender"]
@@ -371,7 +371,7 @@ var/world_topic_spam_protect_time = world.timeofday
 
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -385,7 +385,7 @@ var/world_topic_spam_protect_time = world.timeofday
 			if(world_topic_spam_protect_ip == addr && abs(world_topic_spam_protect_time - world.time) < 50)
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -408,7 +408,7 @@ var/world_topic_spam_protect_time = world.timeofday
 			if(world_topic_spam_protect_ip == addr && abs(world_topic_spam_protect_time - world.time) < 50)
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -438,7 +438,7 @@ var/world_topic_spam_protect_time = world.timeofday
 			if(world_topic_spam_protect_ip == addr && abs(world_topic_spam_protect_time - world.time) < 50)
 				spawn(50)
 					world_topic_spam_protect_time = world.time
-					return "Bad Key (Throttled)"
+				return "Bad Key (Throttled)"
 
 			world_topic_spam_protect_time = world.time
 			world_topic_spam_protect_ip = addr
@@ -505,7 +505,7 @@ var/world_topic_spam_protect_time = world.timeofday
 	return 1
 
 /world/proc/load_motd()
-	join_motd = russian_to_cp1251(file2text("config/motd.txt"))
+	join_motd = file2text("config/motd.txt")
 
 
 /proc/load_configuration()

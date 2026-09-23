@@ -81,22 +81,51 @@
 				var/list/metadata = tweak_metadata["[tweak]"]
 				tweak_metadata["[tweak]"] = tweak.validate_metadata(metadata)
 
-/*
 /datum/category_item/player_setup_item/general/equipment/content()
 	. = list()
 	. += "<b>Equipment:</b><br>"
 	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
 		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
-		. += "[UWC.name]: <a href='?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
+		. += "[UWC.name]: <a href='byond://?src=\ref[src];change_underwear=[UWC.name]'><b>[item_name]</b></a>"
 
 		var/datum/category_item/underwear/UWI = UWC.items_by_name[item_name]
 		if(UWI)
 			for(var/datum/gear_tweak/gt in UWI.tweaks)
-				. += " <a href='?src=\ref[src];underwear=[UWC.name];tweak=\ref[gt]'>[gt.get_contents(get_underwear_metadata(UWC.name, gt))]</a>"
+				. += " <a href='byond://?src=\ref[src];underwear=[UWC.name];tweak=\ref[gt]'>[gt.get_contents(get_underwear_metadata(UWC.name, gt))]</a>"
 
 		. += "<br>"
 	return jointext(.,null)
-*/
+
+/datum/category_item/player_setup_item/general/equipment/get_data(var/mob/user)
+	var/list/underwear_list = list()
+	for(var/datum/category_group/underwear/UWC in GLOB.underwear.categories)
+		var/item_name = (pref.all_underwear && pref.all_underwear[UWC.name]) ? pref.all_underwear[UWC.name] : "None"
+		var/list/tweaks_list = list()
+		var/datum/category_item/underwear/UWI = UWC.items_by_name[item_name]
+		if(UWI)
+			for(var/datum/gear_tweak/gt in UWI.tweaks)
+				tweaks_list += list(list("name" = gt.get_contents(get_underwear_metadata(UWC.name, gt)), "ref" = "\ref[gt]"))
+
+		underwear_list += list(list(
+			"category" = UWC.name,
+			"selected" = item_name,
+			"tweaks" = tweaks_list
+		))
+
+	var/list/backpack_tweaks_list = list()
+	if(pref.backpack && istype(pref.backpack.tweaks))
+		for(var/datum/backpack_tweak/bt in pref.backpack.tweaks)
+			backpack_tweaks_list += list(list(
+				"name" = bt.get_ui_content(get_backpack_metadata(pref.backpack, bt)),
+				"ref" = "\ref[bt]"
+			))
+
+	return list(
+		"ref" = "\ref[src]",
+		"underwear" = underwear_list,
+		"backpack" = pref.backpack ? pref.backpack.name : "None",
+		"backpack_tweaks" = backpack_tweaks_list
+	)
 
 /datum/category_item/player_setup_item/general/equipment/proc/get_underwear_metadata(var/underwear_category, var/datum/gear_tweak/gt)
 	var/metadata = pref.all_underwear_metadata[underwear_category]
@@ -149,11 +178,6 @@
 		var/new_metadata = gt.get_metadata(user, get_underwear_metadata(underwear, gt))
 		if(new_metadata)
 			set_underwear_metadata(underwear, gt, new_metadata)
-			return TOPIC_REFRESH_UPDATE_PREVIEW
-	else if(href_list["change_backpack"])
-		var/new_backpack = input(user, "Choose backpack style:", CHARACTER_PREFERENCE_INPUT_TITLE, pref.backpack) as null|anything in backpacks_by_name
-		if(!isnull(new_backpack) && CanUseTopic(user))
-			pref.backpack = backpacks_by_name[new_backpack]
 			return TOPIC_REFRESH_UPDATE_PREVIEW
 	else if(href_list["backpack"] && href_list["tweak"])
 		var/backpack_name = href_list["backpack"]

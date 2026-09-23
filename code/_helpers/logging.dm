@@ -37,7 +37,7 @@
 /proc/shutdown_logging()
 	call_ext(RUST_G, "log_close_all")()
 
-#define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] src: [src] usr: [usr].")
+#define WARNING(MSG) warning("[MSG] in [__FILE__] at line [__LINE__] usr: [usr].")
 //print a warning message to world.log
 /proc/warning(msg)
 	to_world_log("## WARNING: [msg][log_end]")
@@ -182,7 +182,7 @@
 
 	if(key)
 		if(include_link && C)
-			. += "<a href='?priv_msg=\ref[C];ticket=\ref[ticket]'>"
+			. += "<a href='byond://?priv_msg=\ref[C];ticket=\ref[ticket]'>"
 
 		. += key
 

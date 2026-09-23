@@ -94,29 +94,34 @@ proc/generate_random_prayer()//This generates a new one.
 /mob/living/proc/reveal_heretics()
 	var/msg = " is one of them!"
 	var/name = ""
+	var/datum/religion/rel = GLOB.all_religions[ILLEGAL_RELIGION]
 	if (religion_is_legal())  //Non-heretics will say nothing
 		msg = "I don't know anything!"
 		say(NewStutter(msg))
 		return
 	else
-		name = pick(GLOB.all_religions[ILLEGAL_RELIGION].followers)  //Wow the datums saves us an entire for loop
-		if(name)
-			say(NewStutter("[name] is one of them!"))
-		else
-			say("I'm the only one!")
+		if(rel)
+			name = pick(rel.followers)
+			if(name)
+				say(NewStutter("[name] is one of them!"))
+			else
+				say("I'm the only one!")
 
 /* ILLEGAL RELIGION PROCS */
 /datum/religion/proc/claim_territory(area/territory,var/claiming_religion)
-	GLOB.all_religions[claiming_religion].territories |= territory.name
+	var/datum/religion/rel = GLOB.all_religions[claiming_religion]
+	rel.territories |= territory.name
 	return
 
 /datum/religion/proc/lose_territory(area/territory,var/claiming_religion)
-	GLOB.all_religions[claiming_religion].territories -= territory.name
+	var/datum/religion/rel = GLOB.all_religions[claiming_religion]
+	rel.territories -= territory.name
 	return
 
 /datum/religion/proc/territory_claimed(area/territory, mob/user)
 	for (var/name in GLOB.all_religions)
-		if(territory.name in GLOB.all_religions[name].territories)
+		var/datum/religion/rel = GLOB.all_religions[name]
+		if(territory.name in rel.territories)
 			return name
 	return null
 
@@ -183,8 +188,9 @@ proc/generate_random_prayer()//This generates a new one.
 			divisor = 1
 		if(prob(user_religion.favor * divisor))
 			var/S = pick(GLOB.all_spells)
-			var/reward = pick(GLOB.all_spells[S].requirments)
-			var/obj/reward_obj = GLOB.all_spells[S].requirments[reward]
+			var/datum/old_god_spell/ogs = GLOB.all_spells[S]
+			var/reward = pick(ogs.requirments)
+			var/obj/reward_obj = ogs.requirments[reward]
 			new reward_obj(T)
 
 /mob/living/proc/praise_god()
@@ -201,7 +207,7 @@ proc/generate_random_prayer()//This generates a new one.
 				var/T =  get_turf(src)
 				playsound(get_turf(src), praise_sound,30,0)
 				to_chat(src, "<span class='danger'>A [user_religion.holy_item] appears at your feet!</span>")
-				var/holy_item_type = GLOB.all_religions[religion].holy_item.type
+				var/holy_item_type = user_religion.holy_item
 				var/new_holy_item = new holy_item_type(T)
 				religion_token = new_holy_item
 		else
@@ -226,11 +232,9 @@ proc/generate_random_prayer()//This generates a new one.
 			to_chat(src, "<span class='notice'>Your prayer is interrupted.</span>")
 			doing_something = 0
 			return
-		return 0
 	else
 		to_chat(src, "<span class='notice'>You are already doing something.</span>")
 		return 0
-	return 0
 
 
 /mob/living/proc/make_shrine()
@@ -265,11 +269,12 @@ proc/generate_random_prayer()//This generates a new one.
 	set name = "getBrothers"
 	for(var/old_god in GLOB.all_religions)
 		if(old_god != LEGAL_RELIGION)
-			if(GLOB.all_religions[old_god].followers.len > 0)
+			var/datum/religion/rel = GLOB.all_religions[old_god]
+			if(length(rel.followers) > 0)
 				var/brothers_message = "<span class='info'>Your brothers are:<br></span>"
-				for(var/H in GLOB.all_religions[old_god].followers)
+				for(var/H in rel.followers)
 					brothers_message += "<span class='danger'><b>[H], who loves [religion].</b></span>\n"
 				to_chat(src, brothers_message)
-			else if(GLOB.all_religions[old_god].followers.len <= 1)
+			else if(length(rel.followers) <= 1)
 				var/brothers_message = "<span class='info'>I'll have to do this alone.<br></span>"
 				to_chat(src, brothers_message)

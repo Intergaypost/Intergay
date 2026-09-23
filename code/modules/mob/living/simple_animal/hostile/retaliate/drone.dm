@@ -126,7 +126,7 @@
 			else
 				src.visible_message("<span class='notice'>\icon[src] [src] suddenly lies still and quiet.</span>")
 			disabled = rand(150, 600)
-			walk(src,0)
+			SSmove_manager.stop_looping(src)
 
 	if(exploding && prob(20))
 		if(prob(50))
@@ -141,7 +141,7 @@
 		exploding = 1
 		set_stat(UNCONSCIOUS)
 		wander = 1
-		walk(src,0)
+		SSmove_manager.stop_looping(src)
 		spawn(rand(50,150))
 			if(!disabled && exploding)
 				explosion(get_turf(src), 0, 1, 4, 7)
@@ -153,7 +153,8 @@
 	health -= rand(3,15) * (severity + 1)
 	disabled = rand(150, 600)
 	hostile_drone = 0
-	walk(src,0)
+	SSmove_manager.stop_looping(src)
+
 
 /mob/living/simple_animal/hostile/retaliate/malf_drone/death()
 	..(null,"suddenly breaks apart.", "You have been destroyed.")

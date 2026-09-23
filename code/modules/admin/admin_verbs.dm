@@ -9,11 +9,14 @@ var/list/admin_verbs_default = list(
 	/client/proc/debug_variables,		//allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify,
 	/client/proc/debug_global_variables,//as above but for global variables,
 //	/client/proc/check_antagonists,		//shows all antags,
-	/client/proc/cmd_mentor_check_new_players
+	/client/proc/cmd_mentor_check_new_players,
+	/datum/admins/proc/open_verb_manager,
+	/client/proc/open_verb_manager
 //	/client/proc/deadchat				//toggles deadchat on/off,
 	)
 var/list/admin_verbs_admin = list(
 	/client/proc/player_panel_new,		//shows an interface for all players, with links to various panels,
+	/client/proc/cmd_admin_personal_lockers, //manage round-persistent personal lockers,
 	/client/proc/invisimin,				//allows our mob to go invisible/visible,
 //	/datum/admins/proc/show_traitor_panel,	//interface which shows a mob's mind, -Removed due to rare practical use. Moved to debug verbs ~Errorage,
 	/datum/admins/proc/show_game_mode,  //Configuration window for the current game mode.,
@@ -206,7 +209,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/cmd_analyse_health_panel,
 	/client/proc/visualpower,
 	/client/proc/enable_profiler,
-	/client/proc/visualpower_remove
+	/client/proc/visualpower_remove,
+	/datum/admins/proc/open_mc_panel
 	)
 
 var/list/admin_verbs_paranoid_debug = list(
@@ -1102,7 +1106,7 @@ var/list/admin_verbs_mentor = list(
 			c++
 			t1 +="[c]: - [query.item[1]]<BR>"
 		if (c > 1)
-			output+= "Ckey: [C.ckey] <A href='?_src_=holder;showmultiacc=[C.ckey]'>Show</A><BR>" + t1
+			output+= "Ckey: [C.ckey] <a href='byond://?_src_=holder;showmultiacc=[C.ckey]'>Show</A><BR>" + t1
 
 	output+= "<BR><BR><B>Matching computerID</B><BR><BR>"
 
@@ -1129,7 +1133,7 @@ var/list/admin_verbs_mentor = list(
 			c++
 			t1 +="[c]: [query.item[1]]<BR>"
 		if (c > 1)
-			output+= "Ckey: [C.ckey] <A href='?_src_=holder;showmultiacc=[C.ckey]'>Show</A><BR>" + t1
+			output+= "Ckey: [C.ckey] <a href='byond://?_src_=holder;showmultiacc=[C.ckey]'>Show</A><BR>" + t1
 
 	output+= "<BR><BR><B>Matching cookies</B><BR><BR>"
 

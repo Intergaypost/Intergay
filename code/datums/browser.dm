@@ -79,9 +79,9 @@
 
 	return {"<!DOCTYPE html>
 <html style="cursor: url('pointer.cur');">
-	<meta charset=ISO-8859-1">
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta charset="utf-8" />
 		[head_content]
 	</head>
 	<body scroll=auto>

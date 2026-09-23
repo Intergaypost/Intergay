@@ -2929,7 +2929,7 @@ support.sortDetached = assert(function( div1 ) {
 // Prevent attribute/property "interpolation"
 // http://msdn.microsoft.com/en-us/library/ms536429%28VS.85%29.aspx
 if ( !assert(function( div ) {
-	div.innerHTML = "<a href='#'></a>";
+	div.innerHTML = "<a href='byond://#'></a>";
 	return div.firstChild.getAttribute("href") === "#" ;
 }) ) {
 	addHandle( "type|href|height|width", function( elem, name, isXML ) {
@@ -3323,7 +3323,7 @@ jQuery.support = (function( support ) {
 
 	// Setup
 	div.setAttribute( "className", "t" );
-	div.innerHTML = "  <link/><table></table><a href='/a'>a</a><input type='checkbox'/>";
+	div.innerHTML = "  <link/><table></table><a href='byond:///a'>a</a><input type='checkbox'/>";
 
 	// Finish early in limited (non-browser) environments
 	all = div.getElementsByTagName("*") || [];

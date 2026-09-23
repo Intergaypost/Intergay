@@ -75,15 +75,15 @@
 
 					body += "</td><td align='center'>";
 
-					body += "<a href='?src=\ref[src];adminplayeropts="+ref+"'>PP</a> - "
-					body += "<a href='?src=\ref[src];notes=show;mob="+ref+"'>N</a> - "
-					body += "<a href='?_src_=vars;Vars="+ref+"'>VV</a> - "
-					body += "<a href='?src=\ref[src];traitor="+ref+"'>TP</a> - "
-					body += "<a href='?src=\ref[usr];priv_msg=\ref"+ref+"'>PM</a> - "
-					body += "<a href='?src=\ref[src];subtlemessage="+ref+"'>SM</a> - "
-					body += "<a href='?src=\ref[src];adminplayerobservejump="+ref+"'>JMP</a><br>"
+					body += "<a href='byond://?src=\ref[src];adminplayeropts="+ref+"'>PP</a> - "
+					body += "<a href='byond://?src=\ref[src];notes=show;mob="+ref+"'>N</a> - "
+					body += "<a href='byond://?_src_=vars;Vars="+ref+"'>VV</a> - "
+					body += "<a href='byond://?src=\ref[src];traitor="+ref+"'>TP</a> - "
+					body += "<a href='byond://?src=\ref[usr];priv_msg=\ref"+ref+"'>PM</a> - "
+					body += "<a href='byond://?src=\ref[src];subtlemessage="+ref+"'>SM</a> - "
+					body += "<a href='byond://?src=\ref[src];adminplayerobservejump="+ref+"'>JMP</a><br>"
 					if(antagonist > 0)
-						body += "<font size='2'><a href='?src=\ref[src];check_antagonist=1'><font color='red'><b>Antagonist</b></font></a></font>";
+						body += "<font size='2'><a href='byond://?src=\ref[src];check_antagonist=1'><font color='red'><b>Antagonist</b></font></a></font>";
 
 					body += "</td></tr></table>";
 
@@ -194,7 +194,7 @@
 			<tr id='title_tr'>
 				<td align='center'>
 					<font size='5'><b>Player panel</b></font><br>
-					Hover over a line to see more information - <a href='?src=\ref[src];check_antagonist=1'>Check antagonists</a>
+					Hover over a line to see more information - <a href='byond://?src=\ref[src];check_antagonist=1'>Check antagonists</a>
 					<p>
 				</td>
 			</tr>
@@ -326,7 +326,7 @@
 	if (!usr.client.holder)
 		return
 
-	var/dat = "<html><head><title>Player Menu</title></head>"
+	var/dat = "<html><head><meta charset='utf-8'><title>Player Menu</title></head>"
 	dat += "<body><table border=1 cellspacing=5><B><tr><th>Name</th><th>Real Name</th><th>Assigned Job</th><th>Key</th><th>Options</th><th>PM</th><th>Traitor?</th></tr></B>"
 	//add <th>IP:</th> to this if wanting to add back in IP checking
 	//add <td>(IP: [M.lastKnownIP])</td> if you want to know their ip to the lists below
@@ -365,8 +365,8 @@
 
 
 		dat += {"<td>[M.key ? (M.client ? M.key : "[M.key] (DC)") : "No key"]</td>
-		<td align=center><A HREF='?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
-		<td align=center><A href='?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
+		<td align=center><a href='byond://?src=\ref[src];adminplayeropts=\ref[M]'>X</A></td>
+		<td align=center><a href='byond://?src=\ref[usr];priv_msg=\ref[M]'>PM</A></td>
 		"}
 
 
@@ -378,11 +378,11 @@
 			else
 				switch(is_special_character(M))
 					if(0)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td>"}
+						dat += {"<td align=center><a href='byond://?src=\ref[src];traitor=\ref[M]'>Traitor?</A></td>"}
 					if(1)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red>Traitor?</font></A></td>"}
+						dat += {"<td align=center><a href='byond://?src=\ref[src];traitor=\ref[M]'><font color=red>Traitor?</font></A></td>"}
 					if(2)
-						dat += {"<td align=center><A HREF='?src=\ref[src];traitor=\ref[M]'><font color=red><b>Traitor?</b></font></A></td>"}
+						dat += {"<td align=center><a href='byond://?src=\ref[src];traitor=\ref[M]'><font color=red><b>Traitor?</b></font></A></td>"}
 		else
 			dat += {"<td align=center> N/A </td>"}
 
@@ -397,19 +397,19 @@
 /datum/admins/proc/check_antagonists()
 	if (GAME_STATE >= RUNLEVEL_GAME)
 		var/dat = list()
-		dat += "<html><head><title>Round Status</title></head><body><h1><B>Round Status</B></h1>"
+		dat += "<html><head><meta charset='utf-8'><title>Round Status</title></head><body><h1><B>Round Status</B></h1>"
 		dat += "Current Game Mode: <B>[SSticker.mode.name]</B><BR>"
 		dat += "Round Duration: <B>[roundduration2text()]</B><BR>"
 		dat += "<B>Evacuation</B><BR>"
 		if (SSevac.evacuation_controller.is_idle())
-			dat += "<a href='?src=\ref[src];call_shuttle=1'>Call Evacuation</a><br>"
+			dat += "<a href='byond://?src=\ref[src];call_shuttle=1'>Call Evacuation</a><br>"
 		else
 			var/timeleft = SSevac.evacuation_controller.get_eta()
 			if (SSevac.evacuation_controller.waiting_to_leave())
 				dat += "ETA: [(timeleft / 60) % 60]:[add_zero(num2text(timeleft % 60), 2)]<BR>"
-				dat += "<a href='?src=\ref[src];call_shuttle=2'>Send Back</a><br>"
+				dat += "<a href='byond://?src=\ref[src];call_shuttle=2'>Send Back</a><br>"
 
-		dat += "<a href='?src=\ref[src];delay_round_end=1'>[SSticker.delay_end ? "End Round Normally" : "Delay Round End"]</a><br>"
+		dat += "<a href='byond://?src=\ref[src];delay_round_end=1'>[SSticker.delay_end ? "End Round Normally" : "Delay Round End"]</a><br>"
 		dat += "<hr>"
 		var/list/all_antag_types = GLOB.all_antag_types_
 		for(var/antag_type in all_antag_types)

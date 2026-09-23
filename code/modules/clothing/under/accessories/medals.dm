@@ -38,16 +38,16 @@
 	icon_state = "gold_nt"
 
 /obj/item/clothing/accessory/medal/silver/nanotrasen
-	name = "\improper TetraCorp service medal"
-	desc = "A silver medal awarded to the folk for distinguished service in support of TetraCorp's interests."
+	name = "\improper New Order League service medal"
+	desc = "A silver medal awarded to the folk for distinguished service in support of New Order League's interests."
 	icon_state = "silver_nt"
 
 /obj/item/clothing/accessory/medal/bronze/nanotrasen
-	name = "\improper TetraCorp sciences medal"
+	name = "\improper New Order League sciences medal"
 	desc = "A bronze medal awarded to the folk for significant contributions to the fields of science or engineering."
 	icon_state = "bronze_nt"
 
 /obj/item/clothing/accessory/medal/iron/nanotrasen
-	name = "\improper TetraCorp merit medal"
+	name = "\improper New Order League merit medal"
 	desc = "An iron medal awarded to the folk for merit."
 	icon_state = "iron_nt"

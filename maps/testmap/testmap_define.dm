@@ -13,6 +13,7 @@
 	accessible_z_levels = list("1"=1)
 
 	allowed_spawns = list("Cryogenic Storage")
+	default_spawn = "Cryogenic Storage"
 
 	station_name  = "Station Test"
 	station_short = "Station T"
@@ -26,7 +27,7 @@
 	id_hud_icons = 'maps/dreyfus/icons/assignment_hud.dmi'
 
 
-	map_admin_faxes = list("TetraCorp Central Committee")
+	map_admin_faxes = list("TRINET Central Committee")
 
 	shuttle_docked_message = "The shuttle has docked."
 	shuttle_leaving_dock = "The shuttle has departed from home dock."

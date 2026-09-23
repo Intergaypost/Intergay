@@ -17,6 +17,13 @@
 	///Proximity monitor associated with this atom
 	var/datum/proximity_monitor/proximity_monitor
 
+	/// Last name used to calculate a color for chatmessage overlays
+	var/chat_color_name
+	/// Last color calculated for chatmessage overlays
+	var/chat_color
+	/// Darkened color calculated for chatmessage overlays
+	var/chat_color_darkened
+
 	///Chemistry.
 	var/datum/reagents/reagents = null
 

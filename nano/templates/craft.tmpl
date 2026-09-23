@@ -19,7 +19,10 @@
 </div>
 <div class='itemContent'>
 	{{if data.cur_item}}
-		<div class="itemLabelHeader">{{:data.cur_item.name}}</div><div style ='float: left; margin-top:-8px; margin-right:4px; max-height:48px; max-width:48px; height:48px; width:48px; margin-left:0px'><img class='icon icon-[icon_state] [class]' style='width:[I.Width()]px;height:[I.Height()]px;min-height:[I.Height()]px' src=\"[url_encode(key)]\"></div>
+		<div class="itemLabelHeader">{{:data.cur_item.name}}</div>
+		{{if data.cur_item.icon}}
+			<div style='float: left; margin-top:-8px; margin-right:4px; max-height:48px; max-width:48px; height:48px; width:48px; margin-left:0px'><img src='{{:data.cur_item.icon}}' style='width:48px; height:48px;'></div>
+		{{/if}}
 		{{:data.cur_item.desc}}
 		{{:data.cur_item.ingredients}}
 		{{:data.cur_item.tool}}

@@ -33,6 +33,36 @@ SUBSYSTEM_DEF(ticker)
 	to_world("Choose your face, and prepare to act out your part. The game will start in [round(pregame_timeleft/10)] seconds.")
 	return ..()
 
+/datum/controller/subsystem/ticker/Recover()
+	flags |= SS_NO_INIT
+	pregame_timeleft = SSticker.pregame_timeleft
+	gamemode_vote_results = SSticker.gamemode_vote_results
+	bypass_gamemode_vote = SSticker.bypass_gamemode_vote
+	master_mode = SSticker.master_mode
+	mode = SSticker.mode
+	round_progressing = SSticker.round_progressing
+	bad_modes = SSticker.bad_modes
+	revotes_allowed = SSticker.revotes_allowed
+	end_game_state = SSticker.end_game_state
+	delay_end = SSticker.delay_end
+	delay_notified = SSticker.delay_notified
+	restart_timeout = SSticker.restart_timeout
+	minds = SSticker.minds
+	antag_pool = SSticker.antag_pool
+	looking_for_antags = SSticker.looking_for_antags
+	eof = SSticker.eof
+
+	if (Master)
+		switch (GAME_STATE)
+			if(RUNLEVEL_LOBBY)
+				Master.SetRunLevel(RUNLEVEL_LOBBY)
+			if(RUNLEVEL_SETUP)
+				Master.SetRunLevel(RUNLEVEL_SETUP)
+			if(RUNLEVEL_GAME)
+				Master.SetRunLevel(RUNLEVEL_GAME)
+			if(RUNLEVEL_POSTGAME)
+				Master.SetRunLevel(RUNLEVEL_POSTGAME)
+
 /datum/controller/subsystem/ticker/fire(resumed = 0)
 	switch(GAME_STATE)
 		if(RUNLEVEL_LOBBY)
@@ -74,12 +104,14 @@ SUBSYSTEM_DEF(ticker)
 			return
 
 	if(src.mode.isStartRequirementsSatisfied())
-		var/iswegood = 1
+		var/iswegood = 0
 		for(var/mob/new_player/player in GLOB.player_list)
-			if(player.client.prefs.job_high == "Captain" && player.ready)
+			//if(player.client.prefs.job_high == "Captain" && player.ready)
+			if(player.ready)
 				iswegood = 1
+				break
 		if(iswegood == 0)
-			to_chat(world, "<span class='tetracorp'><b>TetraCorp</span></b> does not authorize the cryogenic revival procedure without an active <span class='rose'>Captain</span>.")
+			to_chat(world, "<h2><span class='blueglow'><b>Опаньки!</span></b> Раунд не может быть начат <span class='rose'>без игроков.</span></h2>")
 			pregame_timeleft = 60 SECONDS
 			Master.SetRunLevel(RUNLEVEL_LOBBY)
 			return
@@ -313,6 +345,8 @@ Helpers
 			if(!player_is_antag(player.mind, only_offstation_roles = 1))
 				job_master.EquipRank(player, player.mind.assigned_role, 0)
 				equip_custom_items(player)
+				if(player.mind.assigned_role != "AI" && player.mind.assigned_role != "Cyborg")
+					assign_personal_locker(player)
 
 /datum/controller/subsystem/ticker/proc/attempt_late_antag_spawn(var/list/antag_choices)
 	var/datum/antagonist/antag = antag_choices[1]
@@ -480,9 +514,10 @@ Helpers
 	round_end_stats += "Total bloodshed: <font color='red'><B>[GLOB.total_deaths]</B></font>.\n"
 	for(var/old_god in GLOB.all_religions)
 		if(old_god != LEGAL_RELIGION)
-			if(GLOB.all_religions[old_god].followers.len > 0)
+			var/datum/religion/R = GLOB.all_religions[old_god]
+			if(length(R.followers) > 0)
 				round_end_stats += "<b>The [old_god] worshippers were:</b>\n"
-				for(var/H in GLOB.all_religions[old_god].followers)
+				for(var/H in R.followers)
 					round_end_stats += "<font color='red'><b>[H]</b></font>\n"
 	to_world(round_end_stats)
 

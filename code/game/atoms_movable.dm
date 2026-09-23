@@ -24,9 +24,20 @@
 	var/item_state = null // Used to specify the item state for the on-mob overlays.
 	var/movable_flags
 	var/pull_sound = null
+	///Are we moving with inertia? Mostly used as an optimization
+	var/inertia_moving = FALSE
+	///Delay in deciseconds between inertia based movement
+	var/inertia_move_delay = 5
+	///Holds information about any movement loops currently running/waiting to run on the movable. Lazy, will be null if nothing's going on
+	var/datum/movement_packet/move_packet
 
 /atom/movable/Destroy()
 	. = ..()
+	if(move_packet)
+		if(!QDELETED(move_packet))
+			qdel(move_packet)
+		move_packet = null
+
 	for(var/atom/movable/AM in src)
 		qdel(AM)
 
@@ -43,6 +54,7 @@
 		qdel(virtual_mob)
 		virtual_mob = null
 
+
 /atom/movable/Bump(var/atom/A, yes)
 	if(src.throwing)
 		src.throw_impact(A)
@@ -57,10 +69,12 @@
 	return
 
 /atom/movable/proc/set_glide_size(target = 8)
-	SEND_SIGNAL(src, COMSIG_MOVABLE_UPDATE_GLIDE_SIZE, target)
+	if(glide_size == target)
+		return
 	glide_size = target
+	SEND_SIGNAL(src, COMSIG_MOVABLE_UPDATE_GLIDE_SIZE, target)
 
-	for(var/atom/movable/AM)
+	for(var/atom/movable/AM in src)
 		AM.set_glide_size(target)
 
 /atom/movable/proc/forceMove(atom/destination)
@@ -322,3 +336,33 @@
 
 /atom/movable/proc/get_bullet_impact_effect_type()
 	return BULLET_IMPACT_NONE
+
+/**
+* A wrapper for setDir that should only be able to fail by living mobs.
+*
+* Called from [/atom/movable/proc/keyLoop], this exists to be overwritten by living mobs with a check to see if we're actually alive enough to change directions
+*/
+/atom/movable/proc/keybind_face_direction(direction)
+	return
+
+/atom/movable/proc/has_gravity(turf/T)
+	return global.has_gravity(src, T)
+
+/atom/movable/proc/Process_Spacemove(movement_dir = 0)
+	return has_gravity()
+
+/// Only moves the object if it's under no gravity
+/atom/movable/proc/newtonian_move(direction)
+	if(!isturf(loc) || Process_Spacemove(0))
+		return FALSE
+
+	if(SEND_SIGNAL(src, COMSIG_MOVABLE_NEWTONIAN_MOVE, direction) & COMPONENT_MOVABLE_NEWTONIAN_BLOCK)
+		return TRUE
+
+	set_glide_size(MOVEMENT_ADJUSTED_GLIDE_SIZE(inertia_move_delay, SSspacedrift.visual_delay))
+	AddComponent(/datum/component/drift, direction)
+
+	return TRUE
+
+
+

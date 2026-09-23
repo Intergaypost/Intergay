@@ -47,6 +47,10 @@ var/list/gamemode_cache = list()
 	var/popup_admin_pm = 0				//adminPMs to non-admins show in a pop-up 'reply' window when set to 1.
 	var/fps = 20
 	var/tick_limit_mc_init = TICK_LIMIT_MC_INIT_DEFAULT	//SSinitialization throttling
+	var/base_mc_tick_rate = 1
+	var/high_pop_mc_tick_rate = 1.1
+	var/high_pop_mc_mode_amount = 65
+	var/disable_high_pop_mc_mode_amount = 60
 	var/list/resource_urls = null
 	var/antag_hud_allowed = 0			// Ghosts can turn on Antagovision to see a HUD of who is the bad guys this round.
 	var/antag_hud_restricted = 0                    // Ghosts that turn on Antagovision cannot rejoin the round.
@@ -98,6 +102,7 @@ var/list/gamemode_cache = list()
 	var/forumurl
 	var/githuburl
 	var/discordurl
+	var/show_typing_indicator_for_whispers = FALSE
 
 	var/forbid_singulo_possession = 0
 
@@ -175,13 +180,13 @@ var/list/gamemode_cache = list()
 	var/expected_round_length = 3 * 60 * 60 * 10 // 3 hours
 	// If the first delay has a custom start time
 	// No custom time, no custom time, between 80 to 100 minutes respectively.
-	var/list/event_first_run   = list(EVENT_LEVEL_MUNDANE = null, 	EVENT_LEVEL_MODERATE = null,	EVENT_LEVEL_MAJOR = list("lower" = 48000, "upper" = 60000))
+	var/list/event_first_run   = alist(EVENT_LEVEL_MUNDANE = null, 	EVENT_LEVEL_MODERATE = null,	EVENT_LEVEL_MAJOR = list("lower" = 48000, "upper" = 60000))
 	// The lowest delay until next event
 	// 10, 30, 50 minutes respectively
-	var/list/event_delay_lower = list(EVENT_LEVEL_MUNDANE = 6000,	EVENT_LEVEL_MODERATE = 18000,	EVENT_LEVEL_MAJOR = 30000)
+	var/list/event_delay_lower = alist(EVENT_LEVEL_MUNDANE = 6000,	EVENT_LEVEL_MODERATE = 18000,	EVENT_LEVEL_MAJOR = 30000)
 	// The upper delay until next event
 	// 15, 45, 70 minutes respectively
-	var/list/event_delay_upper = list(EVENT_LEVEL_MUNDANE = 9000,	EVENT_LEVEL_MODERATE = 27000,	EVENT_LEVEL_MAJOR = 42000)
+	var/list/event_delay_upper = alist(EVENT_LEVEL_MUNDANE = 9000,	EVENT_LEVEL_MODERATE = 27000,	EVENT_LEVEL_MAJOR = 42000)
 
 	var/aliens_allowed = 0
 	var/alien_eggs_allowed = 0
@@ -228,6 +233,10 @@ var/list/gamemode_cache = list()
 
 	var/max_client_view_x = MAX_VIEW
 	var/max_client_view_y = MAX_VIEW
+
+	var/allow_diagonal_movement = TRUE
+	var/diagonal_movement_speed_normalization = TRUE
+
 
 /datum/configuration/New()
 	var/list/L = typesof(/datum/game_mode) - /datum/game_mode
@@ -581,6 +590,26 @@ var/list/gamemode_cache = list()
 				if("tick_limit_mc_init")
 					tick_limit_mc_init = text2num(value)
 
+				if("base_mc_tick_rate")
+					base_mc_tick_rate = text2num(value)
+					if(Master)
+						Master.UpdateTickRate()
+
+				if("high_pop_mc_tick_rate")
+					high_pop_mc_tick_rate = text2num(value)
+					if(Master)
+						Master.UpdateTickRate()
+
+				if("high_pop_mc_mode_amount")
+					high_pop_mc_mode_amount = text2num(value)
+					if(Master)
+						Master.UpdateTickRate()
+
+				if("disable_high_pop_mc_mode_amount")
+					disable_high_pop_mc_mode_amount = text2num(value)
+					if(Master)
+						Master.UpdateTickRate()
+
 				if("allow_antag_hud")
 					config.antag_hud_allowed = 1
 				if("antag_hud_restricted")
@@ -801,6 +830,16 @@ var/list/gamemode_cache = list()
 
 				if("use_loyalty_implants")
 					config.use_loyalty_implants = 1
+
+				if("show_typing_indicator_for_whispers")
+					config.show_typing_indicator_for_whispers = TRUE
+
+				if("allow_diagonal_movement")
+					config.allow_diagonal_movement = 1
+
+				if("diagonal_movement_speed_normalization")
+					config.diagonal_movement_speed_normalization = 1
+
 
 				else
 					log_misc("Unknown setting in configuration: '[name]'")

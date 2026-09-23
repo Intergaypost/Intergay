@@ -40,9 +40,9 @@
 	var/datum/backpack_setup/backpack_setup
 
 	// General information
-	var/home_system = ""
-	var/citizenship = ""
-	var/personal_faction = ""
+	var/datum/backstory/homesystem/home_system
+	//var/citizenship = ""
+	//var/personal_faction = ""
 
 	//Equipment slots
 	var/obj/item/wear_suit = null
@@ -107,6 +107,7 @@
 	var/sec_record = ""
 	var/gen_record = ""
 	var/exploit_record = ""
+	var/datum/backstory/story/backstory
 
 	var/datum/mil_branch/char_branch = null
 	var/datum/mil_rank/char_rank = null

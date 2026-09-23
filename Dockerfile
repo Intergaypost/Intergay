@@ -12,9 +12,9 @@ RUN apt-get install -y libc6:i386 libstdc++6:i386
 
 # we are not using ADD here to download it because this file should never change
 # and thus, strictly caching it is okay
-RUN cd /bs12/ && wget -q https://www.byond.com/download/build/511/511.1385_byond_linux.zip
+RUN cd /bs12/ && wget -q https://www.byond.com/download/build/516/516.1687_byond_linux.zip
 
-RUN cd /bs12/ && unzip -q 511.1385_byond_linux.zip
+RUN cd /bs12/ && unzip -q 511.1687_byond_linux.zip
 
 COPY . /bs12/Baystation12
 

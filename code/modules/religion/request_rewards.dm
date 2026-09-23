@@ -30,8 +30,10 @@
 	var/offering_item
 
 /datum/request/offering/New(var/religion)
-	offering_item = pick(GLOB.all_religions[religion].offering_items)
-	offering_item = new offering_item
+	var/datum/religion/rel = GLOB.all_religions[religion]
+	if(rel)
+		offering_item = pick(rel.offering_items)
+		offering_item = new offering_item
 	message += "   Place \the [offering_item] before a shrine and praise your god."
 
 /datum/request/offering/check_complete(var/mob/living/target)

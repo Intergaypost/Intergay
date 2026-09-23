@@ -1,0 +1,607 @@
+<div class="charsetup-wrapper">
+	<div class="charsetup-row">
+		<!-- Left Navigation Sidebar -->
+		<div class="charsetup-sidebar-cell">
+			<!-- Slot Management -->
+			<div class="charsetup-slot-box">
+				<div class="charsetup-slot-title">Slot {{:data.slot}} / {{:data.max_slots}}</div>
+				{{if data.has_save_path}}
+					<div class="charsetup-slot-actions">
+						{{:helper.link('Save', 'disk', {'save': 1})}}
+						{{:helper.link('Load', 'folder-open', {'load': 1})}}
+						{{:helper.link('Reset', 'trash', {'resetslot': 1})}}
+					</div>
+				{{/if}}
+			</div>
+
+			<!-- Vertical Tabs -->
+			<ul class="charsetup-nav-list">
+				{{for data.categories}}
+					<li class="charsetup-nav-item">
+						{{:helper.link(value.name, null, {'select_category': value.name}, value.active ? 'selected' : null, 'charsetup-nav-btn' + (value.active ? ' active' : ''))}}
+					</li>
+				{{/for}}
+			</ul>
+		</div>
+
+		<!-- Center Main Content -->
+		<div class="charsetup-main-cell">
+			<!-- GENERAL / CHARACTER TAB -->
+			{{if data.active_category == 'General'}}
+				<!-- Identity Section -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Identity & Basic Information</div>
+					<div class="item">
+						<div class="itemLabel">Full Name:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.basic.real_name, 'pencil', {'item': data.general.basic.ref, 'rename': 1})}}
+							{{:helper.link('Randomize', 'refresh', {'item': data.general.basic.ref, 'random_name': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Always Random Name:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.basic.be_random_name ? 'Yes' : 'No', null, {'item': data.general.basic.ref, 'always_random_name': 1}, null, data.general.basic.be_random_name ? 'selected' : null)}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Gender:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.basic.gender_text, 'person', {'item': data.general.basic.ref, 'gender': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Age:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.basic.age, 'calculator', {'item': data.general.basic.ref, 'age': 1})}}
+							<span class="idle">({{:data.general.basic.min_age}} - {{:data.general.basic.max_age}})</span>
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Religion:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.basic.religion, 'star', {'item': data.general.basic.ref, 'religion': 1})}}
+						</div>
+					</div>
+				</div>
+
+				<!-- Appearance & Body Section -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Physical Appearance</div>
+					<!-- <div class="item">
+						<div class="itemLabel">Species:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.body.species, 'search', {'item': data.general.body.ref, 'show_species': 1})}}
+						</div>
+					</div> -->
+					<div class="item">
+						<div class="itemLabel">Blood Type:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.body.blood_type, null, {'item': data.general.body.ref, 'blood_type': 1})}}
+						</div>
+					</div>
+					{{if data.general.body.has_skin_tone}}
+						<div class="item">
+							<div class="itemLabel">Skin Tone:</div>
+							<div class="itemContent">
+								{{:helper.link(data.general.body.skin_tone + ' / ' + data.general.body.max_skin_tone, null, {'item': data.general.body.ref, 'skin_tone': 1})}}
+							</div>
+						</div>
+					{{/if}}
+					{{if data.general.body.has_base_skin}}
+						<div class="item">
+							<div class="itemLabel">Base Colour:</div>
+							<div class="itemContent">
+								{{:helper.link(data.general.body.base_skin || 'Default', null, {'item': data.general.body.ref, 'base_skin': 1})}}
+							</div>
+						</div>
+					{{/if}}
+					{{if data.general.body.has_skin_color}}
+						<div class="item">
+							<div class="itemLabel">Skin Colour:</div>
+							<div class="itemContent">
+								{{:helper.link('Change Colour', 'pencil', {'item': data.general.body.ref, 'skin_color': 1})}}
+								<span class="charsetup-color-swatch" style="background-color:{{:data.general.body.skin_color}};"></span>
+							</div>
+						</div>
+					{{/if}}
+					<div class="item">
+						<div class="itemLabel">Hair Style:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.body.hair_style, null, {'item': data.general.body.ref, 'hair_style': 1})}}
+							{{if data.general.body.has_hair_color}}
+								{{:helper.link('Colour', 'pencil', {'item': data.general.body.ref, 'hair_color': 1})}}
+								<span class="charsetup-color-swatch" style="background-color:{{:data.general.body.hair_color}};"></span>
+							{{/if}}
+						</div>
+					</div>
+					{{if data.general.body.has_facial_hair}}
+						<div class="item">
+							<div class="itemLabel">Facial Hair:</div>
+							<div class="itemContent">
+								{{:helper.link(data.general.body.facial_style, null, {'item': data.general.body.ref, 'facial_style': 1})}}
+								{{if data.general.body.has_hair_color}}
+									{{:helper.link('Colour', 'pencil', {'item': data.general.body.ref, 'facial_color': 1})}}
+									<span class="charsetup-color-swatch" style="background-color:{{:data.general.body.facial_color}};"></span>
+								{{/if}}
+							</div>
+						</div>
+					{{/if}}
+					{{if data.general.body.has_eye_color}}
+						<div class="item">
+							<div class="itemLabel">Eye Colour:</div>
+							<div class="itemContent">
+								{{:helper.link('Change Colour', 'pencil', {'item': data.general.body.ref, 'eye_color': 1})}}
+								<span class="charsetup-color-swatch" style="background-color:{{:data.general.body.eye_color}};"></span>
+							</div>
+						</div>
+					{{/if}}
+					<div class="item">
+						<div class="itemLabel">Needs Glasses:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.body.needs_glasses ? 'Yes' : 'No', null, {'item': data.general.body.ref, 'disabilities': 1}, null, data.general.body.needs_glasses ? 'selected' : null)}}
+						</div>
+					</div>
+				</div>
+
+				<!-- Prosthetics & Limbs Section -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Limbs & Internal Organs</div>
+					<div class="item">
+						<div class="itemLabel">Limbs & Prostheses:</div>
+						<div class="itemContent">
+							{{:helper.link('Adjust Limbs', 'wrench', {'item': data.general.body.ref, 'limbs': 1})}}
+							{{:helper.link('Reset Limbs', 'refresh', {'item': data.general.body.ref, 'reset_limbs': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Internal Organs:</div>
+						<div class="itemContent">
+							{{:helper.link('Adjust Organs', 'heart', {'item': data.general.body.ref, 'organs': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Current Modifications:</div>
+						<div class="itemContent">
+							{{if data.general.body.has_modifications}}
+								{{for data.general.body.modifications :modVal:modIndex}}
+									<span class="highlight">{{:modVal}}</span>{{if modIndex < data.general.body.modifications.length - 1}}, {{/if}}
+								{{/for}}
+							{{else}}
+								<span class="idle">None (Standard organic)</span>
+							{{/if}}
+						</div>
+					</div>
+				</div>
+
+				<!-- Languages Section -->
+				{{if data.general.language}}
+					<div class="charsetup-section">
+						<div class="charsetup-section-title">Languages</div>
+						<div class="item">
+							<div class="itemLabel">Primary Language:</div>
+							<div class="itemContent"><b>{{:data.general.language.species_language}}</b></div>
+						</div>
+						{{if data.general.language.species_default_language}}
+							<div class="item">
+								<div class="itemLabel">Default Language:</div>
+								<div class="itemContent"><b>{{:data.general.language.species_default_language}}</b></div>
+							</div>
+						{{/if}}
+						{{if data.general.language.can_select_alt_languages}}
+							<div class="item">
+								<div class="itemLabel">Secondary Languages:</div>
+								<div class="itemContent">
+									{{for data.general.language.alternate_languages}}
+										<div>- <b>{{:value.name}}</b> {{:helper.link('Remove', 'trash', {'item': data.general.language.ref, 'remove_language': value.index})}}</div>
+									{{/for}}
+									{{if data.general.language.can_add}}
+										{{:helper.link('Add Language (' + data.general.language.remaining_languages + ' remaining)', 'plus', {'item': data.general.language.ref, 'add_language': 1})}}
+									{{/if}}
+								</div>
+							</div>
+						{{/if}}
+					</div>
+				{{/if}}
+
+				<!-- Background & Records Section -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Background & Records</div>
+					<div class="item">
+						<div class="itemLabel">Backstory:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.background.backstory_name, 'script', {'item': data.general.background.ref, 'select_backstory': 1})}}
+							{{if data.general.background.backstory_desc || data.general.background.backstory_fluff}}
+								<div class="charsetup-backstory-box">
+									<div><span class="highlight">[{{:data.general.background.backstory_category}}]</span> <b>{{:data.general.background.backstory_desc}}</b></div>
+									{{if data.general.background.backstory_fluff}}
+										<div class="charsetup-backstory-fluff">{{:data.general.background.backstory_fluff}}</div>
+									{{/if}}
+								</div>
+							{{/if}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">{{:data.general.background.company_name}} Relation:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.background.nt_relation, null, {'item': data.general.background.ref, 'nt_relation': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Home System:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.background.home_system, null, {'item': data.general.background.ref, 'home_system': 1})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Medical Records:</div>
+						<div class="itemContent">
+							{{if data.general.background.has_records_ban}}
+								<span class="bad">Banned from records</span>
+							{{else}}
+								{{:helper.link(data.general.background.med_record_preview, 'document', {'item': data.general.background.ref, 'set_medical_records': 1})}}
+							{{/if}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Employment Records:</div>
+						<div class="itemContent">
+							{{if data.general.background.has_records_ban}}
+								<span class="bad">Banned from records</span>
+							{{else}}
+								{{:helper.link(data.general.background.gen_record_preview, 'document', {'item': data.general.background.ref, 'set_general_records': 1})}}
+							{{/if}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Security Records:</div>
+						<div class="itemContent">
+							{{if data.general.background.has_records_ban}}
+								<span class="bad">Banned from records</span>
+							{{else}}
+								{{:helper.link(data.general.background.sec_record_preview, 'document', {'item': data.general.background.ref, 'set_security_records': 1})}}
+							{{/if}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Memory:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.background.memory_preview, 'pencil', {'item': data.general.background.ref, 'set_memory': 1})}}
+						</div>
+					</div>
+				</div>
+
+				<!-- Flavor Text Section -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Character Flavor Descriptions</div>
+					<div class="item">
+						<div class="itemLabel">Character Flavor Text:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.flavor.flavor_general, 'pencil', {'item': data.general.flavor.ref, 'flavor_text': 'open'})}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Robot Flavor Text:</div>
+						<div class="itemContent">
+							{{:helper.link(data.general.flavor.flavor_robot, 'pencil', {'item': data.general.flavor.ref, 'flavour_text_robot': 'open'})}}
+						</div>
+					</div>
+				</div>
+			{{/if}}
+
+			<!-- OCCUPATION TAB -->
+			{{if data.active_category == 'Occupation'}}
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Job Preferences & Settings</div>
+					{{if data.occupation.has_branch}}
+						<div class="item">
+							<div class="itemLabel">Branch of Service:</div>
+							<div class="itemContent">
+								{{:helper.link(data.occupation.char_branch, null, {'item': data.occupation.ref, 'char_branch': 1})}}
+							</div>
+						</div>
+					{{/if}}
+					{{if data.occupation.has_rank}}
+						<div class="item">
+							<div class="itemLabel">Rank:</div>
+							<div class="itemContent">
+								{{:helper.link(data.occupation.char_rank, null, {'item': data.occupation.ref, 'char_rank': 1})}}
+							</div>
+						</div>
+					{{/if}}
+					<div class="item">
+						<div class="itemLabel">Fallback Preference:</div>
+						<div class="itemContent">
+							{{:helper.link(data.occupation.alternate_option_text, 'refresh', {'item': data.occupation.ref, 'job_alternative': 1})}}
+							{{:helper.link('Reset All Jobs', 'trash', {'item': data.occupation.ref, 'reset_jobs': 1})}}
+						</div>
+					</div>
+				</div>
+
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Occupations</div>
+					<table class="charsetup-job-table">
+						{{for data.occupation.jobs}}
+							<tr class="charsetup-job-row" style="background-color:{{:value.selection_color}};">
+								<td class="charsetup-job-name">
+									{{if value.is_head}}
+										<b>{{:value.title}}</b>
+									{{else}}
+										{{:value.title}}
+									{{/if}}
+								</td>
+								<td class="charsetup-job-alt">
+									{{if value.has_alt_titles}}
+										{{:helper.link('[' + value.alt_title + ']', 'tag', {'item': data.occupation.ref, 'select_alt_title': value.job_ref})}}
+									{{/if}}
+								</td>
+								<td class="charsetup-job-btn-cell">
+									{{if value.unavailable}}
+										<span class="job-unavailable-badge">[{{:value.unavailable}}]</span>
+									{{else value.is_assistant_disabled}}
+										<span class="idle">Disabled</span>
+									{{else}}
+										{{:helper.link(value.priority, null, {'item': data.occupation.ref, 'set_job': value.title}, null, 'job-priority-' + value.priority_class)}}
+									{{/if}}
+								</td>
+							</tr>
+						{{/for}}
+					</table>
+				</div>
+			{{/if}}
+
+			<!-- ROLES / ANTAGONISM TAB -->
+			{{if data.active_category == 'Roles'}}
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Special Role Availability</div>
+					{{for data.roles.candidacy.special_roles}}
+						<div class="item">
+							<div class="itemLabel">{{:value.name}}:</div>
+							<div class="itemContent">
+								{{if value.banned}}
+									<span class="bad"><b>[BANNED]</b></span>
+								{{else}}
+									{{:helper.link('High', null, {'item': data.roles.candidacy.ref, 'add_special': value.role_type}, value.status == 'High' ? 'selected' : null)}}
+									{{:helper.link('Low', null, {'item': data.roles.candidacy.ref, 'del_special': value.role_type}, value.status == 'Low' ? 'selected' : null)}}
+									{{:helper.link('Never', null, {'item': data.roles.candidacy.ref, 'add_never': value.role_type}, value.status == 'Never' ? 'selected' : null)}}
+								{{/if}}
+							</div>
+						</div>
+					{{/for}}
+				</div>
+
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Antagonist Uplink Setup</div>
+					<div class="item">
+						<div class="itemLabel">Uplink Priority:</div>
+						<div class="itemContent">
+							{{:helper.link('Add Source', 'plus', {'item': data.roles.setup.ref, 'add_source': 1})}}
+						</div>
+					</div>
+					{{if data.roles.setup.has_sources}}
+						<div style="margin-top: 8px;">
+							{{for data.roles.setup.uplink_sources}}
+								<div class="item" style="padding: 4px 0; border-bottom: 1px dotted #383838;">
+									<div class="itemLabel" style="width: 45%;">
+										<b>{{:value.name}}</b>
+										{{if value.desc}}
+											<br><span class="idle" style="font-size: 10px;">{{:value.desc}}</span>
+										{{/if}}
+									</div>
+									<div class="itemContent" style="width: 50%;">
+										{{:helper.link('Up', 'arrowthick-1-n', {'item': data.roles.setup.ref, 'move_source_up': value.ref})}}
+										{{:helper.link('Down', 'arrowthick-1-s', {'item': data.roles.setup.ref, 'move_source_down': value.ref})}}
+										{{:helper.link('Remove', 'trash', {'item': data.roles.setup.ref, 'remove_source': value.ref})}}
+									</div>
+								</div>
+							{{/for}}
+						</div>
+					{{else}}
+						<div class="notice">You will not receive an uplink unless you add an uplink source!</div>
+					{{/if}}
+				</div>
+			{{/if}}
+
+			<!-- GLOBAL / GAME PREFERENCES TAB -->
+			{{if data.active_category == 'Global'}}
+				<!-- UI Preferences -->
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Client & Display Settings</div>
+					<div class="item">
+						<div class="itemLabel">Client Target FPS:</div>
+						<div class="itemContent">
+							{{:helper.link(data.global.ui.fps, 'gear', {'item': data.global.ui.ref, 'select_fps': 1})}}
+						</div>
+					</div>
+					{{if data.global.ui.can_ooc_color}}
+						<div class="item">
+							<div class="itemLabel">Admin OOC Colour:</div>
+							<div class="itemContent">
+								{{:helper.link(data.global.ui.is_default_ooc ? 'Using Default' : data.global.ui.ooc_color, 'pencil', {'item': data.global.ui.ref, 'select_ooc_color': 1})}}
+								{{if !data.global.ui.is_default_ooc}}
+									<span class="charsetup-color-swatch" style="background-color:{{:data.global.ui.ooc_color}};"></span>
+									{{:helper.link('Reset', 'refresh', {'item': data.global.ui.ref, 'reset': 'ooc'})}}
+								{{/if}}
+							</div>
+						</div>
+					{{/if}}
+				</div>
+
+				<!-- Prefixes -->
+				{{if data.global.prefixes && data.global.prefixes.prefixes}}
+					<div class="charsetup-section">
+						<div class="charsetup-section-title">Custom Radio / Speech Prefixes</div>
+						{{for data.global.prefixes.prefixes}}
+							<div class="item">
+								<div class="itemLabel">{{:value.name}}:</div>
+								<div class="itemContent">
+									<b>[{{:value.key}}]</b>
+									{{if !value.is_locked}}
+										{{:helper.link('Change', 'pencil', {'item': data.global.prefixes.ref, 'change_prefix': value.ref})}}
+									{{/if}}
+									{{if !value.is_default}}
+										{{:helper.link('Reset', 'refresh', {'item': data.global.prefixes.ref, 'reset_prefix': value.ref})}}
+									{{/if}}
+								</div>
+							</div>
+						{{/for}}
+					</div>
+				{{/if}}
+
+				<!-- pAI Settings -->
+				{{if data.global.pai}}
+					<div class="charsetup-section">
+						<div class="charsetup-section-title">pAI Candidate Profile</div>
+						<div class="item">
+							<div class="itemLabel">pAI Name:</div>
+							<div class="itemContent">
+								{{:helper.link(data.global.pai.name, 'pencil', {'item': data.global.pai.ref, 'option': 'name'})}}
+							</div>
+						</div>
+						<div class="item">
+							<div class="itemLabel">Description:</div>
+							<div class="itemContent">
+								{{:helper.link(data.global.pai.desc_preview, 'pencil', {'item': data.global.pai.ref, 'option': 'desc'})}}
+							</div>
+						</div>
+						<div class="item">
+							<div class="itemLabel">Preferred Role:</div>
+							<div class="itemContent">
+								{{:helper.link(data.global.pai.role_preview, 'pencil', {'item': data.global.pai.ref, 'option': 'role'})}}
+							</div>
+						</div>
+						<div class="item">
+							<div class="itemLabel">OOC Comments:</div>
+							<div class="itemContent">
+								{{:helper.link(data.global.pai.comments_preview, 'pencil', {'item': data.global.pai.ref, 'option': 'ooc'})}}
+							</div>
+						</div>
+					</div>
+				{{/if}}
+
+				<!-- OOC Ignored Players -->
+				{{if data.global.ooc}}
+					<div class="charsetup-section">
+						<div class="charsetup-section-title">Ignored Players</div>
+						<div class="item">
+							<div class="itemLabel">Actions:</div>
+							<div class="itemContent">
+								{{:helper.link('Ignore Player', 'plus', {'item': data.global.ooc.ref, 'ignore_player': 1})}}
+							</div>
+						</div>
+						{{if data.global.ooc.ignored_players && data.global.ooc.ignored_players.length}}
+							<div style="margin-top: 6px;">
+								{{for data.global.ooc.ignored_players}}
+									<div class="item">
+										<div class="itemLabel">{{:value}}</div>
+										<div class="itemContent">
+											{{:helper.link('Unignore', 'trash', {'item': data.global.ooc.ref, 'unignore_player': value})}}
+										</div>
+									</div>
+								{{/for}}
+							</div>
+						{{else}}
+							<div class="idle" style="margin-top: 6px;">No players currently ignored.</div>
+						{{/if}}
+					</div>
+				{{/if}}
+
+				<!-- Game Client Preferences -->
+				{{if data.global.settings && data.global.settings.preferences}}
+					<div class="charsetup-section">
+						<div class="charsetup-section-title">General Game Preferences</div>
+						{{for data.global.settings.preferences :prefVal:prefIndex}}
+							<div class="charsetup-pref-row">
+								<div class="charsetup-pref-label">{{:prefVal.description}}:</div>
+								<div class="charsetup-pref-options">
+									{{for prefVal.options :optVal:optIndex}}
+										{{:helper.link(optVal.option, null, {'item': data.global.settings.ref, 'pref': prefVal.key, 'value': optVal.option}, optVal.is_selected ? 'selected' : null)}}
+									{{/for}}
+								</div>
+							</div>
+						{{/for}}
+					</div>
+				{{/if}}
+			{{/if}}
+
+			<!-- CONTROLS TAB -->
+			{{if data.active_category == 'Controls'}}
+				<div class="charsetup-section">
+					<div class="charsetup-section-title">Controls & Input Settings</div>
+					<div class="item">
+						<div class="itemLabel">Input Mode:</div>
+						<div class="itemContent">
+							{{:helper.link(data.controls.keybindings.hotkeys ? 'Hotkey Mode (WASD)' : 'Classic Mode', 'gear', {'item': data.controls.keybindings.ref, 'toggle_hotkeys': 1}, null, data.controls.keybindings.hotkeys ? 'selected' : null)}}
+						</div>
+					</div>
+					<div class="item">
+						<div class="itemLabel">Quick Actions:</div>
+						<div class="itemContent">
+							{{:helper.link('Reset All Keybindings', 'refresh', {'item': data.controls.keybindings.ref, 'preference': 'keybindings_reset'})}}
+							{{:helper.link('Fix / Reset Macros', 'wrench', {'item': data.controls.keybindings.ref, 'fix_macros': 1})}}
+						</div>
+					</div>
+				</div>
+
+				{{if data.controls && data.controls.keybindings && data.controls.keybindings.categories}}
+					{{for data.controls.keybindings.categories :catVal:catIndex}}
+						<div class="charsetup-section">
+							<div class="charsetup-section-title">{{:catVal.name}}</div>
+							<table class="charsetup-kb-table">
+								{{for catVal.bindings :bindVal:bindIndex}}
+									<tr class="charsetup-kb-row">
+										<td class="charsetup-kb-name">
+											<b>{{:bindVal.full_name}}</b>
+											{{if bindVal.description}}
+												<br><span class="idle" style="font-size: 10px;">{{:bindVal.description}}</span>
+											{{/if}}
+										</td>
+										<td class="charsetup-kb-keys">
+											{{if bindVal.has_keys}}
+												{{for bindVal.keys :keyVal:keyIndex}}
+													{{:helper.link(keyVal.display_name, null, {'item': data.controls.keybindings.ref, 'preference': 'keybindings_capture', 'keybinding': bindVal.name, 'old_key': keyVal.key}, null, 'charsetup-kb-key-btn')}}
+												{{/for}}
+												{{if bindVal.can_add}}
+													{{:helper.link('+ Add', 'plus', {'item': data.controls.keybindings.ref, 'preference': 'keybindings_capture', 'keybinding': bindVal.name, 'old_key': 'None'}, null, 'charsetup-kb-add-btn')}}
+												{{/if}}
+											{{else}}
+												{{:helper.link('Unbound', 'plus', {'item': data.controls.keybindings.ref, 'preference': 'keybindings_capture', 'keybinding': bindVal.name, 'old_key': 'None'}, null, 'charsetup-kb-unbound-btn')}}
+											{{/if}}
+										</td>
+										<td class="charsetup-kb-reset-cell">
+											{{if !bindVal.is_default}}
+												{{:helper.link('Reset', 'refresh', {'item': data.controls.keybindings.ref, 'preference': 'keybinding_reset', 'keybinding': bindVal.name, 'old_keys': bindVal.old_keys_str}, null, 'charsetup-kb-reset-btn')}}
+											{{else}}
+												<span class="idle" style="font-size: 11px;">Default</span>
+											{{/if}}
+										</td>
+									</tr>
+								{{/for}}
+							</table>
+						</div>
+					{{/for}}
+				{{/if}}
+			{{/if}}
+		</div>
+
+		<!-- Right Preview & Controls Panel -->
+		<div class="charsetup-preview-cell">
+			<div class="charsetup-preview-card">
+				<img class="charsetup-preview-img" src="previewicon.png?v={{:data.preview_version}}" alt="Character Preview">
+			</div>
+			<div class="charsetup-preview-summary">
+				<div><b>Name:</b> {{:data.general.basic.real_name}}</div>
+				<div><b>Species:</b> {{:data.general.body.species}}</div>
+				<div><b>Gender:</b> {{:data.general.basic.gender_text}}</div>
+				<div><b>Age:</b> {{:data.general.basic.age}}</div>
+				<div><b>Backstory:</b> {{:data.general.background.backstory_name}}</div>
+			</div>
+			<div class="charsetup-preview-actions">
+				{{:helper.link('Randomize Appearance', 'refresh', {'item': data.general.body.ref, 'random': 1})}}
+				{{:helper.link('Cycle Background', 'image', {'item': data.general.body.ref, 'cycle_bg': 1})}}
+				{{:helper.link((data.preview_job_gear ? 'Hide Job Gear' : 'Show Job Gear'), 'suitcase', {'item': data.general.body.ref, 'toggle_preview_value': 2}, null, data.preview_job_gear ? 'selected' : null)}}
+				{{:helper.link((data.preview_loadout ? 'Hide Loadout' : 'Show Loadout'), 'tag', {'item': data.general.body.ref, 'toggle_preview_value': 1}, null, data.preview_loadout ? 'selected' : null)}}
+			</div>
+		</div>
+	</div>
+</div>

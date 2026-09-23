@@ -844,4 +844,7 @@ ORGANS_CAN_DECAY
 ## clients will still download from the server *too*.
 ## Spaces are prohibited in each URL by spec, you must use encoded spaces.
 #RESOURCE_URLS URL
->>>>>>> 39447965d4516aa51b02f493230856fd3169571a
+
+## Uncomment this to show a typing indicator for people writing whispers.
+#SHOW_TYPING_INDICATOR_FOR_WHISPERS
+

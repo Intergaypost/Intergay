@@ -83,8 +83,9 @@
 		//sound_to(M, 'sound/weapons/flash_ring.ogg')
 
 /obj/item/weapon/grenade/flashbang/Destroy()
-	walk(src, 0) // Because we might have called walk_away, we must stop the walk loop or BYOND keeps an internal reference to us forever.
+	SSmove_manager.stop_looping(src)
 	return ..()
+
 
 /obj/item/weapon/grenade/flashbang/clusterbang//Created by Polymorph, fixed by Sieve
 	desc = "Use of this weapon may constiute a war crime in your area, consult your local captain."
@@ -124,7 +125,7 @@
 	banglet = 1
 	var/stepdist = rand(1,4)//How far to step
 	var/temploc = src.loc//Saves the current location to know where to step away from
-	walk_away(src,temploc,stepdist)//I must go, my people need me
+	SSmove_manager.move_away(src, temploc, stepdist, delay = 2, timeout = stepdist * 2)
 	var/dettime = rand(15,60)
 	spawn(dettime)
 		detonate()
@@ -150,8 +151,9 @@
 		banglet = 1
 		var/stepdist = rand(1,3)
 		var/temploc = src.loc
-		walk_away(src,temploc,stepdist)
+		SSmove_manager.move_away(src, temploc, stepdist, delay = 2, timeout = stepdist * 2)
 		var/dettime = rand(15,60)
 		spawn(dettime)
 		detonate()
 	..()
+

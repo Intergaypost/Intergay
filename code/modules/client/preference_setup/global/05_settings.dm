@@ -61,32 +61,34 @@
 	pref.lastchangelog	= sanitize_text(pref.lastchangelog, initial(pref.lastchangelog))
 	pref.default_slot	= sanitize_integer(pref.default_slot, 1, config.character_slots, initial(pref.default_slot))
 
-/*
-/datum/category_item/player_setup_item/player_global/settings/content(var/mob/user)
-	. = list()
-	. += "<b>Preferences</b><br>"
-	. += "<table>"
-
+/datum/category_item/player_setup_item/player_global/settings/get_data(var/mob/user)
+	var/list/prefs_list = list()
 	var/mob/pref_mob = preference_mob()
+
 	for(var/cp in get_client_preferences())
 		var/datum/client_preference/client_pref = cp
-
-		if(!client_pref.may_set(pref_mob.client))
+		if(pref_mob && !client_pref.may_set(pref_mob))
 			continue
 
-		. += "<tr><td>[client_pref.description]: </td>"
+		var/selected_option = pref_mob ? pref_mob.get_preference_value(client_pref.key) : client_pref.default_value
+		var/list/options_list = list()
+		for(var/opt in client_pref.options)
+			options_list += list(list(
+				"option" = opt,
+				"is_selected" = (selected_option == opt) ? 1 : 0
+			))
 
-		var/selected_option = pref_mob.get_preference_value(client_pref.key)
-		for(var/option in client_pref.options)
-			var/is_selected = selected_option == option
-			. += "<td><a class='[is_selected ? "linkOn" : ""]' href='?src=\ref[src];pref=[client_pref.key];value=[option]'><b>[option]</b></a>"
+		prefs_list += list(list(
+			"key" = client_pref.key,
+			"description" = client_pref.description,
+			"selected" = selected_option,
+			"options" = options_list
+		))
 
-		. += "</tr>"
-
-	. += "</table>"
-
-	return jointext(., "")
-*/
+	return list(
+		"ref" = "\ref[src]",
+		"preferences" = prefs_list
+	)
 
 /datum/category_item/player_setup_item/player_global/settings/OnTopic(var/href,var/list/href_list, var/mob/user)
 	var/mob/pref_mob = preference_mob()

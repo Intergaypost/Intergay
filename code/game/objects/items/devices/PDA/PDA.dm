@@ -5,7 +5,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 
 /obj/item/device/pda
 	name = "\improper PDA"
-	desc = "A portable microcomputer by TetraCorp Personal Devices. Functionality determined by a preprogrammed ROM cartridge."
+	desc = "A portable microcomputer by Tri-Net Corp Personal Devices. Functionality determined by a preprogrammed ROM cartridge."
 	icon = 'icons/obj/pda.dmi'
 	icon_state = "pda"
 	item_state = "electronic"
@@ -287,7 +287,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	if(usr.stat == 2)
 		to_chat(usr, "You can't do that because you are dead!")
 		return
-	var/HTML = "<html><head><title>AI PDA Message Log</title></head><body>"
+	var/HTML = "<html><head><meta charset='utf-8'><title>AI PDA Message Log</title></head><body>"
 	for(var/index in tnote)
 		if(index["sent"])
 			HTML += addtext("<i><b>&rarr; To <a href='byond://?src=\ref[src];choice=Message;notap=1;target=",index["src"],"'>", index["owner"],"</a>:</b></i><br>", index["message"], "<br>")
@@ -368,7 +368,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	var/auto_update = 1
 	if(mode in no_auto_update)
 		auto_update = 0
-	if(old_ui && (mode == lastmode && ui_tick % 5 && mode in update_every_five))
+	if(old_ui && (mode == lastmode && ui_tick % 5 && (mode in update_every_five)))
 		return
 
 	lastmode = mode
@@ -691,7 +691,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 			if (in_range(src, U) && loc == U)
 				n = sanitizeSafe(n, extra = 0)
 				if (mode == 1)
-					note = rustoutf(html_decode(n))
+					note = html_decode(n)
 					notehtml = note
 					note = replacetext(note, "\n", "<br>")
 			else
@@ -1009,7 +1009,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 	last_text = world.time
 	tempmessage.Remove(P)
 	var/datum/reception/reception = get_reception(src, P, t)
-	t = cp1251_to_utf8(reception.message)
+	t = reception.message
 	if(!get_message_server(z))
 		to_chat(U, "<span class='notice'>ERROR: Messaging server is not responding.</span>")
 		tempmessage[P] = t
@@ -1028,7 +1028,7 @@ var/global/list/obj/item/device/pda/PDAs = list()
 			to_chat(U, "ERROR: Messaging server rejected your message. Reason: contains '[send_result]'.")
 			tempmessage[P] = t
 			return
-		var/utf_convert = rustoutf(html_decode(t))
+		var/utf_convert = html_decode(t)
 		tnote.Add(list(list("sent" = 1, "owner" = "[P.owner]", "job" = "[P.ownjob]", "message" = "[utf_convert]", "timestamp" = stationtime2text(), "target" = "\ref[P]")))
 		P.tnote.Add(list(list("sent" = 0, "owner" = "[owner]", "job" = "[ownjob]", "message" = "[utf_convert]", "timestamp" = stationtime2text(), "target" = "\ref[src]")))
 		for(var/mob/M in GLOB.player_list)
@@ -1273,10 +1273,11 @@ var/global/list/obj/item/device/pda/PDAs = list()
 				user.show_message(medical_scan_results(C, 1))
 
 			if(2)
-				if (!istype(C:dna, /datum/dna))
+				var/datum/dna/D = C:dna
+				if (!istype(D, /datum/dna))
 					to_chat(user, "<span class='notice'>No fingerprints found on [C]</span>")
 				else
-					to_chat(user, text("<span class='notice'>\The [C]'s Fingerprints: [md5(C:dna.uni_identity)]</span>"))
+					to_chat(user, text("<span class='notice'>\The [C]'s Fingerprints: [md5(D.uni_identity)]</span>"))
 				if ( !(C:blood_DNA) )
 					to_chat(user, "<span class='notice'>No blood found on [C]</span>")
 					if(C:blood_DNA)

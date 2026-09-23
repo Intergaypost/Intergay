@@ -28,8 +28,9 @@
 	//We want to leave behind lit candles
 	spell_consume(var/list/spell_components)
 		for(var/O in spell_components)
-			if(istype(spell_components[O],/obj/item/weapon/flame/candle/))
-				spell_components[O].light("")
+			var/obj/item/weapon/flame/candle/C = spell_components[O]
+			if(istype(C))
+				C.light("")
 		return
 
 /datum/old_god_spell/blind
@@ -73,8 +74,9 @@
 	//We want to leave behind lit candles and take the wirecutters
 	spell_consume(var/list/spell_components)
 		for(var/O in spell_components)
-			if(istype(spell_components[O],/obj/item/weapon/flame/candle/))
-				spell_components[O].light("")
+			var/obj/item/weapon/flame/candle/C = spell_components[O]
+			if(istype(C))
+				C.light("")
 		qdel(spell_components["SOUTH"])
 		return
 

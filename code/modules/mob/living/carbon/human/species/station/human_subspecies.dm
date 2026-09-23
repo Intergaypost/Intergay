@@ -35,14 +35,15 @@
 	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_SPCR | HAS_LIPS | HAS_UNDERWEAR | HAS_EYE_COLOR
 
 /datum/species/human/vatgrown
-	name = "Vat-Grown Human"
-	name_plural = "Vat-Grown Humans"
-	blurb = "With cloning on the forefront of human scientific advancement, cheap mass production \
-	of bodies is a very real and rather ethically grey industry. Vat-grown humans tend to be paler than \
-	baseline, with no appendix and fewer inherited genetic disabilities, but a weakened metabolism."
+	name = "Bio-Slave"
+	name_plural = "Bio-Slaves"
+	blurb = "С клонированием на переднем крае научного прогресса человечества, дешёвое массовое производство \
+	тел — вполне реальная и довольно этически серая индустрия. Выращенные в чане люди обычно бледнее \
+	базовых, без аппендикса, лица и с меньшим числом нейронов, но прекрасные рабочие."
 	icobase = 'icons/mob/human_races/subspecies/r_vatgrown.dmi'
+	appearance_flags = HAS_HAIR_COLOR | HAS_SKIN_TONE_SPCR | HAS_LIPS | HAS_UNDERWEAR
 
-	toxins_mod =   1.1
+	toxins_mod =   0.4
 	has_organ = list(
 		BP_HEART =    /obj/item/organ/internal/heart,
 		BP_LUNGS =    /obj/item/organ/internal/lungs,
@@ -51,6 +52,10 @@
 		BP_BRAIN =    /obj/item/organ/internal/brain,
 		BP_EYES =     /obj/item/organ/internal/eyes
 		)
+
+	num_alternate_languages = 0
+	default_language = LANGUAGE_BIOSLAVE
+	language = LANGUAGE_BIOSLAVE
 
 /datum/species/human/vatgrown/sanitize_name(name)
 	return sanitizeName(name, allow_numbers=TRUE)
@@ -61,7 +66,7 @@
 	#define NUM ascii2text(rand(48,57)) // 0-9
 	#define NAME capitalize(pick(gender == FEMALE ? GLOB.first_names_female : GLOB.first_names_male))
 	switch(rand(1,4))
-		if(1) return NAME
+		if(1) return "[NAME]-[LTR]"
 		if(2) return "[LTR][LTR]-[NAME]"
 		if(3) return "[NAME]-[NUM][NUM][NUM]"
 		if(4) return "[LTR][LTR]-[NUM][NUM][NUM]"

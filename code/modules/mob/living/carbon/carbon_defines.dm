@@ -3,7 +3,7 @@
 	var/datum/species/species //Contains icon generation and language information, set during New().
 	var/list/datum/disease2/disease/virus2 = list()
 	var/list/antibodies = list()
-	var/datum/happiness_event/list/events = list()
+	var/list/datum/happiness_event/events = list()
 
 
 	var/life_tick = 0      // The amount of life ticks that have processed on this mob.

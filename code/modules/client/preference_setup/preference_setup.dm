@@ -1,5 +1,3 @@
-#define TOPIC_UPDATE_PREVIEW 4
-#define TOPIC_REFRESH_UPDATE_PREVIEW (TOPIC_REFRESH|TOPIC_UPDATE_PREVIEW)
 
 var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 
@@ -28,6 +26,12 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 	name = "Global"
 	sort_order = 5//7
 	category_item_type = /datum/category_item/player_setup_item/player_global
+
+/datum/category_group/player_setup_category/control_preferences
+	name = "Controls"
+	sort_order = 6
+	category_item_type = /datum/category_item/player_setup_item/controls
+
 
 /*
 /datum/category_group/player_setup_category/law_pref
@@ -86,12 +90,30 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 			dat += "  "
 		else
 			dat += "  "
-			dat += "<a href='?src=\ref[src];category=\ref[PS]'>[PS.name]</a> "
+			dat += "<a href='byond://?src=\ref[src];category=\ref[PS]'>[PS.name]</a> "
 	return dat
 
 /datum/category_collection/player_setup_collection/proc/content(var/mob/user)
 	if(selected_category)
 		return selected_category.content(user)
+
+/datum/category_collection/player_setup_collection/proc/get_data(var/mob/user)
+	var/list/data = list()
+	data["active_category"] = selected_category ? selected_category.name : "General"
+
+	var/list/categories_data = list()
+	for(var/datum/category_group/player_setup_category/PS in categories)
+		categories_data += list(list(
+			"name" = PS.name,
+			"ref" = "\ref[PS]",
+			"active" = (PS == selected_category)
+		))
+	data["categories"] = categories_data
+
+	for(var/datum/category_group/player_setup_category/PS in categories)
+		data[lowertext(PS.name)] = PS.get_data(user)
+
+	return data
 
 /datum/category_collection/player_setup_collection/Topic(var/href,var/list/href_list)
 	if(..())
@@ -102,7 +124,7 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 
 	if(href_list["category"])
 		var/category = locate(href_list["category"])
-		if(category && category in categories)
+		if(category && (category in categories))
 			selected_category = category
 		. = 1
 
@@ -162,9 +184,22 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 		. += "[PI.content(user)]<br>"
 	. += "</td></tr></table>"
 
+/datum/category_group/player_setup_category/proc/get_data(var/mob/user)
+	var/list/data = list()
+	for(var/datum/category_item/player_setup_item/PI in items)
+		data[lowertext(PI.name)] = PI.get_data(user)
+	return data
+
 /datum/category_group/player_setup_category/occupation_preferences/content(var/mob/user)
 	for(var/datum/category_item/player_setup_item/PI in items)
 		. += "[PI.content(user)]<br>"
+
+/datum/category_group/player_setup_category/occupation_preferences/get_data(var/mob/user)
+	if(items.len)
+		var/datum/category_item/player_setup_item/occupation/PI = items[1]
+		if(istype(PI))
+			return PI.get_data(user)
+	return ..()
 
 /**********************
 * Category Item Setup *
@@ -217,6 +252,9 @@ var/const/CHARACTER_PREFERENCE_INPUT_TITLE = "Character Preference"
 
 /datum/category_item/player_setup_item/proc/content()
 	return
+
+/datum/category_item/player_setup_item/proc/get_data(var/mob/user)
+	return list("name" = name, "ref" = "\ref[src]")
 
 /datum/category_item/player_setup_item/proc/sanitize_character()
 	return

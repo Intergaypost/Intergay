@@ -13,6 +13,8 @@ var/const/GHOST_IMAGE_ALL = ~GHOST_IMAGE_NONE
 	simulated = FALSE
 	stat = DEAD
 	status_flags = GODMODE
+	appearance_flags = KEEP_TOGETHER
+	glide_size = 32
 	var/ghost_image_flag = GHOST_IMAGE_DARKNESS
 	var/image/ghost_image = null //this mobs ghost image, for deleting and stuff
 
@@ -59,6 +61,9 @@ mob/observer/check_airflow_movable()
 
 /mob/observer/set_stat()
 	stat = DEAD // They are also always dead
+
+/mob/observer/get_speech_bubble_state_modifier()
+	return "ghost"
 
 /proc/updateallghostimages()
 	for (var/mob/observer/ghost/O in GLOB.player_list)

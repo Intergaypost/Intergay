@@ -14,7 +14,7 @@ var/global/list/minor_air_alarms = list()
 
 /obj/machinery/computer/atmos_alert/Initialize()
 	. = ..()
-	atmosphere_alarm.register_alarm(src, /obj/machinery/computer/station_alert/update_icon)
+	atmosphere_alarm.register_alarm(src, TYPE_PROC_REF(/atom, update_icon))
 
 /obj/machinery/computer/atmos_alert/Destroy()
 	atmosphere_alarm.unregister_alarm(src)
@@ -42,7 +42,7 @@ var/global/list/minor_air_alarms = list()
 
 	if(major_alarms.len)
 		for(var/zone in major_alarms)
-			msg += "<FONT color='red'><B>[zone]</B></FONT> <A href='?src=\ref[src];priority_clear=[ckey(zone)]'>X</A><BR>"
+			msg += "<FONT color='red'><B>[zone]</B></FONT> <a href='byond://?src=\ref[src];priority_clear=[ckey(zone)]'>X</A><BR>"
 	else
 		msg += "No priority alerts detected.<BR>"
 
@@ -50,7 +50,7 @@ var/global/list/minor_air_alarms = list()
 
 	if(minor_alarms.len)
 		for(var/zone in minor_alarms)
-			msg += "<B>[zone]</B> <A href='?src=\ref[src];minor_clear=[ckey(zone)]'>X</A><BR>"
+			msg += "<B>[zone]</B> <a href='byond://?src=\ref[src];minor_clear=[ckey(zone)]'>X</A><BR>"
 	else
 		msg += "No minor alerts detected.<BR>"
 

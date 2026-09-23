@@ -57,7 +57,7 @@
 		var/datum/stack_recipe_list/srl = recipe_list[recipes_sublist]
 		recipe_list = srl.recipes
 	var/t1 = text("<HTML><HEAD><title>Constructions from []</title></HEAD><body><TT>Amount Left: []<br>", src, src.get_amount())
-	for(var/i=1;i<=recipe_list.len,i++)
+	for(var/i=1;i<=recipe_list.len;i++)
 		var/E = recipe_list[i]
 		if (isnull(E))
 			t1 += "<hr>"
@@ -68,7 +68,7 @@
 
 		if (istype(E, /datum/stack_recipe_list))
 			var/datum/stack_recipe_list/srl = E
-			t1 += "<a href='?src=\ref[src];sublist=[i]'>[srl.title]</a>"
+			t1 += "<a href='byond://?src=\ref[src];sublist=[i]'>[srl.title]</a>"
 
 		if (istype(E, /datum/stack_recipe))
 			var/datum/stack_recipe/R = E
@@ -82,7 +82,7 @@
 				title+= "[R.title]"
 			title+= " ([R.req_amount] [src.singular_name]\s)"
 			if (can_build)
-				t1 += text("<A href='?src=\ref[src];sublist=[recipes_sublist];make=[i];multiplier=1'>[title]</A>  ")
+				t1 += text("<a href='byond://?src=\ref[src];sublist=[recipes_sublist];make=[i];multiplier=1'>[title]</A>  ")
 			else
 				t1 += text("[]", title)
 				continue
@@ -92,9 +92,9 @@
 				var/list/multipliers = list(5,10,25)
 				for (var/n in multipliers)
 					if (max_multiplier>=n)
-						t1 += " <A href='?src=\ref[src];make=[i];multiplier=[n]'>[n*R.res_amount]x</A>"
+						t1 += " <a href='byond://?src=\ref[src];make=[i];multiplier=[n]'>[n*R.res_amount]x</A>"
 				if (!(max_multiplier in multipliers))
-					t1 += " <A href='?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
+					t1 += " <a href='byond://?src=\ref[src];make=[i];multiplier=[max_multiplier]'>[max_multiplier*R.res_amount]x</A>"
 
 	t1 += "</TT></body></HTML>"
 	user << browse(t1, "window=stack")
@@ -195,7 +195,6 @@
 			var/datum/matter_synth/S = synths[i]
 			S.use_charge(charge_costs[i] * used) // Doesn't need to be deleted
 		return 1
-	return 0
 
 /obj/item/stack/proc/add(var/extra)
 	if(!uses_charge)
@@ -239,24 +238,25 @@
 	return 0
 
 //creates a new stack with the specified amount
-/obj/item/stack/proc/split(var/tamount, var/force=FALSE)
+/obj/item/stack/proc/split(tamount)
 	if (!amount)
-		return null
-	if(uses_charge && !force)
 		return null
 
 	var/transfer = max(min(tamount, src.amount, initial(max_amount)), 0)
 
 	var/orig_amount = src.amount
 	if (transfer && src.use(transfer))
-		var/obj/item/stack/newstack = new src.type(loc, transfer)
-		newstack.color = color
+		var/obj/item/stack/newstack
+		if(uses_charge)
+			newstack = new src.stacktype(loc, transfer)
+		else
+			newstack = new src.type(loc, transfer)
+		// newstack.copy_from(src) // Че за хуйня? Че за copy_from
 		if (prob(transfer/orig_amount * 100))
 			transfer_fingerprints_to(newstack)
-			if(blood_DNA)
-				newstack.blood_DNA |= blood_DNA
 		return newstack
 	return null
+
 
 /obj/item/stack/proc/get_amount()
 	if(uses_charge)

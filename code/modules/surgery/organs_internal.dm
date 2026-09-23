@@ -65,7 +65,7 @@
 	if(!affected || affected.open() < 2)
 		return
 	for(var/obj/item/organ/internal/I in affected.internal_organs)
-		if(I && I.damage > 0 && I.robotic < ORGAN_ROBOT && (!I.status & ORGAN_DEAD || I.can_recover()) && (I.surface_accessible || affected.open() >= (affected.encased ? 3 : 2)))
+		if(I && I.damage > 0 && I.robotic < ORGAN_ROBOT && (!(I.status & ORGAN_DEAD) || I.can_recover()) && (I.surface_accessible || affected.open() >= (affected.encased ? 3 : 2)))
 			user.visible_message("[user] starts treating damage to [target]'s [I.name] with [tool_name].", \
 			"You start treating damage to [target]'s [I.name] with [tool_name]." )
 
@@ -284,7 +284,6 @@
 		return SURGERY_FAILURE
 
 	if(!target.species)
-		CRASH("Target ([target]) of surgery [type] has no species!")
 		return SURGERY_FAILURE
 
 	var/o_is = (O.gender == PLURAL) ? "are" : "is"
@@ -436,7 +435,7 @@
 
 	target.op_stage.current_organ = null
 
-	var/obj/item/organ/internal/list/dead_organs = list()
+	var/list/obj/item/organ/internal/dead_organs = list()
 	for(var/obj/item/organ/internal/I in target.internal_organs)
 		if(I && !(I.status & ORGAN_CUT_AWAY) && I.status & ORGAN_DEAD && I.parent_organ == affected.organ_tag && !(I.robotic >= ORGAN_ROBOT))
 			dead_organs |= I

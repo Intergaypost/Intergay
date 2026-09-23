@@ -1,8 +1,3 @@
-//used for pref.alternate_option
-#define GET_RANDOM_JOB 0
-#define BE_ASSISTANT 1
-#define RETURN_TO_LOBBY 2
-
 /datum/preferences
 	//Since there can only be 1 high job.
 	var/job_high = null
@@ -78,11 +73,11 @@
 
 		player_branch = mil_branches.get_branch(pref.char_branch)
 
-		. += "Branch of Service: <a href='?src=\ref[src];char_branch=1'>[pref.char_branch]</a>	"
+		. += "Branch of Service: <a href='byond://?src=\ref[src];char_branch=1'>[pref.char_branch]</a>	"
 	if(GLOB.using_map.flags & MAP_HAS_RANK)
 		player_rank = mil_branches.get_rank(pref.char_branch, pref.char_rank)
 
-		. += "Rank: <a href='?src=\ref[src];char_rank=1'>[pref.char_rank]</a>	"
+		. += "Rank: <a href='byond://?src=\ref[src];char_rank=1'>[pref.char_rank]</a>	"
 	. += "<br>"
 	. += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>" // Table within a table for alignment, also allows you to easily add more columns.
 	. += "<table width='100%' cellpadding='1' cellspacing='0'>"
@@ -128,19 +123,19 @@
 
 		if(job.allowed_branches)
 			if(!player_branch)
-				. += "<del>[rank]</del></td><td><a href='?src=\ref[src];show_branches=[rank]'><b> \[BRANCH RESTRICTED]</b></a></td></tr>"
+				. += "<del>[rank]</del></td><td><a href='byond://?src=\ref[src];show_branches=[rank]'><b> \[BRANCH RESTRICTED]</b></a></td></tr>"
 				continue
 			if(!is_type_in_list(player_branch, job.allowed_branches))
-				. += "<del>[rank]</del></td><td><a href='?src=\ref[src];show_branches=[rank]'><b> \[NOT FOR [player_branch.name_short]]</b></a></td></tr>"
+				. += "<del>[rank]</del></td><td><a href='byond://?src=\ref[src];show_branches=[rank]'><b> \[NOT FOR [player_branch.name_short]]</b></a></td></tr>"
 				continue
 
 		if(job.allowed_ranks)
 			if(!player_rank)
-				. += "<del>[rank]</del></td><td><a href='?src=\ref[src];show_ranks=[rank]'><b> \[RANK RESTRICTED]</b></a></td></tr>"
+				. += "<del>[rank]</del></td><td><a href='byond://?src=\ref[src];show_ranks=[rank]'><b> \[RANK RESTRICTED]</b></a></td></tr>"
 				continue
 
 			if(!is_type_in_list(player_rank, job.allowed_ranks))
-				. += "<del>[rank]</del></td><td><a href='?src=\ref[src];show_ranks=[rank]'><b> \[NOT FOR [player_rank.name_short || player_rank.name]]</b></a></td></tr>"
+				. += "<del>[rank]</del></td><td><a href='byond://?src=\ref[src];show_ranks=[rank]'><b> \[NOT FOR [player_rank.name_short || player_rank.name]]</b></a></td></tr>"
 				continue
 
 		if(("Assistant" in pref.job_low) && (rank != "Assistant"))
@@ -153,7 +148,7 @@
 
 		. += "</td><td width='40%'>"
 
-		. += "<a href='?src=\ref[src];set_job=[rank]'>"
+		. += "<a href='byond://?src=\ref[src];set_job=[rank]'>"
 
 		if(rank == "Assistant")//Assistant is special
 			if("Assistant" in pref.job_low)
@@ -161,7 +156,7 @@
 			else
 				. += " <font color=black>\[No]</font>"
 			if(job.alt_titles) //Blatantly cloned from a few lines down.
-				. += "</a></td></tr><tr bgcolor='[lastJob.selection_color]'><td width='60%' align='center'>&nbsp</td><td><a href='?src=\ref[src];select_alt_title=\ref[job]'>\[[pref.GetPlayerAltTitle(job)]\]</a></td></tr>"
+				. += "</a></td></tr><tr bgcolor='[lastJob.selection_color]'><td width='60%' align='center'>&nbsp</td><td><a href='byond://?src=\ref[src];select_alt_title=\ref[job]'>\[[pref.GetPlayerAltTitle(job)]\]</a></td></tr>"
 			. += "</a></td></tr>"
 			continue
 
@@ -174,22 +169,122 @@
 		else
 			. += " <font color=black>\[NEVER]</font>"
 		if(job.alt_titles)
-			. += "</a></td></tr><tr bgcolor='[lastJob.selection_color]'><td width='60%' align='center'>&nbsp</td><td><a href='?src=\ref[src];select_alt_title=\ref[job]'>\[[pref.GetPlayerAltTitle(job)]\]</a></td></tr>"
+			. += "</a></td></tr><tr bgcolor='[lastJob.selection_color]'><td width='60%' align='center'>&nbsp</td><td><a href='byond://?src=\ref[src];select_alt_title=\ref[job]'>\[[pref.GetPlayerAltTitle(job)]\]</a></td></tr>"
 		. += "</a></td></tr>"
 	. += "</td'></tr></table>"
 	. += "</center></table><center>"
 
 	switch(pref.alternate_option)
 		if(GET_RANDOM_JOB)
-			. += "<u><a href='?src=\ref[src];job_alternative=1'>Get random job if preferences unavailable</a></u>"
+			. += "<u><a href='byond://?src=\ref[src];job_alternative=1'>Get random job if preferences unavailable</a></u>"
 		if(BE_ASSISTANT)
-			. += "<u><a href='?src=\ref[src];job_alternative=1'>Be assistant if preference unavailable</a></u>"
+			. += "<u><a href='byond://?src=\ref[src];job_alternative=1'>Be assistant if preference unavailable</a></u>"
 		if(RETURN_TO_LOBBY)
-			. += "<u><a href='?src=\ref[src];job_alternative=1'>Return to lobby if preference unavailable</a></u>"
+			. += "<u><a href='byond://?src=\ref[src];job_alternative=1'>Return to lobby if preference unavailable</a></u>"
 
-	. += "<a href='?src=\ref[src];reset_jobs=1'>\[Reset\]</a></center>"
+	. += "<a href='byond://?src=\ref[src];reset_jobs=1'>\[Reset\]</a></center>"
 	. += "</tt>"
 	. = jointext(.,null)
+
+/datum/category_item/player_setup_item/occupation/get_data(var/mob/user)
+	if(!job_master)
+		return list("ref" = "\ref[src]")
+
+	var/datum/species/S = preference_species()
+	var/datum/mil_branch/player_branch = null
+	var/datum/mil_rank/player_rank = null
+	if(GLOB.using_map.flags & MAP_HAS_BRANCH)
+		player_branch = mil_branches.get_branch(pref.char_branch)
+	if(GLOB.using_map.flags & MAP_HAS_RANK)
+		player_rank = mil_branches.get_rank(pref.char_branch, pref.char_rank)
+
+	var/alt_option_text = "Return to lobby if preference unavailable"
+	switch(pref.alternate_option)
+		if(GET_RANDOM_JOB) alt_option_text = "Get random job if preferences unavailable"
+		if(BE_ASSISTANT) alt_option_text = "Be assistant if preference unavailable"
+		if(RETURN_TO_LOBBY) alt_option_text = "Return to lobby if preference unavailable"
+
+	var/list/jobs_list = list()
+	var/is_assistant_only = ("Assistant" in pref.job_low)
+
+	for(var/datum/job/job in job_master.occupations)
+		var/rank = job.title
+		var/unavailable = null
+
+		if((job.sex_lock && user.client && job.sex_lock != user.client.prefs.gender) || (job.total_positions == 0 && job.spawn_positions == 0))
+			unavailable = "UNAVAILABLE"
+		else if(jobban_isbanned(user, rank))
+			unavailable = "BANNED"
+		else if(user.client && !job.player_old_enough(user.client))
+			unavailable = "IN [job.available_in_days(user.client)] DAYS"
+		else if(job.minimum_character_age && user.client && (user.client.prefs.age < job.minimum_character_age))
+			unavailable = "MIN AGE [job.minimum_character_age]"
+		else if(!job.is_species_allowed(S))
+			unavailable = "SPECIES RESTRICTED"
+		else if(job.allowed_branches)
+			if(!player_branch)
+				unavailable = "BRANCH RESTRICTED"
+			else if(!is_type_in_list(player_branch, job.allowed_branches))
+				unavailable = "NOT FOR [player_branch.name_short]"
+		else if(job.allowed_ranks)
+			if(!player_rank)
+				unavailable = "RANK RESTRICTED"
+			else if(!is_type_in_list(player_rank, job.allowed_ranks))
+				unavailable = "NOT FOR [player_rank.name_short || player_rank.name]"
+
+		var/priority = "Never"
+		var/priority_class = "never"
+		if(rank == "Assistant")
+			if("Assistant" in pref.job_low)
+				priority = "Yes"
+				priority_class = "high"
+			else
+				priority = "No"
+				priority_class = "never"
+		else
+			if(pref.job_high == job.title)
+				priority = "High"
+				priority_class = "high"
+			else if(job.title in pref.job_medium)
+				priority = "Medium"
+				priority_class = "medium"
+			else if(job.title in pref.job_low)
+				priority = "Low"
+				priority_class = "low"
+			else
+				priority = "Never"
+				priority_class = "never"
+
+		var/list/alt_titles_list = list()
+		if(job.alt_titles && job.alt_titles.len)
+			for(var/at in job.alt_titles)
+				alt_titles_list += at
+
+		jobs_list += list(list(
+			"title" = rank,
+			"alt_title" = pref.GetPlayerAltTitle(job),
+			"has_alt_titles" = (job.alt_titles && job.alt_titles.len > 0) ? 1 : 0,
+			"alt_titles" = alt_titles_list,
+			"job_ref" = "\ref[job]",
+			"selection_color" = job.selection_color,
+			"priority" = priority,
+			"priority_class" = priority_class,
+			"is_head" = ((rank in GLOB.command_positions) || (rank == "AI")) ? 1 : 0,
+			"is_assistant" = (rank == "Assistant") ? 1 : 0,
+			"is_assistant_disabled" = (is_assistant_only && rank != "Assistant") ? 1 : 0,
+			"unavailable" = unavailable
+		))
+
+	return list(
+		"ref" = "\ref[src]",
+		"has_branch" = (GLOB.using_map.flags & MAP_HAS_BRANCH) ? 1 : 0,
+		"char_branch" = pref.char_branch,
+		"has_rank" = (GLOB.using_map.flags & MAP_HAS_RANK) ? 1 : 0,
+		"char_rank" = pref.char_rank,
+		"alternate_option" = pref.alternate_option,
+		"alternate_option_text" = alt_option_text,
+		"jobs" = jobs_list
+	)
 
 /datum/category_item/player_setup_item/occupation/OnTopic(href, href_list, user)
 	if(href_list["reset_jobs"])
@@ -207,7 +302,7 @@
 		var/datum/job/job = locate(href_list["select_alt_title"])
 		if (job)
 			var/choices = list(job.title) + job.alt_titles
-			var/choice = input("Choose an title for [job.title].", "Choose Title", pref.GetPlayerAltTitle(job)) as anything in choices|null
+			var/choice = input(user, "Choose a title for [job.title].", "Choose Title", pref.GetPlayerAltTitle(job)) as anything in choices|null
 			if(choice && CanUseTopic(user))
 				SetPlayerAltTitle(job, choice)
 				return (pref.equip_preview_mob ? TOPIC_REFRESH_UPDATE_PREVIEW : TOPIC_REFRESH)

@@ -58,8 +58,8 @@
 	to_chat(user, "<span class='notice'>You start placing the poster on the wall...</span>")//Looks like it's uncluttered enough. Place the poster.
 
 
-	var/obj/structure/sign/poster/P = new(user.loc, placement_dir=get_dir(user, W), serial=serial_number)
-
+	var/obj/structure/sign/poster/P = new(user.loc, get_dir(user, W), serial_number)
+	qdel(src)
 	flick("poster_being_set", P)
 	var/oldsrc = src //get a reference to src so we can delete it after detaching ourselves
 	src = null

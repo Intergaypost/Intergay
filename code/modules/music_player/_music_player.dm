@@ -68,7 +68,7 @@ GLOBAL_LIST_EMPTY(music_players)
 		serial_number = "[rand(1,999)]"
 		desc = desc + "<br> You see \"#[serial_number]\" on the cover."
 		GLOB.music_players += src
-		log_and_message_admins("MUSIC PLAYER: <a href='?_src_=holder;adminplayerobservefollow=\ref[src]'>#[serial_number]</a> has been created.")
+		log_and_message_admins("MUSIC PLAYER: <a href='byond://?_src_=holder;adminplayerobservefollow=\ref[src]'>#[serial_number]</a> has been created.")
 		update_icon()
 
 /obj/item/music_player/Destroy()
@@ -377,8 +377,9 @@ GLOBAL_LIST_EMPTY(music_players)
 		sound_token.SetVolume(volume)
 
 /obj/item/music_player/proc/explode()
-	walk_to(src, 0)
+	SSmove_manager.stop_looping(src)
 	src.visible_message(SPAN_DANGER("\The [src] blows apart!"), 1)
+
 
 	explosion(src.loc, 1, 1, 1, rand(3, 4), 1)
 
@@ -416,7 +417,7 @@ GLOBAL_LIST_EMPTY(music_players)
 
 	mode = PLAYER_STATE_PLAY
 	START_PROCESSING(SSobj, src)
-	log_and_message_admins("launched [src] <a href='?_src_=holder;adminplayerobservefollow=\ref[src]'>#[serial_number]</a> with the song \"[tape.track.title]\".")
+	log_and_message_admins("launched [src] <a href='byond://?_src_=holder;adminplayerobservefollow=\ref[src]'>#[serial_number]</a> with the song \"[tape.track.title]\".")
 
 	if(prob(break_chance))
 		break_act()

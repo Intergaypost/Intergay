@@ -32,7 +32,11 @@ GLOBAL_DATUM_INIT(designer_system, /datum/designer_system, new)
 // It calls our dear designer_system so it can be inserted on its designs list, and also get an unique ID.
 /datum/designer_system/proc/newDesign(var/datum/designer_unit/unit)
 	designs.Insert(designs.len +1, unit)
-	unit.id = designs.len -1 > 0 ? designs[designs.len -1].id +1 : 1
+	if(designs.len - 1 > 0)
+		var/datum/designer_unit/prev_unit = designs[designs.len - 1]
+		unit.id = prev_unit.id + 1
+	else
+		unit.id = 1
 
 // A DEBUG verb, more for admemeing than that to be honest.
 // Doesn't actually delete designs, it deletes their icons.

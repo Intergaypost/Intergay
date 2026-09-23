@@ -1,0 +1,4 @@
+MOVEMENT_SUBSYSTEM_DEF(spacedrift)
+	name = "Space Drift"
+	priority = FIRE_PRIORITY_SPACEDRIFT
+	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME

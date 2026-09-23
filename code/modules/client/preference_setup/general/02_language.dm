@@ -26,12 +26,31 @@
 		if(pref.alternate_languages.len)
 			for(var/i = 1 to pref.alternate_languages.len)
 				var/lang = pref.alternate_languages[i]
-				. += "- [lang] - <a href='?src=\ref[src];remove_language=[i]'>remove</a><br>"
+				. += "- [lang] - <a href='byond://?src=\ref[src];remove_language=[i]'>remove</a><br>"
 
 		if(pref.alternate_languages.len < S.num_alternate_languages)
-			. += "- <a href='?src=\ref[src];add_language=1'>add</a> ([S.num_alternate_languages - pref.alternate_languages.len] remaining)<br>"
+			. += "- <a href='byond://?src=\ref[src];add_language=1'>add</a> ([S.num_alternate_languages - pref.alternate_languages.len] remaining)<br>"
 	else
 		. += "- [pref.species] cannot choose secondary languages.<br>"
+
+/datum/category_item/player_setup_item/general/language/get_data(var/mob/user)
+	var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+	if(!S) S = all_species[SPECIES_HUMAN]
+	var/list/alt_langs = list()
+	if(pref.alternate_languages)
+		for(var/i = 1 to pref.alternate_languages.len)
+			alt_langs += list(list("name" = pref.alternate_languages[i], "index" = i))
+
+	return list(
+		"ref" = "\ref[src]",
+		"species_language" = S.language,
+		"species_default_language" = (S.default_language && S.default_language != S.language) ? S.default_language : null,
+		"num_alternate_languages" = S.num_alternate_languages,
+		"can_select_alt_languages" = (S.num_alternate_languages > 0) ? 1 : 0,
+		"alternate_languages" = alt_langs,
+		"remaining_languages" = max(0, S.num_alternate_languages - (pref.alternate_languages ? pref.alternate_languages.len : 0)),
+		"can_add" = ((pref.alternate_languages ? pref.alternate_languages.len : 0) < S.num_alternate_languages) ? 1 : 0
+	)
 
 /datum/category_item/player_setup_item/general/language/OnTopic(var/href,var/list/href_list, var/mob/user)
 	if(href_list["remove_language"])

@@ -154,7 +154,7 @@ var/list/ai_verbs_default = list(
 	add_language(LANGUAGE_GALCOM, 1)
 	add_language(LANGUAGE_EAL, 1)
 	add_language(LANGUAGE_SOL_COMMON, 1)
-	add_language(LANGUAGE_UNATHI, 1)
+	add_language(LANGUAGE_BIOSLAVE, 1)
 	add_language(LANGUAGE_SIIK_MAAS, 1)
 	add_language(LANGUAGE_SKRELLIAN, 1)
 	add_language(LANGUAGE_LUNAR, 1)

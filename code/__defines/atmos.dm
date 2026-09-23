@@ -2,6 +2,10 @@
 #define CELL_VOLUME        2500 // Liters in a cell.
 #define MOLES_CELLSTANDARD (ONE_ATMOSPHERE*CELL_VOLUME/(T20C*R_IDEAL_GAS_EQUATION)) // Moles in a 2.5 m^3 cell at 101.325 kPa and 20 C.
 
+#define TANK_MAX_RELEASE_PRESSURE     (3*ONE_ATMOSPHERE)
+#define TANK_DEFAULT_RELEASE_PRESSURE 24
+#define ADIABATIC_EXPONENT            0.667 // Actually adiabatic exponent - 1.
+
 #define O2STANDARD 0.21 // Percentage.
 #define N2STANDARD 0.79
 

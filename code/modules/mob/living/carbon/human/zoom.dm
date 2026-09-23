@@ -73,5 +73,3 @@ modules/mob/living/carbon/human/life.dm if you die, you will be zoomed out.
 			HM.SetFov(1)
 
 	return
-
-	return

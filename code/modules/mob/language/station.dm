@@ -116,3 +116,11 @@
 	syllables = list ("die", "en", "skei", "van", "son", "der", "aar", "ch", "op", "ruk", "aa", "be", "ne", "het",
  	"ek", "ras", "ver", "zan", "das", "waa", "geb", "vol", "lu", "min", "breh", "rus", "stv", "ee", "goe", "sk",
  	"la", "ver", "we", "ge", "luk", "an", "ar", "at", "es", "et", "bel", "du", "jaa", "ch", "kk", "gh", "ll", "uu", "wat")
+
+/datum/language/bioslave
+	name = LANGUAGE_BIOSLAVE
+	desc = "Кричащие звуки, что понятны лишь остальным био-рабам."
+	colour = "rough"
+	key = "2"
+	space_chance = "30"
+	syllables = list ("А", "ААА", "а", "ааа")

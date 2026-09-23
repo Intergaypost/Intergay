@@ -157,7 +157,7 @@
 			to_chat(user, SPAN_NOTICE("\The [src] already has \a [power_supply] loaded."))
 			return TRUE
 
-		if(!do_after(user, 5, A, can_move = TRUE))
+		if(!do_after(user, 5, A))
 			return TRUE
 
 		if(user.unEquip(A, src))

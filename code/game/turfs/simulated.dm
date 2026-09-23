@@ -121,16 +121,11 @@
 			slip_stun = 10
 
 		if(slip("the [floor_type] floor", slip_stun))
-			for(var/i = 1 to slip_dist)
-				step(src, dir)
-				sleep(1)
-
-/mob/proc/slip_handler(dir, dist, delay)
-	if (dist > 0)
-		addtimer(CALLBACK(src, PROC_REF(slip_handler), dir, dist - 1, delay), delay)
-	step(src, dir)
+			var/turf/target = get_ranged_target_turf(src, dir, slip_dist)
+			AddComponent(/datum/component/force_move, target, (floor_type == "slippery"))
 
 /mob/living/proc/HandleBloodTrail(turf/simulated/T)
+
 	return
 
 /mob/living/carbon/human/HandleBloodTrail(turf/simulated/T, atom/A)

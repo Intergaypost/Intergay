@@ -1,6 +1,6 @@
-#define FONT_SIZE "5pt"
-#define FONT_COLOR "#7f59bd"
-#define FONT_STYLE "Arial Black"
+#define STATUS_DISPLAY_FONT_SIZE "5pt"
+#define STATUS_DISPLAY_FONT_COLOR "#7f59bd"
+#define STATUS_DISPLAY_FONT_STYLE "Arial Black"
 #define SCROLL_SPEED 2
 
 // Status display
@@ -177,7 +177,7 @@
 	set_light(1.5, 1, COLOR_WHITE)
 
 /obj/machinery/status_display/proc/update_display(line1, line2)
-	var/new_text = {"<div style="font-size:[FONT_SIZE];color:[FONT_COLOR];font:'[FONT_STYLE]';text-align:center;" valign="top">[line1]<br>[line2]</div>"}
+	var/new_text = {"<div style="font-size:[STATUS_DISPLAY_FONT_SIZE];color:[STATUS_DISPLAY_FONT_COLOR];font:'[STATUS_DISPLAY_FONT_STYLE]';text-align:center;" valign="top">[line1]<br>[line2]</div>"}
 	if(maptext != new_text)
 		maptext = new_text
 	set_light(1.5, 1, COLOR_WHITE)
@@ -230,6 +230,7 @@
 			set_picture(signal.data["picture_state"])
 	update()
 
-#undef FONT_COLOR
-#undef FONT_STYLE
+#undef STATUS_DISPLAY_FONT_SIZE
+#undef STATUS_DISPLAY_FONT_COLOR
+#undef STATUS_DISPLAY_FONT_STYLE
 #undef SCROLL_SPEED

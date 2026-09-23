@@ -139,8 +139,23 @@ var/list/_client_preferences_by_type
 	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
 
 /datum/client_preference/show_typing_indicator/changed(var/mob/preference_mob, var/new_value)
-	if(new_value == GLOB.PREF_HIDE)
-		QDEL_NULL(preference_mob.typing_indicator)
+	if(preference_mob)
+		SStyping.update_preference(preference_mob.client, (new_value == GLOB.PREF_SHOW))
+
+/datum/client_preference/show_runechat
+	description = "Runechat"
+	key = "CHAT_RUNECHAT"
+	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
+
+/datum/client_preference/show_runechat_non_mobs
+	description = "Runechat (Non-mobs)"
+	key = "CHAT_RUNECHAT_NON_MOBS"
+	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
+
+/datum/client_preference/show_runechat_ghosts
+	description = "Runechat (Ghosts)"
+	key = "CHAT_RUNECHAT_GHOSTS"
+	options = list(GLOB.PREF_SHOW, GLOB.PREF_HIDE)
 
 /datum/client_preference/show_ooc
 	description ="OOC chat"
@@ -189,6 +204,16 @@ var/list/_client_preferences_by_type
 /datum/client_preference/fullscreen_mode/changed(mob/preference_mob, new_value)
 	if(preference_mob.client)
 		preference_mob.client.toggle_fullscreen(new_value == GLOB.PREF_YES)
+
+/datum/client_preference/examine_cursor
+	description = "Examine Cursor (Shift-hover)"
+	key = "SHOW_EXAMINE_CURSOR"
+	options = list(GLOB.PREF_YES, GLOB.PREF_NO)
+
+/datum/client_preference/examine_cursor/changed(var/mob/preference_mob, var/new_value)
+	if(preference_mob)
+		preference_mob.update_mouse_pointer()
+
 
 /datum/client_preference/autohiss
 	description = "Autohiss"

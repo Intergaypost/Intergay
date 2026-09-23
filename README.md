@@ -1,25 +1,25 @@
 # Intergay
 
-[This project is developement.]
+[Этот проект находится в разработке.]
 ---
  [![forinfinityandbyond](https://user-images.githubusercontent.com/5211576/29499758-4efff304-85e6-11e7-8267-62919c3688a9.gif)](https://www.reddit.com/r/SS13/comments/5oplxp/what_is_the_main_problem_with_byond_as_an_engine/dclbu1a)
 
-### LICENSE
-The code for Baystation12 is licensed under the [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl.html), which can be found in full in LICENSE.
+### ЛИЦЕНЗИЯ
+Код для Baystation12 лицензирован под [GNU Affero General Public License v3](http://www.gnu.org/licenses/agpl.html), полный текст которой можно найти в LICENSE.
 
-Code with a git authorship date prior to `1420675200 +0000` (2015/01/08 00:00) is licensed under the GNU General Public License version 3, which can be found in full in LICENSE-GPL3.txt.
+Код с датой авторства в git до `1420675200 +0000` (2015/01/08 00:00) лицензирован под GNU General Public License версии 3, полный текст которой можно найти в LICENSE-GPL3.txt.
 
-All code where the authorship dates are not prior to `1420675200 +0000` is assumed to be licensed under AGPL v3, if you wish to license under GPL v3 please make this clear in the commit message and any added files.
+Весь код, у которого даты авторства не предшествуют `1420675200 +0000`, считается лицензированным под AGPL v3. Если вы хотите лицензировать под GPL v3, пожалуйста, явно укажите это в сообщении коммита и любых добавленных файлах.
 
-If you wish to develop and host this codebase in a closed source manner you may use all commits prior to `1420675200 +0000`, which are licensed under GPL v3.  The major change here is that if you host a server using any code licensed under AGPLv3 you are required to provide full source code for your servers users as well including addons and modifications you have made.
+Если вы хотите разрабатывать и размещать эту кодовую базу с закрытым исходным кодом, вы можете использовать все коммиты до `1420675200 +0000`, которые лицензированы под GPL v3. Основное изменение здесь в том, что если вы размещаете сервер, использующий любой код под AGPLv3, вы обязаны предоставить полный исходный код пользователям вашего сервера, включая дополнения и внесённые вами изменения.
 
-See [here](https://www.gnu.org/licenses/why-affero-gpl.html) for more information.
+См. [здесь](https://www.gnu.org/licenses/why-affero-gpl.html) для получения дополнительной информации.
 
-tgui clientside is licensed as a subproject under the MIT license.
-Font Awesome font files, used by tgui, are licensed under the SIL Open Font License v1.1
-tgui assets are licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+Клиентская часть tgui лицензирована как подпроект под лицензией MIT.
+Файлы шрифта Font Awesome, используемые tgui, лицензированы под SIL Open Font License v1.1
+Ресурсы tgui лицензированы под [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
 
-See tgui/LICENSE.md for the MIT license.
-See tgui/assets/fonts/SIL-OFL-1.1-LICENSE.md for the SIL Open Font License.
+См. tgui/LICENSE.md для лицензии MIT.
+См. tgui/assets/fonts/SIL-OFL-1.1-LICENSE.md для SIL Open Font License.
 
-All assets including icons and sound are under a [Creative Commons 3.0 BY-SA license](http://creativecommons.org/licenses/by-sa/3.0/) unless otherwise indicated.
+Все ресурсы, включая иконки и звуки, находятся под [лицензией Creative Commons 3.0 BY-SA](http://creativecommons.org/licenses/by-sa/3.0/), если не указано иное.

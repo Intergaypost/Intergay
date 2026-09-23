@@ -17,7 +17,11 @@
 /proc/sanitize_inlist(value, list/List, default)
 	if(value in List)	return value
 	if(default)			return default
-	if(List && List.len)return List[1]
+/proc/sanitize_islist(value, default)
+	if(islist(value) && length(value))
+		return value
+	if(default)
+		return default
 
 // Checks if the given input is a valid list index; returns true/false and doesn't change anything.
 /proc/is_valid_index(input, list/given_list)

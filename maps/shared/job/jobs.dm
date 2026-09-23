@@ -4,10 +4,10 @@
 						//datum/job/countess,
 						//datum/job/hop,
 						//datum/job/supreme_arbiter,
-						//datum/job/arbiter,
-						///datum/job/medassist
+						///datum/job/medassist,
 						/datum/job/hos,
-						//datum/job/officer,
+						/datum/job/officer,
+						/datum/job/arbiter,
 						//datum/job/detective,
 						/datum/job/cmo,
 						/datum/job/doctor,
@@ -22,9 +22,9 @@
 						//datum/job/hydro,
 						/datum/job/janitor,
 						/datum/job/engineer,
-						/datum/job/chaplain,
+						//datum/job/chaplain,
 						//datum/job/jester
-						///datum/job/assistant,
+						/datum/job/civilian,
 						///datum/job/cadet
 						///datum/job/ouvrier
 						///datum/job/jr_upkeep
@@ -229,9 +229,29 @@
 		H.generate_stats(STAT_DX)
 		H.generate_skills(list("crafting","melee","cleaning","mining"))
 
+/datum/job/civilian
+	selection_color = "#515151"
+	title = "Inhabitant"
+	supervisors = "none"
+	minimal_player_age = 14
+	economic_modifier = 1
+	ideal_character_age = 21
+	alt_titles = null
+	social_class = SOCIAL_CLASS_MIN
+	total_positions = 0
+	department_flag = CIV
+	spawn_positions = 1
+	access = list(access_maint_tunnels)
+
+	equip(var/mob/living/carbon/human/H)
+		..()
+		//H.add_stats(rand(9,11), rand(9,11), rand(7,10))
+		H.newgeneratestats(12,16,8,13,4,9,9,16)
+		H.generate_skills(list("crafting","cleaning"))
+
 /datum/job/captain
 	title = "Captain"
-	supervisors = "your own wits and TetraCorp"
+	supervisors = "your own wits and New Order League"
 	minimal_player_age = 41
 	economic_modifier = 10
 	ideal_character_age = 65
@@ -282,7 +302,7 @@
 	outfit_type = /decl/hierarchy/outfit/job/science/superviseur
 	social_class = SOCIAL_CLASS_HIGH
 	department_flag = SCI
-	rankprefix  = "Dr."
+	rankprefix  = "Prof."
 	access = list(access_medical, access_medical_equip, access_morgue, access_genetics, access_heads, access_tox,
 			access_chemistry, access_virology, access_cmo, access_surgery, access_RC_announce,
 			access_keycard_auth, access_sec_doors, access_psychiatrist, access_eva, access_maint_tunnels, access_external_airlocks,
@@ -303,7 +323,7 @@
 		..()
 		//H.add_stats(rand(5,7), rand(5,8), rand(12,15))
 		H.newgeneratestats(7,12,8,13,12,17,6,11)
-		H.generate_skills(list("science","medical", "crafting"))
+		H.generate_skills(list("science","medical","crafting"))
 
 /datum/job/scientist
 	selection_color = "#006BCA"
@@ -315,7 +335,7 @@
 	total_positions = 1
 	spawn_positions = 3
 	department_flag = SCI
-	rankprefix  = "Dr."
+	rankprefix  = "Prof."
 	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_xenoarch, access_robotics)
 	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenoarch, access_robotics)
 
@@ -326,7 +346,7 @@
 		..()
 		//H.add_stats(rand(5,7), rand(5,8), rand(10,14))
 		H.newgeneratestats(8,13,7,12,11,15,8,12)
-		H.generate_skills(list("science","medical", "crafting"))
+		H.generate_skills(list("science","medical","crafting"))
 
 /datum/job/doctor
 	selection_color = "#633d63"
@@ -350,7 +370,7 @@
 	H.generate_skills(list("medical","cleaning", "surgery"))
 
 /datum/job/cmo
-	title = "CMO"
+	title = "Head Physician"
 	supervisors = "the Captain"
 	selection_color = "#382238"
 	department = "Medical"
@@ -358,6 +378,7 @@
 
 	total_positions = 1
 	spawn_positions = 1
+	rankprefix  = "Dr."
 	outfit_type = /decl/hierarchy/outfit/job/medical/cmo
 	access = list(access_medical, access_medical_equip, access_morgue, access_genetics, access_heads, access_tox, access_chemistry, access_virology, access_cmo, access_surgery, access_maint_tunnels)
 	minimal_access = list(access_medical, access_medical_equip, access_morgue, access_genetics, access_heads, access_tox, access_chemistry, access_virology, access_cmo, access_surgery, access_maint_tunnels)
@@ -470,7 +491,7 @@
 	spawn_positions = 3
 	//alt_titles = null
 	department_flag = ENG
-	rankprefix  = "Maintainer"
+	rankprefix  = "Spec."
 	outfit_type = /decl/hierarchy/outfit/job/dreyfus/inge/inge
 	access = list(access_eva, access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction, access_atmospherics, access_emergency_storage, access_tcomsat)
 	minimal_access = list(access_eva, access_engine, access_engine_equip, access_tech_storage, access_maint_tunnels, access_external_airlocks, access_construction, access_atmospherics, access_emergency_storage, access_tcomsat)
@@ -678,11 +699,12 @@
 		//H.add_stats(rand(9,14), rand(8,12), rand(12,16))
 		H.generate_stats(STAT_ST)
 		H.generate_skills(list("melee","ranged"))
+*/
 
 /datum/job/arbiter
-	title = "Inquisitor"
+	title = "Arbiter"
 	department = "Civilian"
-	supervisors = "the Supreme Arbiter and Verina"
+	supervisors = "president himself"
 	department_flag = CRH
 	total_positions = 2
 	spawn_positions = 2
@@ -690,7 +712,7 @@
 	selection_color = "#6161aa"
 	access = list(access_maint_tunnels, access_chapel_office)
 	minimal_access = list(access_maint_tunnels, access_chapel_office)
-	outfit_type = /decl/hierarchy/outfit/job/arbiter
+	outfit_type = /decl/hierarchy/outfit/job/security/arbiter
 	social_class = SOCIAL_CLASS_HIGH
 
 	equip(var/mob/living/carbon/human/H)//Peacekeeper stats.
@@ -698,9 +720,8 @@
 		if(!H.religion_is_legal())//So that they can't be heretics.
 			H.religion = LEGAL_RELIGION
 		//H.add_stats(rand(11,16), rand(10,14), rand(7,10))
-		H.generate_stats(STAT_ST)
-		H.generate_skills(list("melee","ranged"))
-*/
+		H.newgeneratestats(13,17,9,12,6,14,9,16)
+		H.generate_skills(list("melee"))
 
 /datum/job/medassist
 	selection_color = "#633d63"

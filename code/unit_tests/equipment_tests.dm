@@ -1,7 +1,3 @@
-#define SUCCESS 1
-#define FAILURE 0
-
-
 datum/unit_test/vision_glasses/
 	name = "EQUIPMENT: Vision Template"
 	var/mob/living/carbon/human/H = null
@@ -19,7 +15,7 @@ datum/unit_test/vision_glasses/start_test()
 			fail(test["msg"])
 			async = 0
 
-			return 0
+			return
 
 		H = locate(test["mobref"])
 
@@ -85,6 +81,3 @@ datum/unit_test/storage_capacity_test/start_test()
 
 	// TODO: re-implement
 	return bad_tests
-
-#undef SUCCESS
-#undef FAILURE

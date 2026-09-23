@@ -39,7 +39,8 @@
 
 /obj/old_god_shrine/attackby(obj/item/W as obj, var/mob/living/user)
 	//If you attack it with your holy_item, it just disapears
-	if(W.type == GLOB.all_religions[shrine_religion.name].holy_item.type) //LMAO THIS WORKS.
+	var/datum/religion/rel = GLOB.all_religions[shrine_religion.name]
+	if(W.type == rel.holy_item) //LMAO THIS WORKS.
 		visible_message("<span class='warning'><b>[user] waves their [W] and the shrine dissolves into mist!</b></span>")
 		playsound(loc, pick(GLOB.rustle_sound), 50, 1, -1)
 		shrine_religion.favor += 30
@@ -56,7 +57,7 @@
 					playsound(loc, I.hitsound, 50, 1, -1)
 					take_damage(W.force,user)
 
-/obj/old_god_shrine/proc/take_damage(var/force, var/mob/living/user/attacker)
+/obj/old_god_shrine/proc/take_damage(var/force, var/mob/living/attacker)
 	playsound(src.loc, pick(sounds), 100, 1)
 	//prob(25) gives an average of 1-2 hits
 	if (force >= toughness && prob(75))
@@ -78,7 +79,8 @@
 	if(M.religion == LEGAL_RELIGION)
 		return
 	for(var/S in GLOB.all_spells)
-		if(findtext(msg,GLOB.all_spells[S].phrase))
+		var/datum/old_god_spell/spell = GLOB.all_spells[S]
+		if(findtext(msg, spell.phrase))
 			var/datum/old_god_spell/selected_spell = GLOB.all_spells[S]
 			var/list/spell_components = list()
 			for(var/direction in selected_spell.requirments)

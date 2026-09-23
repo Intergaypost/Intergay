@@ -96,12 +96,13 @@ SUBSYSTEM_DEF(overlays)
 	else { \
 		appearance_bro.appearance = origin; \
 		if (!ispath(origin)) { \
-			appearance_bro.dir = origin.dir; \
+			var/atom/A_or_I = origin; \
+			appearance_bro.dir = A_or_I.dir; \
 		} \
 		target = appearance_bro.appearance; \
 	}
 
-/atom/proc/build_appearance_list(atom/new_overlays)
+/atom/proc/build_appearance_list(new_overlays)
 	var/static/image/appearance_bro = new
 	if (islist(new_overlays))
 		listclearnulls(new_overlays)

@@ -1,3 +1,5 @@
+#define SIGNAL_HANDLER
+
 #define SEND_SIGNAL(target, sigtype, arguments...) ( !target.comp_lookup || !target.comp_lookup[sigtype] ? null : target._SendSignal(sigtype, list(target, ##arguments)) )
 
 #define SEND_GLOBAL_SIGNAL(sigtype, arguments...) ( SEND_SIGNAL(SSdcs, sigtype, ##arguments) )
@@ -99,6 +101,8 @@
 	#define COMPONENT_NO_VISIBLE_MESSAGE 1 //exactly what's said on the tin.
 
 // /atom/movable signals
+#define COMSIG_MOVABLE_PRE_MOVE "movable_pre_move"				//from base of atom/movable/Moved(): (/atom)
+	#define COMPONENT_MOVABLE_BLOCK_PRE_MOVE (1<<0)
 #define COMSIG_MOVABLE_MOVED "movable_moved"					//from base of atom/movable/Moved(): (/atom, dir)
 #define COMSIG_MOVABLE_CROSS "movable_cross"					//from base of atom/movable/Cross(): (/atom/movable)
 #define COMSIG_MOVABLE_CROSSED "movable_crossed"                //from base of atom/movable/Crossed(): (/atom/movable)
@@ -106,6 +110,8 @@
 	#define COMPONENT_MOVABLE_BLOCK_UNCROSS 1
 #define COMSIG_MOVABLE_UNCROSSED "movable_uncrossed"            //from base of atom/movable/Uncrossed(): (/atom/movable)
 #define COMSIG_MOVABLE_BUMP "movable_bump"						//from base of atom/movable/Bump(): (/atom)
+#define COMSIG_MOVABLE_NEWTONIAN_MOVE "movable_newtonian_move"	//from base of atom/movable/newtonian_move(): (inertia_direction)
+	#define COMPONENT_MOVABLE_NEWTONIAN_BLOCK (1<<0)
 #define COMSIG_MOVABLE_IMPACT "movable_impact"					//from base of atom/movable/throw_impact(): (/atom/hit_atom, /datum/thrownthing/throwingdatum)
 #define COMSIG_MOVABLE_IMPACT_ZONE "item_impact_zone"			//from base of mob/living/hitby(): (mob/living/target, hit_zone)
 #define COMSIG_MOVABLE_BUCKLE "buckle"							//from base of atom/movable/buckle_mob(): (mob, force)
@@ -121,8 +127,14 @@
 
 // /mob signals
 #define COMSIG_MOB_DEATH "mob_death"							//from base of mob/death(): (gibbed)
+#define COMSIG_MOB_STATCHANGE "mob_statchange"					//from base of mob/living/Life() or death(): (new_stat, old_stat)
+#define COMSIG_MOB_CLIENT_PRE_MOVE "mob_client_pre_move"		//from base of client/Move()
+	#define COMSIG_MOB_CLIENT_BLOCK_PRE_MOVE COMPONENT_MOVABLE_BLOCK_PRE_MOVE
+#define COMSIG_MOB_CLIENT_PRE_LIVING_MOVE "mob_client_pre_living_move" //from base of client/Move()
+	#define COMSIG_MOB_CLIENT_BLOCK_PRE_LIVING_MOVE COMPONENT_MOVABLE_BLOCK_PRE_MOVE
 #define COMSIG_MOB_CLICKON "mob_clickon"						//from base of mob/clickon(): (atom/A, params)
 	#define COMSIG_MOB_CANCEL_CLICKON 1
+
 #define COMSIG_MOB_ALLOWED "mob_allowed"						//from base of obj/allowed(mob/M): (/obj) returns bool, if TRUE the mob has id access to the obj
 #define COMSIG_MOB_RECEIVE_MAGIC "mob_receive_magic"			//from base of mob/anti_magic_check(): (mob/user, magic, holy, major, self, protection_sources)
 	#define COMPONENT_BLOCK_MAGIC 1
@@ -230,5 +242,16 @@
 #define COMSIG_ACTION_TRIGGER "action_trigger"						//from base of datum/action/proc/Trigger(): (datum/action)
 	#define COMPONENT_ACTION_BLOCK_TRIGGER 1
 
+// /datum/move_loop signals
+#define COMSIG_MOVELOOP_START "moveloop_start"						//from /datum/move_loop/start_loop(): ()
+#define COMSIG_MOVELOOP_STOP "moveloop_stop"						//from /datum/move_loop/stop_loop(): ()
+#define COMSIG_MOVELOOP_PREPROCESS_CHECK "moveloop_preprocess_check"//from /datum/move_loop/process(): ()
+	#define MOVELOOP_SKIP_STEP (1<<0)
+#define COMSIG_MOVELOOP_POSTPROCESS "moveloop_postprocess"			//from /datum/move_loop/process(): (succeeded, visual_delay)
+#define COMSIG_MOVELOOP_JPS_REPATH "moveloop_jps_repath"			//from /datum/move_loop/has_target/jps/recalculate_path(): ()
 
-#define REDIRECT_TRANSFER_WITH_TURF 1
+// /atom pressure signals
+#define COMSIG_ATOM_PRE_PRESSURE_PUSH "atom_pre_pressure_push"		//from base of atom/experience_pressure_difference(): (pressure_difference, direction, pressure_resistance_prob_delta)
+	#define COMSIG_ATOM_BLOCKS_PRESSURE (1<<0)
+
+#define REDIRECT_TRANSFER_WITH_TURF 1

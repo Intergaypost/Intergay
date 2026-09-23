@@ -166,8 +166,9 @@
 	interact(user)
 
 /obj/machinery/media/jukebox/proc/explode()
-	walk_to(src, 0)
+	SSmove_manager.stop_looping(src)
 	src.visible_message(SPAN_DANGER("\the [src] blows apart!"), 1)
+
 
 	explosion(get_turf(src), 0, 0, 1, rand(1,2), 1)
 

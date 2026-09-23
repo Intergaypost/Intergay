@@ -1,7 +1,7 @@
 /datum/gear_tweak/proc/get_contents(var/metadata)
 	return
 
-/datum/gear_tweak/proc/get_metadata(var/user, var/metadata)
+/datum/gear_tweak/proc/get_metadata(var/user, var/metadata, var/title = CHARACTER_PREFERENCE_INPUT_TITLE)
 	return
 
 /datum/gear_tweak/proc/get_default()
@@ -96,8 +96,8 @@
 /datum/gear_tweak/path/get_default()
 	return valid_paths[1]
 
-/datum/gear_tweak/path/get_metadata(var/user, var/metadata)
-	return input(user, "Choose a type.", CHARACTER_PREFERENCE_INPUT_TITLE, metadata) as null|anything in valid_paths
+/datum/gear_tweak/path/get_metadata(var/user, var/metadata, var/title = CHARACTER_PREFERENCE_INPUT_TITLE)
+	return input(user, "Choose a type.", title, metadata) as null|anything in valid_paths
 
 /datum/gear_tweak/path/tweak_gear_data(var/metadata, var/datum/gear_data/gear_data)
 	if(!(metadata in valid_paths))
@@ -129,12 +129,12 @@
 	for(var/i = 1 to valid_contents.len)
 		. += "Random"
 
-/datum/gear_tweak/contents/get_metadata(var/user, var/list/metadata)
+/datum/gear_tweak/contents/get_metadata(var/user, var/list/metadata, var/title = CHARACTER_PREFERENCE_INPUT_TITLE)
 	. = list()
 	for(var/i = metadata.len to (valid_contents.len - 1))
 		metadata += "Random"
 	for(var/i = 1 to valid_contents.len)
-		var/entry = input(user, "Choose an entry.", CHARACTER_PREFERENCE_INPUT_TITLE, metadata[i]) as null|anything in (valid_contents[i] + list("Random", "None"))
+		var/entry = input(user, "Choose an entry.", title, metadata[i]) as null|anything in (valid_contents[i] + list("Random", "None"))
 		if(entry)
 			. += entry
 		else
@@ -175,8 +175,8 @@
 /datum/gear_tweak/reagents/get_default()
 	return "Random"
 
-/datum/gear_tweak/reagents/get_metadata(var/user, var/list/metadata)
-	. = input(user, "Choose an entry.", CHARACTER_PREFERENCE_INPUT_TITLE, metadata) as null|anything in (valid_reagents + list("Random", "None"))
+/datum/gear_tweak/reagents/get_metadata(var/user, var/list/metadata, var/title = CHARACTER_PREFERENCE_INPUT_TITLE)
+	. = input(user, "Choose an entry.", title, metadata) as null|anything in (valid_reagents + list("Random", "None"))
 	if(!.)
 		return metadata
 
@@ -223,7 +223,7 @@
 		names += initial(O.name)
 	return "[english_list(names, and_text = ", ")]"
 
-/datum/gear_tweak/tablet/get_metadata(var/user, var/metadata)
+/datum/gear_tweak/tablet/get_metadata(var/user, var/metadata, var/title = CHARACTER_PREFERENCE_INPUT_TITLE)
 	. = list()
 
 	var/list/names = list()
@@ -235,7 +235,7 @@
 		else
 			names["None"] = counter++
 
-	var/entry = input(user, "Choose a processor.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	var/entry = input(user, "Choose a processor.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -247,7 +247,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a battery.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a battery.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -259,7 +259,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a hard drive.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a hard drive.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -271,7 +271,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a network card.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a network card.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -283,7 +283,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a nanoprinter.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a nanoprinter.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -295,7 +295,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a card slot.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a card slot.", title) in names
 	. += names[entry]
 
 	names = list()
@@ -307,7 +307,7 @@
 		else
 			names["None"] = counter++
 
-	entry = input(user, "Choose a tesla link.", CHARACTER_PREFERENCE_INPUT_TITLE) in names
+	entry = input(user, "Choose a tesla link.", title) in names
 	. += names[entry]
 
 /datum/gear_tweak/tablet/get_default()

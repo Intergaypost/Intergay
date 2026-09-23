@@ -46,9 +46,10 @@
 		to_chat(user, "<span class='danger'>You hear a sinister voice, whispering unspeakable acts in your mind...promising untold profits.</span>")
 		var/sound = "sound/effects/badmood[pick(1,4)].ogg"
 		playsound(get_turf(user), sound,50,1)
-		GLOB.all_religions[GREED].bloodgold = TRUE
+		var/datum/religion/greed/R = GLOB.all_religions[GREED]
+		if(R) R.bloodgold = TRUE
 		spawn(600) //30 seconds
-			GLOB.all_religions[GREED].bloodgold = FALSE
+			if(R) R.bloodgold = FALSE
 
 /obj/old_god_shrine/greed_shrine
 	name = "gold-plated shrine"

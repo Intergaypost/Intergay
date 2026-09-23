@@ -28,6 +28,7 @@
 	var/paused_tick_usage	//total tick_usage of all of our runs while pausing this run
 	var/ticks = 1			//how many ticks does this ss take to run on avg.
 	var/times_fired = 0		//number of times we have called fire()
+	var/postponed_fires = 0	//how many fires have we been requested to postpone
 	var/queued_time = 0		//time we entered the queue, (for timing and priority reasons)
 	var/queued_priority 	//we keep a running total to make the math easier, if priority changes mid-fire that would break our running total, so we store it here
 	//linked list stuff for the queue
@@ -78,9 +79,35 @@
 	dequeue()
 	can_fire = 0
 	flags |= SS_NO_FIRE
-	Master.subsystems -= src
+	if (Master)
+		Master.subsystems -= src
 	..()
 	return QDEL_HINT_HARDDEL_NOW
+
+
+/** Update next_fire for the next run.
+ *  reset_time (bool) - Ignore things that would normally alter the next fire, like tick_overrun, and last_fire. (also resets postpone)
+ */
+/datum/controller/subsystem/proc/update_nextfire(reset_time = FALSE)
+	var/queue_node_flags = flags
+
+	if (reset_time)
+		postponed_fires = 0
+		if (queue_node_flags & SS_TICKER)
+			next_fire = world.time + (world.tick_lag * wait)
+		else
+			next_fire = world.time + wait
+		return
+
+	if (queue_node_flags & SS_TICKER)
+		next_fire = world.time + (world.tick_lag * wait)
+	else if (queue_node_flags & SS_POST_FIRE_TIMING)
+		next_fire = world.time + wait + (world.tick_lag * (tick_overrun/100))
+	else if (queue_node_flags & SS_KEEP_TIMING)
+		next_fire += wait
+	else
+		next_fire = queued_time + wait + (world.tick_lag * (tick_overrun/100))
+
 
 
 //Queue it to run.
@@ -98,7 +125,7 @@
 		queue_node_flags = queue_node.flags
 
 		if (queue_node_flags & SS_TICKER)
-			if (!(SS_flags & SS_TICKER))
+			if ((SS_flags & (SS_TICKER|SS_BACKGROUND)) != SS_TICKER)
 				continue
 			if (queue_node_priority < SS_priority)
 				break
@@ -149,9 +176,9 @@
 		queue_next.queue_prev = queue_prev
 	if (queue_prev)
 		queue_prev.queue_next = queue_next
-	if (src == Master.queue_tail)
+	if (Master && (src == Master.queue_tail))
 		Master.queue_tail = queue_prev
-	if (src == Master.queue_head)
+	if (Master && (src == Master.queue_head))
 		Master.queue_head = queue_next
 	queued_time = 0
 	if (state == SS_QUEUED)
@@ -252,11 +279,10 @@
 		if (SS_IDLE)
 			. = "  "
 
-//could be used to postpone a costly subsystem for (default one) var/cycles, cycles
-//for instance, during cpu intensive operations like explosions
+/// Causes the next "cycle" fires to be missed. Effect is accumulative but can reset by calling update_nextfire(reset_time = TRUE)
 /datum/controller/subsystem/proc/postpone(cycles = 1)
-	if(next_fire - world.time < wait)
-		next_fire += (wait*cycles)
+	if (can_fire && cycles >= 1)
+		postponed_fires += cycles
 
 //usually called via datum/controller/subsystem/New() when replacing a subsystem (i.e. due to a recurring crash)
 //should attempt to salvage what it can from the old instance of subsystem
@@ -269,7 +295,7 @@
 // Admin-enables this subsystem.
 /datum/controller/subsystem/proc/enable()
 	if (!can_fire)
-		next_fire = world.time + wait
+		update_nextfire(reset_time = TRUE)
 		can_fire = TRUE
 
 /datum/controller/subsystem/VV_static()
@@ -296,4 +322,4 @@
 	if (suspended)
 		suspended = FALSE
 		if (can_fire)
-			next_fire = world.time + wait
+			update_nextfire(reset_time = TRUE)

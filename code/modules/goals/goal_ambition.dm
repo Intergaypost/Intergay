@@ -13,5 +13,5 @@
 /datum/goal/ambition/get_success_string()
 	return ""
 
-/datum/goal/ambition/summarize(var/show_success = FALSE)
-	. = SPAN_DANGER(..(show_success))
+/datum/goal/ambition/summarize(var/show_success = FALSE, var/allow_modification = FALSE, var/datum/admins/admin, var/position = 1)
+	. = SPAN_DANGER(..(show_success, allow_modification, admin, position))

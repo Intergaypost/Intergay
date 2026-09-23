@@ -1,15 +1,26 @@
-/client/verb/ooc(message as text)
+/client/verb/ooc(message = null as text|null)
 	set name = "OOC"
 	set category = "OOC"
 
+	if(isnull(message))
+		message = input(src, "", "OOC") as text|null
+		if(isnull(message))
+			return
+
 	sanitize_and_communicate(/decl/communication_channel/ooc, src, message)
 
-/client/verb/looc(message as text)
+/client/verb/looc(message = null as text|null)
 	set name = "LOOC"
 	set desc = "Local OOC, seen only by those in view. Remember: Just because you see someone that doesn't mean they see you."
 	set category = "OOC"
 
+	if(isnull(message))
+		message = input(src, "", "LOOC") as text|null
+		if(isnull(message))
+			return
+
 	sanitize_and_communicate(/decl/communication_channel/ooc/looc, src, message)
+
 
 /client/verb/fix_chat()
 	set name = "Fix Chat"

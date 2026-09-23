@@ -2,7 +2,7 @@
 #define LANGUAGE_GALCOM "Interpostian"
 #define LANGUAGE_EAL "Encoded Audio Language"
 #define LANGUAGE_SOL_COMMON "Sol Common"
-#define LANGUAGE_UNATHI "Sinta'unathi"
+#define LANGUAGE_BIOSLAVE "Screecher"
 #define LANGUAGE_SIIK_MAAS "Siik'maas"
 #define LANGUAGE_SIIK_TAJR "Siik'tajr"
 #define LANGUAGE_SKRELLIAN "Skrellian"
@@ -18,6 +18,7 @@
 #define LANGUAGE_BOGANI "Bogani"
 #define LANGUAGE_SOULBREAKER "Space Muslim"
 #define LANGUAGE_OLDWAYS "Old Ways"
+
 
 // Language flags.
 #define WHITELISTED  1   // Language is available if the speaker is whitelisted.

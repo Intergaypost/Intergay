@@ -1,6 +1,6 @@
 datum/preferences
 	var/real_name						//our character's name
-	var/be_random_name = 1				//whether we are a random name every round
+	var/be_random_name = 0				//whether we are a random name every round
 	var/gender = MALE					//gender of character (well duh)
 	var/age = 30						//age of character
 	var/spawnpoint = "Cryogenic Storage" 			//where this character will spawn (0-2).
@@ -44,16 +44,32 @@ datum/preferences
 
 /datum/category_item/player_setup_item/general/basic/content()
 	. = list()
-	. += "<b>Gender:</b> <a href='?src=\ref[src];gender=1'><b>[pref.gender == MALE ? "Male" : "Female"]</b></a><br>"
-	. += "<b>Age:</b> <a href='?src=\ref[src];age=1'>[pref.age]</a><br>"
-	//. += "<b>Spawn Point</b>: <a href='?src=\ref[src];spawnpoint=1'>[pref.spawnpoint]</a><br>"
+	. += "<b>Gender:</b> <a href='byond://?src=\ref[src];gender=1'><b>[pref.gender == MALE ? "Male" : "Female"]</b></a><br>"
+	. += "<b>Age:</b> <a href='byond://?src=\ref[src];age=1'>[pref.age]</a><br>"
+	//. += "<b>Spawn Point</b>: <a href='byond://?src=\ref[src];spawnpoint=1'>[pref.spawnpoint]</a><br>"
 	. += "<b>RELIGION</b> "
-	. += "<a href='?src=\ref[src];religion=1'>[pref.religion]</a><br/>"
+	. += "<a href='byond://?src=\ref[src];religion=1'>[pref.religion]</a><br/>"
 	//. += "<b>Join Families</b> "
-	//. += "<a href='?src=\ref[src];family=1'>[pref.family ? "Yes" : "No"]</a><br/>"
+	//. += "<a href='byond://?src=\ref[src];family=1'>[pref.family ? "Yes" : "No"]</a><br/>"
 	//if(config.allow_Metadata)
-		//. += "<b>OOC Notes:</b> <a href='?src=\ref[src];metadata=1'> Edit </a><br>"
+		//. += "<b>OOC Notes:</b> <a href='byond://?src=\ref[src];metadata=1'> Edit </a><br>"
 	. = jointext(.,null)
+
+/datum/category_item/player_setup_item/general/basic/get_data(var/mob/user)
+	var/datum/species/S = all_species[pref.species ? pref.species : SPECIES_HUMAN]
+	if(!S) S = all_species[SPECIES_HUMAN]
+	return list(
+		"ref" = "\ref[src]",
+		"real_name" = pref.real_name,
+		"be_random_name" = pref.be_random_name ? 1 : 0,
+		"gender" = pref.gender,
+		"gender_text" = (pref.gender == MALE ? "Male" : (pref.gender == FEMALE ? "Female" : pref.gender)),
+		"age" = pref.age,
+		"min_age" = S.min_age,
+		"max_age" = S.max_age,
+		"religion" = pref.religion,
+		"spawnpoint" = pref.spawnpoint
+	)
 
 /datum/category_item/player_setup_item/general/basic/OnTopic(var/href,var/list/href_list, var/mob/user)
 	var/datum/species/S = all_species[pref.species]
@@ -91,7 +107,7 @@ datum/preferences
 	else if(href_list["age"])
 		var/new_age = input(user, "Choose your character's age:\n([S.min_age]-[S.max_age])", CHARACTER_PREFERENCE_INPUT_TITLE, pref.age) as num|null
 		if(new_age && CanUseTopic(user))
-			pref.age = max(min(round(text2num(new_age)), S.max_age), S.min_age)
+			pref.age = sanitize_integer(new_age, S.min_age, S.max_age, pref.age)
 			return TOPIC_REFRESH
 
 	else if(href_list["spawnpoint"])
@@ -115,7 +131,7 @@ datum/preferences
 		return TOPIC_REFRESH
 
 	else if(href_list["metadata"])
-		var/new_metadata = sanitize(input(user, "Enter any information you'd like others to see, such as Roleplay-preferences:", "Game Preference" , pref.metadata)) as message|null
+		var/new_metadata = sanitize(input(user, "Enter any information you'd like others to see, such as Roleplay-preferences:", "Game Preference" , pref.metadata) as message|null)
 		if(new_metadata && CanUseTopic(user))
 			pref.metadata = new_metadata
 			return TOPIC_REFRESH

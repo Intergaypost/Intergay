@@ -359,19 +359,18 @@
 	processing()
 
 /obj/structure/vent_gas/proc/processing()
-	INITIALIZE
-	sleep(20)
-	spawn(45)
-		playsound(src.loc, 'sound/machines/loop_vent2.ogg', 10, 0, 3)
-	for(var/i = 0; 6 > i; i++)
-		var/obj/effect/gas_particle/O = new(src.loc)
-		animate(O, pixel_y = rand(50, 98), time=rand(14,20))
-		sleep(5)
-		spawn(20)
-			animate(O, alpha = 0, time = 20)
+	while(TRUE)
+		sleep(20)
+		spawn(45)
+			playsound(src.loc, 'sound/machines/loop_vent2.ogg', 10, 0, 3)
+		for(var/i = 0; 6 > i; i++)
+			var/obj/effect/gas_particle/O = new(src.loc)
+			animate(O, pixel_y = rand(50, 98), time=rand(14,20))
+			sleep(5)
 			spawn(20)
-				qdel(O)
-	goto INITIALIZE
+				animate(O, alpha = 0, time = 20)
+				spawn(20)
+					qdel(O)
 
 /obj/effect/gas_particle
 	name = "gas particles"

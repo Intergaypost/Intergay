@@ -60,8 +60,6 @@ GLOBAL_VAR_INIT(arrest_security_status, "Arrest")
 	// Employment record
 	set_emplRecord((H && H.gen_record && !jobban_isbanned(H, "Records") ? H.gen_record : "No record supplied"))
 	set_homeSystem(H ? H.home_system : "Unset")
-	set_citizenship(H ? H.citizenship : "Unset")
-	set_faction(H ? H.personal_faction : "Unset")
 	set_religion(H ? H.religion : "Unset")
 
 	// Antag record
@@ -232,8 +230,6 @@ FIELD_SHORT_SECURE("Fingerprint", fingerprint, access_security)
 // EMPLOYMENT RECORDS
 FIELD_LONG_SECURE("Employment Record", emplRecord, access_heads)
 FIELD_SHORT_SECURE("Home System", homeSystem, access_heads)
-FIELD_SHORT_SECURE("Citizenship", citizenship, access_heads)
-FIELD_SHORT_SECURE("Faction", faction, access_heads)
 FIELD_SHORT_SECURE("Religion", religion, access_heads)
 
 // ANTAG RECORDS

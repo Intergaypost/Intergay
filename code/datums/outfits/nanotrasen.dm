@@ -11,27 +11,27 @@
 	pda_type = /obj/item/device/pda/heads
 
 /decl/hierarchy/outfit/nanotrasen/representative
-	name = "TetraCorp Representative"
+	name = "New Order League Representative"
 	belt = /obj/item/weapon/clipboard
-	id_pda_assignment = "TetraCorp Navy Representative"
+	id_pda_assignment = "New Order League Navy Representative"
 
 /decl/hierarchy/outfit/nanotrasen/officer
-	name = "TetraCorp Officer"
+	name = "New Order League Officer"
 	head = /obj/item/clothing/head/beret/centcom/officer
 	l_ear = /obj/item/device/radio/headset/heads/captain
 	belt = /obj/item/weapon/gun/energy
-	id_pda_assignment = "TetraCorp Navy Officer"
+	id_pda_assignment = "New Order League Navy Officer"
 
 /decl/hierarchy/outfit/nanotrasen/captain
-	name = "TetraCorp Captain"
+	name = "New Order League Captain"
 	uniform = /obj/item/clothing/under/rank/centcom_captain
 	l_ear = /obj/item/device/radio/headset/heads/captain
 	head = /obj/item/clothing/head/beret/centcom/captain
 	belt = /obj/item/weapon/gun/energy
-	id_pda_assignment = "TetraCorp Navy Captain"
+	id_pda_assignment = "New Order League Navy Captain"
 
 /decl/hierarchy/outfit/nanotrasen/commander
-	name = "TetraCorp Commander"
+	name = "New Order League Commander"
 	mask = /obj/item/clothing/mask/smokable/cigarette/cigar/cohiba
 	shoes = /obj/item/clothing/shoes/swat
 	uniform = /obj/item/clothing/under/rank/centcom_captain
@@ -40,4 +40,4 @@
 	l_ear =  /obj/item/device/radio/headset/heads/captain
 	glasses = /obj/item/clothing/glasses/eyepatch
 	l_pocket = /obj/item/weapon/flame/lighter/zippo
-	id_pda_assignment = "TetraCorp Commander"
+	id_pda_assignment = "New Order League Commander"

@@ -8,7 +8,8 @@
 	max_damage = 0
 	dir = SOUTH
 	organ_tag = "limb"
-	appearance_flags = PIXEL_SCALE
+	appearance_flags = PIXEL_SCALE | LONG_GLIDE
+
 
 	// Strings
 	var/broken_description             // fracture string if any.
@@ -925,7 +926,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 		holder = owner
 	if(!holder)
 		return
-	if (holder.handcuffed && body_part in list(ARM_LEFT, ARM_RIGHT, HAND_LEFT, HAND_RIGHT))
+	if (holder.handcuffed && (body_part in list(ARM_LEFT, ARM_RIGHT, HAND_LEFT, HAND_RIGHT)))
 		holder.visible_message(\
 			"\The [holder.handcuffed.name] falls off of [holder.name].",\
 			"\The [holder.handcuffed.name] falls off you.")
@@ -1000,7 +1001,7 @@ Note that amputating the affected organ does in fact remove the infection from t
 
 	if(owner)
 		owner.visible_message(\
-			"<span class='tetracorp'><big>[owner]'s [name] shatters!</big></span>",\
+			"<span class='government'><big>[owner]'s [name] shatters!</big></span>",\
 			"<span class='combat'><big>Something feels like it shattered in your [name]!</big></span>",\
 			"<span class='combat'>You hear a sickening crack.</span>")
 		jostle_bone()

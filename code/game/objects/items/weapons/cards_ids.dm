@@ -416,6 +416,12 @@ var/global/const/NO_EMAG_ACT = -50
 	icon_state = "trader"
 	access = list(access_merchant)
 
+/obj/item/weapon/card/id/arbiter
+	name = "identification card"
+	desc = "A card issued to arbiters."
+	icon_state = "id_arbiter"
+	job_access_type = /datum/job/arbiter
+
 /obj/item/weapon/foodcoupon
 	name = "food coupon"
 	desc = "You present it to your local nutritionist to get food."

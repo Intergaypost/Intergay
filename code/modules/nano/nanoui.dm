@@ -370,9 +370,10 @@ nanoui is used to open and update nano browser uis
 	return {"
 <!DOCTYPE html>
 <html>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta charset="utf-8">
 		<script type='text/javascript'>
 			function receiveUpdateData(jsonString)
 			{

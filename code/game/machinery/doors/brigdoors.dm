@@ -1,7 +1,7 @@
 #define CHARS_PER_LINE 5
-#define FONT_SIZE "5pt"
-#define FONT_COLOR "#7f59bd"
-#define FONT_STYLE "Arial Black"
+#define BRIGDOOR_FONT_SIZE "5pt"
+#define BRIGDOOR_FONT_COLOR "#7f59bd"
+#define BRIGDOOR_FONT_STYLE "Arial Black"
 
 //This file was auto-corrected by findeclaration.exe on 25.5.2012 20:42:31
 
@@ -240,7 +240,7 @@
 //Checks to see if there's 1 line or 2, adds text-icons-numbers/letters over display
 // Stolen from status_display
 /obj/machinery/door_timer/proc/update_display(var/line1, var/line2)
-	var/new_text = {"<div style="font-size:[FONT_SIZE];color:[FONT_COLOR];font:'[FONT_STYLE]';text-align:center;" valign="top">[line1]<br>[line2]</div>"}
+	var/new_text = {"<div style="font-size:[BRIGDOOR_FONT_SIZE];color:[BRIGDOOR_FONT_COLOR];font:'[BRIGDOOR_FONT_STYLE]';text-align:center;" valign="top">[line1]<br>[line2]</div>"}
 	if(maptext != new_text)
 		maptext = new_text
 
@@ -286,7 +286,7 @@
 	name = "Cell 6"
 	id = "Cell 6"
 
-#undef FONT_SIZE
-#undef FONT_COLOR
-#undef FONT_STYLE
+#undef BRIGDOOR_FONT_SIZE
+#undef BRIGDOOR_FONT_COLOR
+#undef BRIGDOOR_FONT_STYLE
 #undef CHARS_PER_LINE

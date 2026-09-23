@@ -5,7 +5,7 @@
 	var/dat = "<body link='yellow' alink='white' bgcolor='#601414'><font color='white'>"
 	dat += "<B>Thunderfield shop</B><BR>"
 	dat += "Thunder-points left: [vr_mind.thunder_points]<BR>"
-	dat += "<A href='byond://?src=\ref[src];exit=1'>Exit VR body</a>"
+	dat += "<a href='byond://?src=\ref[src];exit=1'>Exit VR body</a>"
 	dat += "<HR>"
 	dat += "<B>Request item:</B><BR>"
 	dat += "<I>Each item costs a number of thunder-points as indicated by the number following their name.</I><br><BR>"
@@ -16,12 +16,12 @@
 	for(var/datum/thunderfield_item/item in GLOB.thunderfield_items)
 		i++
 		if(item.cost <= vr_mind.thunder_points)
-			dat += "<A href='byond://?src=\ref[src];buy_item=1:[i]'>[item.name]</A> ([item.cost])"
+			dat += "<a href='byond://?src=\ref[src];buy_item=1:[i]'>[item.name]</A> ([item.cost])"
 		else
 			dat += "<font color='grey'><i>[item.name] ([item.cost]) </i></font>"
 		dat += "<BR>"
 	dat += "<HR>"
-	dat += "<A href='byond://?src=\ref[src];lock=1'>Lock</a>"
+	dat += "<a href='byond://?src=\ref[src];lock=1'>Lock</a>"
 	dat += "</font></body>"
 	user << browse(dat, "window=hidden")
 	onclose(user, "hidden")

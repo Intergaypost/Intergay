@@ -6,8 +6,6 @@
     locate(min(CENTER.x+(RADIUS),world.maxx), min(CENTER.y+(RADIUS),world.maxy), CENTER.z) \
   )
 
-#define SIGN(X) ((X<0)?-1:1)
-
 /proc/dopage(src,target)
 	var/href_list
 	var/href
@@ -326,7 +324,6 @@ proc
 				if(T.opacity)
 					return 0
 		return 1
-#undef SIGN
 
 proc/isInSight(var/atom/A, var/atom/B)
 	var/turf/Aturf = get_turf(A)
@@ -409,6 +406,8 @@ proc/isInSight(var/atom/A, var/atom/B)
 				C.screen -= O
 
 /proc/flick_overlay(image/I, list/show_to, duration)
+	if(!I)
+		return
 	for(var/client/C in show_to)
 		C.images += I
 	spawn(duration)

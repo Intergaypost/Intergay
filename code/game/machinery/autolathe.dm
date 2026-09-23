@@ -59,19 +59,23 @@
 	if(shocked)
 		shock(user, 50)
 
-	var/dat = "<center><h1>Autolathe Control Panel</h1><hr/>"
+	var/dat = ""
 
 	if(!disabled)
-		dat += "<table width = '100%'>"
+		dat += "<div class='statusDisplay'>"
+		dat += "<table style='width: 100%; text-align: center;'>"
 		var/material_top = "<tr>"
 		var/material_bottom = "<tr>"
 
 		for(var/material in stored_material)
-			material_top += "<td width = '25%' align = center><b>[material]</b></td>"
-			material_bottom += "<td width = '25%' align = center>[stored_material[material]]<b>/[storage_capacity[material]]</b></td>"
+			material_top += "<td><b>[capitalize(material)]</b></td>"
+			material_bottom += "<td>[stored_material[material]] / [storage_capacity[material]]</td>"
 
-		dat += "[material_top]</tr>[material_bottom]</tr></table><hr>"
-		dat += "<h2>Printable Designs</h2><h3>Showing: <a href='?src=\ref[src];change_category=1'>[show_category]</a>.</h3></center><table width = '100%'>"
+		dat += "[material_top]</tr>[material_bottom]</tr></table></div>"
+		dat += "<div class='block'>"
+		dat += "<b>Category:</b> <a href='byond://?src=\ref[src];change_category=1'>[show_category]</a>"
+		dat += "</div>"
+		dat += "<table style='width: 100%;'>"
 
 		var/index = 0
 		for(var/datum/autolathe/recipe/R in machine_recipes)
@@ -84,7 +88,7 @@
 			var/max_sheets
 			var/comma
 			if(!R.resources || !R.resources.len)
-				material_string = "No resources required.</td>"
+				material_string = "No resources required."
 			else
 				//Make sure it's buildable and list requires resources.
 				for(var/material in R.resources)
@@ -98,30 +102,30 @@
 					else
 						material_string += ", "
 					material_string += "[round(R.resources[material] * mat_efficiency)] [material]"
-				material_string += ".<br></td>"
+				material_string += "."
 				//Build list of multipliers for sheets.
 				if(R.is_stack)
 					var/obj/item/stack/R_stack = R.path
 					max_sheets = min(max_sheets, initial(R_stack.max_amount))
 					//do not allow lathe to print more sheets than the max amount that can fit in one stack
 					if(max_sheets && max_sheets > 0)
-						multiplier_string  += "<br>"
-						for(var/i = 5;i<max_sheets;i*=2) //5,10,20,40...
-							multiplier_string  += "<a href='?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a>"
-						multiplier_string += "<a href='?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
+						multiplier_string += "<br>"
+						for(var/i = 5; i < max_sheets; i *= 2) //5,10,20,40...
+							multiplier_string += "<a href='byond://?src=\ref[src];make=[index];multiplier=[i]'>\[x[i]\]</a> "
+						multiplier_string += "<a href='byond://?src=\ref[src];make=[index];multiplier=[max_sheets]'>\[x[max_sheets]\]</a>"
 
-			dat += "<tr><td width = 180>[R.hidden ? "<font color = 'red'>*</font>" : ""]<b>[can_make ? "<a href='?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color = 'red'>*</font>" : ""][multiplier_string]</td><td align = right>[material_string]</tr>"
+			dat += "<tr><td style='vertical-align: top; width: 55%;'>[R.hidden ? "<font color='red'>*</font>" : ""]<b>[can_make ? "<a href='byond://?src=\ref[src];make=[index];multiplier=1'>" : ""][R.name][can_make ? "</a>" : ""]</b>[R.hidden ? "<font color='red'>*</font>" : ""][multiplier_string]</td><td align='right' style='vertical-align: top;'>[material_string]</td></tr>"
 
-		dat += "</table><hr>"
+		dat += "</table>"
 	//Hacking.
 	if(panel_open)
 		dat += "<h2>Maintenance Panel</h2>"
 		dat += wires.GetInteractWindow()
 
-		dat += "<hr>"
-
-	user << browse(dat, "window=autolathe")
-	onclose(user, "autolathe")
+	var/datum/browser/popup = new(user, "autolathe", "Autolathe Control Panel", 460, 520, src)
+	popup.set_content(dat)
+	popup.set_title_image(user.browse_rsc_icon(src.icon, src.icon_state))
+	popup.open()
 
 /obj/machinery/autolathe/attackby(var/obj/item/O as obj, var/mob/user as mob)
 

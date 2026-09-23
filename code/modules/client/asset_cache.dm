@@ -9,136 +9,24 @@ Then call .send(client) on that stored return value.
 You can set verify to TRUE if you want send() to sleep until the client has the assets.
 */
 
-
-// Amount of time(ds) MAX to send per asset, if this get exceeded we cancel the sleeping.
-// This is doubled for the first asset, then added per asset after
-#define ASSET_CACHE_SEND_TIMEOUT 7
-
-//When sending mutiple assets, how many before we give the client a quaint little sending resources message
-#define ASSET_CACHE_TELL_CLIENT_AMOUNT 8
-
-//When passively preloading assets, how many to send at once? Too high creates noticable lag where as too low can flood the client's cache with "verify" files
-#define ASSET_CACHE_PRELOAD_CONCURRENT 3
-
 /client
 	var/list/cache = list() // List of all assets sent to this client by the asset cache.
 	var/list/completed_asset_jobs = list() // List of all completed jobs, awaiting acknowledgement.
 	var/list/sending = list()
 	var/last_asset_job = 0 // Last job done.
 
-//This proc sends the asset to the client, but only if it needs it.
-//This proc blocks(sleeps) unless verify is set to false
+// Global wrapper procs delegating to SSassets subsystem
 /proc/send_asset(var/client/client, var/asset_name, var/verify = TRUE, var/check_cache = TRUE)
-	if(!istype(client))
-		if(ismob(client))
-			var/mob/M = client
-			if(M.client)
-				client = M.client
+	return SSassets.send_asset(client, asset_name, verify, check_cache)
 
-			else
-				return 0
-
-		else
-			return 0
-
-	if(check_cache && (client.cache.Find(asset_name) || client.sending.Find(asset_name)))
-		return 0
-
-	client << browse_rsc(SSassets.cache[asset_name], asset_name)
-	if(!verify) // Can't access the asset cache browser, rip.
-		client.cache += asset_name
-		return 1
-
-	client.sending |= asset_name
-	var/job = ++client.last_asset_job
-
-	client << browse({"
-	<script>
-		window.location.href="?asset_cache_confirm_arrival=[job]"
-	</script>
-	"}, "window=asset_cache_browser")
-
-	var/t = 0
-	var/timeout_time = (ASSET_CACHE_SEND_TIMEOUT * client.sending.len) + ASSET_CACHE_SEND_TIMEOUT
-	while(client && !client.completed_asset_jobs.Find(job) && t < timeout_time) // Reception is handled in Topic()
-		sleep(1) // Lock up the caller until this is received.
-		t++
-
-	if(client)
-		client.sending -= asset_name
-		client.cache |= asset_name
-		client.completed_asset_jobs -= job
-
-	return 1
-
-//This proc blocks(sleeps) unless verify is set to false
 /proc/send_asset_list(var/client/client, var/list/asset_list, var/verify = TRUE)
-	if(!istype(client))
-		if(ismob(client))
-			var/mob/M = client
-			if(M.client)
-				client = M.client
+	return SSassets.send_asset_list(client, asset_list, verify)
 
-			else
-				return 0
-
-		else
-			return 0
-
-	var/list/unreceived = asset_list - (client.cache + client.sending)
-	if(!unreceived || !unreceived.len)
-		return 0
-	for(var/asset in unreceived)
-		if(asset in SSassets.cache)
-			client << browse_rsc(SSassets.cache[asset], asset)
-
-	if(!verify) // Can't access the asset cache browser, rip.
-		client.cache += unreceived
-		return 1
-
-	client.sending |= unreceived
-	var/job = ++client.last_asset_job
-
-	client << browse({"
-	<script>
-		window.location.href="?asset_cache_confirm_arrival=[job]"
-	</script>
-	"}, "window=asset_cache_browser")
-
-	var/t = 0
-	var/timeout_time = ASSET_CACHE_SEND_TIMEOUT * client.sending.len
-	while(client && !client.completed_asset_jobs.Find(job) && t < timeout_time) // Reception is handled in Topic()
-		sleep(1) // Lock up the caller until this is received.
-		t++
-
-	if(client)
-		client.sending -= unreceived
-		client.cache |= unreceived
-		client.completed_asset_jobs -= job
-
-	return 1
-
-//This proc will download the files without clogging up the browse() queue, used for passively sending files on connection start.
-//The proc calls procs that sleep for long times.
 /proc/getFilesSlow(var/client/client, var/list/files, var/register_asset = TRUE)
-	var/concurrent_tracker = 1
-	for(var/file in files)
-		if(!client)
-			break
-		if(register_asset)
-			register_asset(file, files[file])
-		if(concurrent_tracker >= ASSET_CACHE_PRELOAD_CONCURRENT)
-			concurrent_tracker = 1
-			send_asset(client, file)
-		else
-			concurrent_tracker++
-			send_asset(client, file, verify = FALSE)
-		sleep(0) //queuing calls like this too quickly can cause issues in some client versions
+	return SSassets.getFilesSlow(client, files, register_asset)
 
-//This proc "registers" an asset, it adds it to the cache for further use, you cannot touch it from this point on or you'll fuck things up.
-//if it's an icon or something be careful, you'll have to copy it before further use.
 /proc/register_asset(var/asset_name, var/asset)
-	SSassets.cache[asset_name] = asset
+	return SSassets.register_asset(asset_name, asset)
 
 // will return filename for cached atom icon or null if not cached
 // can accept atom objects or types
@@ -166,6 +54,9 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 		return new type()
 	return asset_datums[type]
 
+/datum/asset
+	var/list/common = list()
+
 /datum/asset/New()
 	asset_datums[type] = src
 	register()
@@ -175,6 +66,17 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 
 /datum/asset/proc/send(client)
 	return
+
+/datum/asset/proc/register_directory(dir_path, is_common = TRUE)
+	var/list/filenames = flist(dir_path)
+	for(var/filename in filenames)
+		if(copytext(filename, length(filename)) != "/") // Ignore directories.
+			var/file_path = dir_path + filename
+			if(fexists(file_path))
+				var/rsc = fcopy_rsc(file_path)
+				register_asset(filename, rsc)
+				if(is_common)
+					common[filename] = rsc
 
 //If you don't need anything complicated.
 /datum/asset/simple
@@ -241,15 +143,13 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 /datum/asset/simple/craft/register()
 	for(var/name in SScraft.categories)
 		for(var/datum/crafting_recipe/CR in SScraft.categories[name])
-			if(CR.result)
+			if(CR.result && CR.result.len)
 				var/filename = sanitizeFileName("[CR.result[1]].png")
 				var/icon/I = getFlatTypeIcon(CR.result[1])
 				register_asset(filename, I)
 				assets[filename] = I
 
 /datum/asset/nanoui
-	var/list/common = list()
-
 	var/list/common_dirs = list(
 		"nano/css/",
 		"nano/images/",
@@ -263,20 +163,19 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	)
 
 /datum/asset/nanoui/register()
-	// Crawl the directories to find files.
 	for (var/path in common_dirs)
-		var/list/filenames = flist(path)
-		for(var/filename in filenames)
-			if(copytext(filename, length(filename)) != "/") // Ignore directories.
-				if(fexists(path + filename))
-					common[filename] = fcopy_rsc(path + filename)
-					register_asset(filename, common[filename])
+		register_directory(path, is_common = TRUE)
+
 	for (var/path in uncommon_dirs)
 		var/list/filenames = flist(path)
 		for(var/filename in filenames)
 			if(copytext(filename, length(filename)) != "/") // Ignore directories.
-				if(fexists(path + filename))
-					register_asset(filename, fcopy_rsc(path + filename))
+				var/file_path = path + filename
+				if(fexists(file_path))
+					var/rsc = fcopy_rsc(file_path)
+					register_asset(filename, rsc)
+					if(findtext(filename, "layout_") == 1)
+						common[filename] = rsc
 
 	var/list/mapnames = list()
 	for(var/z in GLOB.using_map.map_levels)
@@ -297,15 +196,7 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	send_asset_list(client, uncommon, FALSE)
 	send_asset_list(client, common, TRUE)
 
-/datum/asset/nanoui/send(client, uncommon)
-	if(!islist(uncommon))
-		uncommon = list(uncommon)
-
-	send_asset_list(client, uncommon, FALSE)
-	send_asset_list(client, common, TRUE)
-
 /datum/asset/goonchat
-	var/list/common = list()
 	var/list/common_dirs = list(
 		"code/modules/html_interface/js/",
 		"code/modules/goonchat/browserassets/js/scrollbar/",
@@ -314,33 +205,20 @@ You can set verify to TRUE if you want send() to sleep until the client has the 
 	)
 
 /datum/asset/goonchat/register()
-	// Crawl the directories to find files.
 	for (var/path in common_dirs)
-		var/list/filenames = flist(path)
-		for(var/filename in filenames)
-			if(copytext(filename, length(filename)) != "/") // Ignore directories.
-				if(fexists(path + filename))
-					common[filename] = fcopy_rsc(path + filename)
-					register_asset(filename, common[filename])
+		register_directory(path, is_common = TRUE)
 
 /datum/asset/goonchat/send(client)
 	send_asset_list(client, common, TRUE)
 
 /datum/asset/pig
-	var/list/common = list()
 	var/list/common_dirs = list(
 		"code/porco/html/"
 	)
 
 /datum/asset/pig/register()
-	// Crawl the directories to find files.
 	for (var/path in common_dirs)
-		var/list/filenames = flist(path)
-		for(var/filename in filenames)
-			if(copytext(filename, length(filename)) != "/") // Ignore directories.
-				if(fexists(path + filename))
-					common[filename] = fcopy_rsc(path + filename)
-					register_asset(filename, common[filename])
+		register_directory(path, is_common = TRUE)
 
 /datum/asset/pig/send(client)
 	send_asset_list(client, common, TRUE)

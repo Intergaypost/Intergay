@@ -12,18 +12,19 @@
 	player_levels = list(1,2,3,5)
 	accessible_z_levels = list("1"=1,"2"=90,"3"=1,"5"=1) //Percentage of chance to get on this or that Z level as you drift through space.
 
-	allowed_spawns = list("Cryogenic Storage", "Cryogenic Storage Captain")
+	allowed_spawns = list("Cryogenic Storage")
+	default_spawn = "Cryogenic Storage"
 
 	station_name  = "Perimeter Station 34-53"
 	station_short = "Perimeter"
 	dock_name     = "Gnezdo"
 	boss_name     = "TETRACORP DIAGNOSTICS SUBROUTINE"
 	boss_short    = "TTC-D-S"
-	company_name  = "TetraCorp"
+	company_name  = "TNC"
 	company_short = "TTC"
 	system_name = "WISE 0855−0714"
 
-	map_admin_faxes = list("TETRACORP MAIL SUBROUTINE")
+	map_admin_faxes = list("TRINET MAIL SUBROUTINE")
 
 	shuttle_docked_message = " has docked with the station. Command staff is prioritised."
 	shuttle_leaving_dock = "The Elipse has departed from home dock."
