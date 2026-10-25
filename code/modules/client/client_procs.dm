@@ -668,12 +668,6 @@ var/global/const/MAX_VIEW = 41
 					winset(src, "default-\ref[key]", "parent=default;name=[key];command=me")
 					communication_hotkeys += key
 
-	// winget() does not work for F1 and F2
-	for(var/key in communication_hotkeys)
-		if(!(key in list("F1","F2")) && !winget(src, "default-\ref[key]", "command"))
-			to_chat(src, "You probably entered the game with a different keyboard layout.\n<a href='?src=\ref[src];reset_macros=1'>Please switch to the English layout and click here to fix the communication hotkeys.</a>")
-			break
-
 /client/proc/setmovingquickly()
 	if(mob)
 		mob.m_intent = "run"
@@ -685,4 +679,4 @@ var/global/const/MAX_VIEW = 41
 		mob.m_intent = "walk"
 		if(mob.hud_used?.move_intent)
 			mob.hud_used.move_intent.icon_state = "walking"
-
+

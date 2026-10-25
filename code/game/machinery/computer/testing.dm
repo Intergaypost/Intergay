@@ -22,7 +22,7 @@
 				src.audible_message("The computer makes a few noises as it dispenses a piece of paper.")
 				playsound(src, 'sound/machines/dotprinter.ogg', 10, 1)
 				var/obj/item/weapon/paper/R = new(src.loc)
-				R.set_content("<b>LOG 22-10-2167</b>\n\nREPORT\n\nTHE MUSSR HAS FALLEN DOT\n\nRETURN TO DAILY ACTIVITY DOT\n\n<b>LOG 12-12-2188</b>\n\nCRYOGENIC STORAGE ACCESS DENIED DOT\n\nACTIVATING CONSERVATION MODE DOT\n\n<b>LOG 18-07-2258</b>\n\nISHIM REPUBLIC IN FULL ALERT STATE DOT\n\nREQUESTING HELP DOT\n\n<b>LOG 19-10-2263</b>\n\nTHE DOT STATION DOT IS DOT UNDER DOT TETRACORP DOT COMMAND DOT\n\nACTIVATE DOT CRYOGENIC DOT AWAKENING DOT")
+				R.set_content("<b>LOG 22-10-2167</b>\n\nREPORT\n\nTHE MUSSR HAS FALLEN DOT\n\nRETURN TO DAILY ACTIVITY DOT\n\n<b>LOG 12-12-2188</b>\n\nCRYOGENIC STORAGE ACCESS DENIED DOT\n\nACTIVATING CONSERVATION MODE DOT\n\n<b>LOG 18-07-2258</b>\n\nISHIM REPUBLIC IN FULL ALERT STATE DOT\n\nREQUESTING HELP DOT\n\n<b>LOG 19-10-2263</b>\n\nTHE DOT STATION DOT IS DOT UNDER DOT NEW ORDER LEAGUE DOT COMMAND DOT\n\nACTIVATE DOT CRYOGENIC DOT AWAKENING DOT")
 				var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
 				stampoverlay.icon_state = "paper_stamp-hos"
 				R.stamped += /obj/item/weapon/stamp
@@ -48,7 +48,7 @@
 				return 1
 			if(GLOB.in_character_filter.len)
 				if(findtext(input, config.ic_filter_regex))
-					to_chat(usr, "<span class='warning'>You rethink your decision and decide that Tetracorp will fire you if you announce that.</span>")
+					to_chat(usr, "<span class='warning'>You rethink your decision and decide that you will be fired if you announce that.</span>")
 					return 1
 			var/decl/security_state/security_state = decls_repository.get_decl(GLOB.using_map.security_state)
 			var/decl/security_level/default/df = security_state.current_security_level

@@ -56,43 +56,43 @@
 	insrank = "Vessel Overseer"
 
 /obj/item/clothing/under/rank/tetra //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "cargotetro"
 	item_state = "cargotetro"
 	worn_state = "cargotetro"
 
 /obj/item/clothing/under/rank/med //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "med"
 	item_state = "med"
 	worn_state = "uniform_med"
 
 /obj/item/clothing/under/rank/sec //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "sec"
 	item_state = "sec"
 	worn_state = "uniform_sec"
 
 /obj/item/clothing/under/rank/sci //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "sci"
 	item_state = "sci"
 	worn_state = "uniform_sci"
 
 /obj/item/clothing/under/rank/misc //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "misc"
 	item_state = "misc"
 	worn_state = "misc"
 
 /obj/item/clothing/under/rank/eng //gonna replace everyone's uniforms with this, makes sense to be standardized.
-	desc =  "It's a grey jumpsuit with a deep purple vest. It has the Tetracorp logo stamped onto it. The standard uniform for all workers."
-	name = "Tetracorp uniform"
+	desc =  "It's a grey jumpsuit with a deep purple vest. It has the NOL logo stamped onto it. The standard uniform for all workers."
+	name = "jumpsuit uniform"
 	icon_state = "eng"
 	item_state = "eng"
 	worn_state = "eng"

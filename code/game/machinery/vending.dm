@@ -829,7 +829,7 @@
 
 
 /obj/machinery/vending/medical
-	name = "TetraMed Plus"
+	name = "TriMed Plus"
 	desc = "Medical drug dispenser, with limited supply."
 	icon_state = "med"
 	icon_deny = "med-deny"
@@ -857,8 +857,8 @@
 					/obj/item/device/assembly/prox_sensor = 6,/obj/item/device/assembly/igniter = 6)
 
 /obj/machinery/vending/wallmed1
-	name = "TetraMed Wall Edition"
-	desc = "A wall-mounted version of the TetraMed."
+	name = "TriMed Wall Edition"
+	desc = "A wall-mounted version of the TriMed."
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"
@@ -867,8 +867,8 @@
 	contraband = list(/obj/item/weapon/reagent_containers/syringe/antitoxin = 4,/obj/item/weapon/reagent_containers/syringe/antiviral = 4,/obj/item/weapon/reagent_containers/pill/tox = 1)
 
 /obj/machinery/vending/wallmed2
-	name = "TetraMed Mini"
-	desc = "A wall-mounted version of the TetraMed, containing only vital first aid equipment."
+	name = "TriMed Mini"
+	desc = "A wall-mounted version of the TriMed, containing only vital first aid equipment."
 	product_ads = "Go save some lives!;The best stuff for your medbay.;Only the finest tools.;Natural chemicals!;This stuff saves lives.;Don't you want some?"
 	icon_state = "wallmed"
 	icon_deny = "wallmed-deny"

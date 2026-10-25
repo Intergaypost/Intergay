@@ -252,7 +252,7 @@
 	if(istype(src, /mob/new_player))
 		var/lobby = ""
 		if(GAME_STATE <= RUNLEVEL_LOBBY)
-			lobby += "<span style='color:#1cfc03'>Time to Start: [SSticker.pregame_timeleft/10]</span>$"
+			lobby += "<span style='color:#1cfc03'>Time to Start: [floor(SSticker.pregame_timeleft/10)]</span>$"
 			for(var/client/C)
 				var/gendercheck = "MALE"
 				var/readycheck = "NOT READY"

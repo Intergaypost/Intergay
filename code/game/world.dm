@@ -1,4 +1,4 @@
-/var/server_name = "Gorodok"
+/var/server_name = "IG"
 
 /var/game_id = null
 /hook/global_init/proc/generate_gameid()

@@ -42,7 +42,7 @@
 //Captain
 /obj/item/clothing/suit/capsuit
 	name = "captain's suit"
-	desc = "Standard issue to all Tetracorp captains. This one has seen its fair use over the years."
+	desc = "Standard issue to all captains. This one has seen its fair use over the years."
 	icon_state = "newcaptain"
 	item_state = "newcaptain"
 	body_parts_covered = UPPER_TORSO|ARMS|LOWER_TORSO

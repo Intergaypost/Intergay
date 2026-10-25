@@ -116,7 +116,7 @@ datum/announcement/proc/NewsCast(message as text, message_title as text)
 	AnnounceArrivalSimple(character.real_name, rank, join_message, get_announcement_frequency(job))
 
 /proc/AnnounceArrivalSimple(var/name, var/rank = "visitor", var/join_message = "has arrived on the [station_name()]", var/frequency)
-	GLOB.global_announcer.autosay("[name], [rank], [join_message].", "TETRACORP LIFESIGNS MONITORING")
+	GLOB.global_announcer.autosay("[name], [rank], [join_message].", "LIFESIGNS MONITORING")
 
 /proc/get_announcement_frequency(var/datum/job/job)
 	//This is just returning common utill we want to re-enable this

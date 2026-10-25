@@ -1,5 +1,5 @@
 ## Server name: This appears at the top of the screen in-game. In this case it will read "tgstation: station_name" where station_name is the randomly generated name of the station for the round. Remove the # infront of SERVERNAME and replace 'tgstation' with the name of your choice
-SERVERNAME Gorodok
+SERVERNAME IG
 
 ## Alert levels
 ALERT_GREEN All threats to the station have passed. Security may not have weapons visible, privacy laws are once again fully enforced.
@@ -252,7 +252,7 @@ TICKLAG 0.5
 ##	Setting this to 0 will prevent the Master Controller from ticking
 BASE_MC_TICK_RATE 1
 
-##High population MC tick rate 
+##High population MC tick rate
 ##	Byond rounds timer values UP, but the tick rate is modified with heuristics during lag spikes so setting this to something like 2
 ##	will make it run every 2 byond ticks, but will also double the effect of anti-lag heuristics. You can instead set it to something like
 ##	1.1 to make it run every 2 byond ticks, but only increase the effect of anti-lag heuristics by 10%. or 1.5 for 50%.
@@ -442,7 +442,7 @@ ORGANS_CAN_DECAY
 #RESOURCE_URLS URL
 =======
 ## Server name: This appears at the top of the screen in-game. In this case it will read "tgstation: station_name" where station_name is the randomly generated name of the station for the round. Remove the # infront of SERVERNAME and replace 'tgstation' with the name of your choice
-SERVERNAME Gorodok
+SERVERNAME IG
 
 ## Alert levels
 ALERT_GREEN All threats to the station have passed. Security may not have weapons visible, privacy laws are once again fully enforced.

@@ -439,7 +439,7 @@
 	icon_state = "deck5"
 
 /obj/structure/sign/nanotrasen
-	name = "\improper Tetracorp"
+	name = "\improper Tetra"
 	desc = "Serving in the best interests of humanity."
 	icon_state = "NT"
 
